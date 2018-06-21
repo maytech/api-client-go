@@ -1,0 +1,7181 @@
+---
+swagger: "2.0"
+info:
+  description: "File Transfer And Sharing API"
+  version: "1.0.0"
+  title: "Quatrix API"
+host: "api.quatrix.it"
+basePath: "/api/1.0"
+tags:
+- name: "Auth"
+  description: "Authenticating to Quatrix account"
+- name: "Account"
+  description: "Getting general information about Quatrix account"
+- name: "Language"
+  description: "Getting information about account language"
+- name: "Contact"
+  description: "Creating and managing Personal and Site contacts"
+- name: "PGP"
+  description: "Setting and managing PGP keys"
+- name: "Group"
+  description: "Getting information about users and contacts"
+- name: "File"
+  description: "Retrieving and modifying of file(s)"
+- name: "Upload"
+  description: "File(s) uploading"
+- name: "Password Reset"
+  description: "Setting/Resetting of Password"
+- name: "Preview"
+  description: "Previewing of Photo(s)/Video(s)/File(s)"
+- name: "Profile"
+  description: "Editing your profile information"
+- name: "MFA"
+  description: "Enabling/disabling MFA"
+- name: "Project Folder"
+  description: "Creating and Managing Project Folders"
+- name: "Site Settings"
+  description: "Managing service settings"
+- name: "User"
+  description: "Creating and managing users"
+- name: "Widget"
+  description: "Setting of widget"
+- name: "Share"
+  description: "Creating shares / Quick links / Request file(s) links"
+- name: "ActivityLog"
+  description: "Tracking all activities"
+- name: "Service"
+  description: "Getting information about the service"
+- name: "Automation"
+  description: "Setting and modifying automatic rules"
+- name: "Inbox"
+  description: "Information about folders of your contacts"
+- name: "SSH-Key"
+  description: "Retrieving and modifying of SSH-keys"
+- name: "Billing"
+  description: "Upgrading the account"
+- name: "Check"
+  description: "API status checks"
+- name: "WOPI"
+  description: "Calls for Office Online integration"
+schemes:
+- "https"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+security:
+- api_key: []
+paths:
+  /session/login:
+    get:
+      tags:
+      - "Auth"
+      summary: "Login and get session ID"
+      description: "Basic Authentication with the Authorization header\nThe Authorization\
+        \ header is constructed as follows\n  1. The user email and password are combined\
+        \ with a single colon. (:)\n  2. The resulting string is encoded using a variant\
+        \ of Base64.\n  3. The authorization method and a space is then prepended\
+        \ to the encoded string, separated with a space (e.g. \"Basic \").\n  For\
+        \ example, 'test@example.com' as the user email and 'qwerty' as the password,\
+        \ then the field's value is the\n  base64-encoding of test@example.com:qwerty,\
+        \ or dGVzdEBleGFtcGxlLmNvbTpxd2VydHk=.\n  Then the Authorization header will\
+        \ appear as\n  'Authorization: Basic dGVzdEBleGFtcGxlLmNvbTpxd2VydHk='\n"
+      parameters: []
+      responses:
+        200:
+          description: "Login success response"
+          schema:
+            $ref: "#/definitions/SessionLoginResp"
+        207:
+          description: "MFA required"
+          schema:
+            $ref: "#/definitions/SessionLoginResp"
+          headers:
+            Mfa-Code:
+              type: "number"
+              description: "MFA code"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+      security:
+      - basicAuth: []
+    post:
+      tags:
+      - "Auth"
+      - "MFA"
+      summary: "MFA"
+      description: "Login with MFA\n"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/SessionLoginPostResp"
+        x-exportParamName: "Body"
+      responses:
+        200:
+          description: "Login success response"
+          schema:
+            $ref: "#/definitions/SessionLoginResp"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /session/keepalive:
+    get:
+      tags:
+      - "Auth"
+      summary: "Keepalive"
+      description: "Keep alive current session\n"
+      parameters: []
+      responses:
+        200:
+          description: "Keepalive success response"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /session/logout:
+    get:
+      tags:
+      - "Auth"
+      summary: "Logout"
+      description: "Logout of current session\n"
+      parameters: []
+      responses:
+        200:
+          description: "Logout success response"
+  /session/unblock-captcha:
+    post:
+      tags:
+      - "Auth"
+      summary: "Unblock captcha"
+      description: "Unblock captcha\n"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/UnblockCaptchaReq"
+        x-exportParamName: "Body"
+      responses:
+        200:
+          description: "Captcha is passed successfully"
+          schema:
+            $ref: "#/definitions/SessionUnblockCaptchaResp"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Captcha is wrong"
+          schema:
+            $ref: "#/definitions/SessionUnblockCaptchaResp"
+  /account/metadata:
+    get:
+      tags:
+      - "Account"
+      summary: "Account metadata"
+      description: "Get Account Public Metadata\n"
+      parameters: []
+      responses:
+        200:
+          description: "Account metadata"
+          schema:
+            $ref: "#/definitions/AccountMetadataResp"
+      security: []
+  /account/roles:
+    get:
+      tags:
+      - "Account"
+      summary: "Account roles"
+      description: "List account roles\n"
+      parameters: []
+      responses:
+        200:
+          description: "List of account roles"
+          schema:
+            type: "array"
+            title: "AccountRolesResp"
+            items:
+              $ref: "#/definitions/AccountRolesRespItems"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /account/logo:
+    get:
+      tags:
+      - "Account"
+      summary: "Account logo"
+      description: "Returns account logo body\n"
+      parameters: []
+      responses:
+        200:
+          description: "Logo body"
+      security: []
+  /account/info:
+    get:
+      tags:
+      - "Account"
+      summary: "Account info"
+      description: "Account usage info\n"
+      parameters: []
+      responses:
+        200:
+          description: "Account info"
+          schema:
+            $ref: "#/definitions/AccountInfoResp"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /account/list:
+    get:
+      tags:
+      - "Account"
+      summary: "List user accounts"
+      description: "List user accounts\n"
+      parameters: []
+      responses:
+        200:
+          description: "Account list"
+          schema:
+            type: "array"
+            title: "AccountListResp"
+            items:
+              $ref: "#/definitions/AccountListRespItems"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /languages:
+    get:
+      tags:
+      - "Language"
+      summary: "List languages"
+      description: "List languages\n"
+      parameters: []
+      responses:
+        200:
+          description: "Languages list"
+          schema:
+            type: "array"
+            title: "LanguagesResp"
+            items:
+              $ref: "#/definitions/LanguagesRespItems"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /languages/default:
+    get:
+      tags:
+      - "Language"
+      summary: "Default language"
+      description: "Get default language\n"
+      parameters: []
+      responses:
+        200:
+          description: "Default language id"
+          schema:
+            $ref: "#/definitions/LanguagesDefaultResp"
+      security: []
+  /contact:
+    get:
+      tags:
+      - "Contact"
+      summary: "List user contacts"
+      description: "List user contacts\n"
+      parameters: []
+      responses:
+        200:
+          description: "Contact list"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/ContactResp"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /contact/metadata/{id}:
+    get:
+      tags:
+      - "Contact"
+      summary: "Contact metadata"
+      description: "Get contact metadata\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of a contact"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      responses:
+        200:
+          description: "Contact metadata"
+          schema:
+            $ref: "#/definitions/ContactResp"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /contact/create:
+    post:
+      tags:
+      - "Contact"
+      summary: "Create contact"
+      description: "Create new contact\n"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/ContactCreateReq"
+        x-exportParamName: "Body"
+      responses:
+        201:
+          description: "Contact metadata"
+          schema:
+            $ref: "#/definitions/ContactResp"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+          examples:
+            msg: "Email is already taken"
+            code: 32
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /contact/edit/{id}:
+    post:
+      tags:
+      - "Contact"
+      summary: "Contact metadata"
+      description: "Get contact metadata\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of a contact"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      - in: "body"
+        name: "body"
+        required: false
+        schema:
+          $ref: "#/definitions/ContactEditResp"
+        x-exportParamName: "Body"
+      responses:
+        200:
+          description: "Contact metadata"
+          schema:
+            $ref: "#/definitions/ContactResp"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /contact/delete:
+    post:
+      tags:
+      - "Contact"
+      summary: "Delete contact"
+      description: "Delete contact\n"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "IDs of a contacts"
+        required: true
+        schema:
+          $ref: "#/definitions/IdsReq"
+        x-exportParamName: "Body"
+      responses:
+        200:
+          description: "Contact ids"
+          schema:
+            type: "array"
+            title: "ContactDeleteResp"
+            items:
+              $ref: "#/definitions/ContactDeleteRespItems"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /contact/upgrade/{id}:
+    get:
+      tags:
+      - "Contact"
+      summary: "Upgrade contact"
+      description: "Upgrade contact to user\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of a contact"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      responses:
+        200:
+          description: "User metadata"
+          schema:
+            $ref: "#/definitions/UserResp"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /contact/pgp-key/{id}:
+    get:
+      tags:
+      - "Contact"
+      - "PGP"
+      summary: "Contact PGP key"
+      description: "Get contact PGP key. Not used.\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of a contact"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      responses:
+        200:
+          description: "PGP key metadata object"
+          schema:
+            $ref: "#/definitions/PgpKeyResp"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        403:
+          description: "PGP managment is disabled"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        404:
+          description: "Contact doesn't have a PGP key"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /contact/group:
+    get:
+      tags:
+      - "Contact"
+      - "Group"
+      summary: "All contact groups"
+      description: "List all contact groups\n"
+      parameters: []
+      responses:
+        200:
+          description: "Contact groups metadata object"
+          schema:
+            type: "array"
+            title: "ContactGroupResp"
+            items:
+              $ref: "#/definitions/ContactGroupRespItems"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /file/metadata:
+    get:
+      tags:
+      - "File"
+      summary: "Get all file metadata"
+      description: "Get all file metadata in current user home folder\n"
+      parameters:
+      - name: "content"
+        in: "query"
+        description: "Return content flag"
+        required: false
+        type: "number"
+        default: 1.0
+        format: "int"
+        enum:
+        - 0.0
+        - 1.0
+        x-exportParamName: "Content"
+      responses:
+        200:
+          description: "File metadata object"
+          schema:
+            $ref: "#/definitions/FileMetadataGetResp"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+    post:
+      tags:
+      - "File"
+      summary: "Set file metadata"
+      description: "Set file metadata\n"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/FileMetadataPostReq"
+        x-exportParamName: "Body"
+      responses:
+        200:
+          description: "File metadata"
+          schema:
+            $ref: "#/definitions/FileMetadataPostResp"
+  /file/metadata/{id}:
+    get:
+      tags:
+      - "File"
+      summary: "Get file metadata"
+      description: "Get file metadata\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of a file"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      - name: "content"
+        in: "query"
+        description: "Return content flag"
+        required: false
+        type: "number"
+        default: 1.0
+        format: "int"
+        enum:
+        - 0.0
+        - 1.0
+        x-exportParamName: "Content"
+      responses:
+        200:
+          description: "File metadata object"
+          schema:
+            $ref: "#/definitions/FileMetadataGetResp"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /file/info/{id}:
+    get:
+      tags:
+      - "File"
+      summary: "Get file info"
+      description: "Get file info\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of a file"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      responses:
+        200:
+          description: "File info object"
+          schema:
+            $ref: "#/definitions/FileInfoResp"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /file/wopi-token/{id}:
+    get:
+      tags:
+      - "File"
+      - "WOPI"
+      summary: "Get wopi token for file"
+      description: "Get wopi token for file\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of a file"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      responses:
+        200:
+          description: "ID of a wopi token"
+          schema:
+            $ref: "#/definitions/IdResp"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /file/copy:
+    post:
+      tags:
+      - "File"
+      summary: "Copy files"
+      description: "Copy files\n"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/CopyMoveFilesReq"
+        x-exportParamName: "Body"
+      responses:
+        202:
+          description: "Job response object"
+          schema:
+            $ref: "#/definitions/JobResp"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /file/delete:
+    post:
+      tags:
+      - "File"
+      summary: "Delete files"
+      description: "Delete number of files\n"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/IdsReq"
+        x-exportParamName: "Body"
+      responses:
+        200:
+          description: "File ids if requested ids <= 10"
+          schema:
+            $ref: "#/definitions/IdsResp"
+        202:
+          description: "Job response object if requested ids > 10"
+          schema:
+            $ref: "#/definitions/JobResp"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /file/move:
+    post:
+      tags:
+      - "File"
+      summary: "Move files"
+      description: "Move files\n"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/CopyMoveFilesReq"
+        x-exportParamName: "Body"
+      responses:
+        200:
+          description: "File ids if requested ids <= 10"
+          schema:
+            $ref: "#/definitions/IdsResp"
+        202:
+          description: "Job response object if requested ids > 10"
+          schema:
+            $ref: "#/definitions/JobResp"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /file/makedir:
+    post:
+      tags:
+      - "File"
+      summary: "Create new folder"
+      description: "Create new folder\n"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/MakeDirReq"
+        x-exportParamName: "Body"
+      responses:
+        201:
+          description: "File metadata object"
+          schema:
+            $ref: "#/definitions/FileResp"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /file/csv/{id}:
+    get:
+      tags:
+      - "File"
+      summary: "Download CSV file with Folder Content"
+      description: "Download CSV file content with Folder Content.\n"
+      produces:
+      - "text/csv"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "File action ID"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      responses:
+        200:
+          description: "Folder Map"
+          schema:
+            $ref: "#/definitions/FileCsvResp"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /file/rename/{id}:
+    post:
+      tags:
+      - "File"
+      summary: "Rename file or folder"
+      description: "Rename file or folder\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of a file"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/FileRenameReq"
+        x-exportParamName: "Body"
+      responses:
+        200:
+          description: "File metadata object"
+          schema:
+            $ref: "#/definitions/FileRenameResp"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /file/tags/{id}:
+    get:
+      tags:
+      - "File"
+      summary: "File tags"
+      description: "List file tags\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of a file"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      responses:
+        200:
+          description: "List of file tags"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/FileTagResp"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /file/add-tag/{id}:
+    post:
+      tags:
+      - "File"
+      summary: "Add file tag"
+      description: "Add tag to file\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of a file"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/FileAddTagReq"
+        x-exportParamName: "Body"
+      responses:
+        200:
+          description: "File tag"
+          schema:
+            $ref: "#/definitions/FileTagResp"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /file/download-link:
+    post:
+      tags:
+      - "File"
+      summary: "Get download link"
+      description: "Get files download link\n"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/IdsReq"
+        x-exportParamName: "Body"
+      responses:
+        200:
+          description: "Download link id"
+          schema:
+            $ref: "#/definitions/IdResp"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /file/download/{id}:
+    get:
+      tags:
+      - "File"
+      summary: "Download file"
+      description: "Download file content\n"
+      produces:
+      - "application/octet-stream"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of a file"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      responses:
+        200:
+          description: "File content"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /file/search:
+    post:
+      tags:
+      - "File"
+      summary: "Search files"
+      description: "Search files\n"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/SearchReq"
+        x-exportParamName: "Body"
+      responses:
+        200:
+          description: "Files list"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/FileResp"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /file/preview/{id}:
+    get:
+      tags:
+      - "File"
+      summary: "File preview"
+      description: "Get file preview metadata\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of a file"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      responses:
+        200:
+          description: "Preview metadata"
+          schema:
+            $ref: "#/definitions/FilePreviewResp"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /file/diff/{id}:
+    get:
+      tags:
+      - "File"
+      summary: "File diff"
+      description: "Get file changes diff\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of a file"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      - name: "from"
+        in: "query"
+        required: true
+        type: "number"
+        x-exportParamName: "From"
+      - name: "to"
+        in: "query"
+        required: false
+        type: "number"
+        x-exportParamName: "To"
+      responses:
+        200:
+          description: "File diffs list"
+          schema:
+            $ref: "#/definitions/FileDiffResp"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /file/modify:
+    post:
+      tags:
+      - "File"
+      - "Upload"
+      summary: "Get file modify link"
+      description: "Get file modify link\n"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/FileModifyReq"
+        x-exportParamName: "Body"
+      responses:
+        200:
+          description: "Modify link metadata"
+          schema:
+            $ref: "#/definitions/FileModifyResp"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /group:
+    get:
+      tags:
+      - "Group"
+      summary: "List user groups"
+      description: "List user groups\n"
+      parameters: []
+      responses:
+        200:
+          description: "Group list"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/GroupResp"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /group/metadata/{id}:
+    get:
+      tags:
+      - "Group"
+      summary: "Group metadata"
+      description: "Get group metadata\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of a group"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      responses:
+        200:
+          description: "Group metadata"
+          schema:
+            $ref: "#/definitions/GroupResp"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /pgp-key/recipients:
+    post:
+      tags:
+      - "PGP"
+      summary: "Recipients PGP keys"
+      description: "Get public PGP keys for given recipients\n"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/IdsReq"
+        x-exportParamName: "Body"
+      responses:
+        200:
+          description: "PGP keys list"
+          schema:
+            type: "array"
+            title: "PgpKeyRecipientsResp"
+            items:
+              $ref: "#/definitions/PgpKeyRecipientsRespItems"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /pgp-key/metadata/{id}:
+    get:
+      tags:
+      - "PGP"
+      summary: "PGP key metadata"
+      description: "Get PGP key metadata\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of a PGP key"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      responses:
+        200:
+          description: "PGP key metadata"
+          schema:
+            $ref: "#/definitions/PgpKeyResp"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /pgp-key/create:
+    post:
+      tags:
+      - "PGP"
+      summary: "Create PGP key"
+      description: "Create new PGP key\n"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/PgpCreateReq"
+        x-exportParamName: "Body"
+      responses:
+        201:
+          description: "PGP key metadata"
+          schema:
+            $ref: "#/definitions/PgpKeyResp"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /pgp-key/edit/{id}:
+    post:
+      tags:
+      - "PGP"
+      summary: "Edit PGP key"
+      description: "Edit PGP key\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of a PGP key"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      - in: "body"
+        name: "body"
+        required: false
+        schema:
+          $ref: "#/definitions/PgpEditReq"
+        x-exportParamName: "Body"
+      responses:
+        200:
+          description: "PGP key metadata"
+          schema:
+            $ref: "#/definitions/PgpKeyResp"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /pgp-key/delete/{id}:
+    get:
+      tags:
+      - "PGP"
+      summary: "Delete PGP key"
+      description: "Delete PGP key\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of a PGP key"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      responses:
+        200:
+          description: "PGP key id"
+          schema:
+            $ref: "#/definitions/IdResp"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /pgp-key/request/{ids[]}:
+    get:
+      tags:
+      - "PGP"
+      summary: "Request PGP key"
+      description: "Send request PGP key email to user or contact\n"
+      parameters:
+      - name: "ids[]"
+        in: "path"
+        description: "ID of contact"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Ids"
+      responses:
+        202:
+          description: "Job response object"
+          schema:
+            $ref: "#/definitions/JobResp"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /key-request/metadata/{id}:
+    get:
+      tags:
+      - "PGP"
+      summary: "PGP key request metadata"
+      description: "Get PGP key request metadata\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of the PGP key request"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      responses:
+        200:
+          description: "PGP key request metadata"
+          schema:
+            $ref: "#/definitions/KeyRequestMetadataResp"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /key-request/respond/{id}:
+    post:
+      tags:
+      - "PGP"
+      summary: "Respond to PGP key request"
+      description: "Respond to PGP key request with PGP key\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of a PGP key request"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/KeyRequestRespondReq"
+        x-exportParamName: "Body"
+      responses:
+        202:
+          description: "Job response object"
+          schema:
+            $ref: "#/definitions/JobResp"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /reset-password/request:
+    post:
+      tags:
+      - "Password Reset"
+      summary: "Request password reset"
+      description: "Send request password reset email\n"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/ResetPasswordRequestReq"
+        x-exportParamName: "Body"
+      responses:
+        200:
+          description: "Response object for anonymous user"
+          schema:
+            $ref: "#/definitions/ResetPasswordRequestResp"
+        202:
+          description: "Job response object for authorized user"
+          schema:
+            $ref: "#/definitions/JobResp"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+      security: []
+  /reset-password/metadata/{id}:
+    get:
+      tags:
+      - "Password Reset"
+      summary: "Password reset request metadata"
+      description: "Get password reset request metadata\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of the password reset request"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      responses:
+        200:
+          description: "Password reset request id"
+          schema:
+            $ref: "#/definitions/ResetPasswordMetadataResp"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /reset-password/reset/{id}:
+    post:
+      tags:
+      - "Password Reset"
+      summary: "Reset password"
+      description: "Reset password\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of a password reset request"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/ResetPasswordResetReq"
+        x-exportParamName: "Body"
+      responses:
+        200:
+          description: "Password reset request id"
+          schema:
+            $ref: "#/definitions/IdResp"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /preview/image/{id}:
+    get:
+      tags:
+      - "Preview"
+      summary: "File image preview"
+      description: "Get file image preview\n"
+      produces:
+      - "image/png"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "File ID"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      - name: "size"
+        in: "query"
+        required: false
+        type: "string"
+        enum:
+        - "small"
+        - "large"
+        x-exportParamName: "Size"
+      responses:
+        200:
+          description: "Image content"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /preview/video/{id}:
+    get:
+      tags:
+      - "Preview"
+      summary: "File video preview"
+      description: "Get file video preview\n"
+      produces:
+      - "image/mp4"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "File ID"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      responses:
+        200:
+          description: "Video content"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /preview/document_pdf/{id}:
+    get:
+      tags:
+      - "Preview"
+      summary: "File document page preview"
+      description: "Get file document page preview\n"
+      produces:
+      - "image/png"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "File document preview page ID"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      responses:
+        200:
+          description: "PDF content"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /profile:
+    get:
+      tags:
+      - "Profile"
+      summary: "Profile metadata"
+      description: "Get profile metadata\n"
+      parameters: []
+      responses:
+        200:
+          description: "Profile metadata"
+          schema:
+            $ref: "#/definitions/ProfileResp"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /profile/set:
+    post:
+      tags:
+      - "Profile"
+      summary: "Update profile metadata"
+      description: "Update profile metadata\n"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: false
+        schema:
+          $ref: "#/definitions/ProfileSetReq"
+        x-exportParamName: "Body"
+      responses:
+        200:
+          description: "Updated profile metadata"
+          schema:
+            $ref: "#/definitions/ProfileSetResp"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /profile/set-password:
+    post:
+      tags:
+      - "Profile"
+      summary: "Change profile password"
+      description: "Change profile password\n"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/ProfileSetPasswordReq"
+        x-exportParamName: "Body"
+      responses:
+        200:
+          description: "Change profile password"
+          schema:
+            $ref: "#/definitions/ProfileSetPasswordResp"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /profile/info:
+    get:
+      tags:
+      - "Profile"
+      summary: "Additional profile info"
+      description: "Get additional profile info\n"
+      parameters: []
+      responses:
+        200:
+          description: "Profile info"
+          schema:
+            $ref: "#/definitions/ProfileInfoResp"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /profile/2fa/generate:
+    get:
+      tags:
+      - "Profile"
+      summary: "Generate new 2fa code"
+      description: "Generate new 2fa code QR code\n"
+      parameters: []
+      responses:
+        200:
+          description: "Image in base64 with QR code"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /profile/set-mfa:
+    post:
+      tags:
+      - "Profile"
+      - "MFA"
+      summary: "Set MFA enabled for account"
+      description: "Set multi factor autorization method (MFA) enabled for account\n"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/ProfileSetMfaReq"
+        x-exportParamName: "Body"
+      responses:
+        200:
+          description: "IDs of closed sessions"
+          schema:
+            $ref: "#/definitions/ProfileSetMfaResp"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /profile/remove-mfa:
+    post:
+      tags:
+      - "Profile"
+      - "MFA"
+      summary: "Remove MFA for account"
+      description: "Remove MFA for account if it was not forced by admin\n"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/ProfileRemoveMfaReq"
+        x-exportParamName: "Body"
+      responses:
+        200:
+          description: "success response"
+          schema:
+            $ref: "#/definitions/ProfileRemoveMfaResp"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /project-folder:
+    get:
+      tags:
+      - "Project Folder"
+      summary: "List of valid project folder for current user"
+      description: "Get list of project folders\n"
+      parameters: []
+      responses:
+        200:
+          description: "Project folders list"
+          schema:
+            type: "array"
+            title: "ProjectFoldersListResp"
+            items:
+              $ref: "#/definitions/ProjectFoldersListRespItem"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /project-folder/create:
+    post:
+      tags:
+      - "Project Folder"
+      summary: "Create project folder"
+      description: "Create new project folder\n"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/PfcreateReq"
+        x-exportParamName: "Body"
+      responses:
+        201:
+          description: "Project Folder"
+          schema:
+            $ref: "#/definitions/PfCreateResp"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /project-folder/project-users:
+    post:
+      tags:
+      - "Project Folder"
+      summary: "List of project folders for users"
+      description: "List of project folders for users\n"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/PfUsersListReq"
+        x-exportParamName: "Body"
+      responses:
+        200:
+          description: "Project Folder"
+          schema:
+            type: "array"
+            title: "PfUsersListResp"
+            items:
+              $ref: "#/definitions/PfUsersListRespItems"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /project-folder/users/{id}:
+    get:
+      tags:
+      - "Project Folder"
+      summary: "List project folder users"
+      description: "List project folder users\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "project folder ID"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      responses:
+        200:
+          description: "Project Folder Users List"
+          schema:
+            type: "array"
+            title: "PfUsersResp"
+            items:
+              $ref: "#/definitions/UserPermissionResp"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /project-folder/set-users:
+    post:
+      tags:
+      - "Project Folder"
+      summary: "Add users to project folders. Replace exists permissions if users\
+        \ exists"
+      description: "Set users to project folders\n"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/PfSetUsersReq"
+        x-exportParamName: "Body"
+      responses:
+        200:
+          description: "Set users"
+          schema:
+            type: "array"
+            title: "PfSetUsersResp"
+            items:
+              $ref: "#/definitions/PfSetUsersRespItems"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        404:
+          description: "Users not set to project folders"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /project-folder/metadata/{id}:
+    get:
+      tags:
+      - "Project Folder"
+      summary: "Project folder metadata"
+      description: "Project folder metadata\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "project folder ID"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      responses:
+        200:
+          description: "Project folder metadata"
+          schema:
+            $ref: "#/definitions/PfMetadataResp"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /project-folder/add-users/{id}:
+    post:
+      tags:
+      - "Project Folder"
+      summary: "Add project folder users"
+      description: "Add project folder users\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/PfaddUsersReq"
+        x-exportParamName: "Body"
+      responses:
+        200:
+          description: "Project Folder Users List"
+          schema:
+            type: "array"
+            title: "PfAddUsersResp"
+            items:
+              $ref: "#/definitions/UserPermissionResp"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /project-folder/edit-users/{id}:
+    post:
+      tags:
+      - "Project Folder"
+      summary: "Update project folder users"
+      description: "Update project folder users\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/PfeditUsersReq"
+        x-exportParamName: "Body"
+      responses:
+        200:
+          description: "Project Folder Users List"
+          schema:
+            type: "array"
+            title: "PfEditUsersResp"
+            items:
+              $ref: "#/definitions/UserPermissionResp"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /project-folder/delete-users/:
+    post:
+      tags:
+      - "Project Folder"
+      summary: "Remove project folder users"
+      description: "Remove project folder users\n"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/PfdeleteUsersReq"
+        x-exportParamName: "Body"
+      responses:
+        200:
+          description: "Project Folder Users IDs"
+          schema:
+            type: "array"
+            title: "PfDeleteUsersResp"
+            items:
+              $ref: "#/definitions/PfDeleteUsersRespItems"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /project-folder/delete/{id}:
+    get:
+      tags:
+      - "Project Folder"
+      summary: "Remove project folder"
+      description: "Remove project folder\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      responses:
+        200:
+          description: "Project Folder"
+          schema:
+            $ref: "#/definitions/IdResp"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /settings:
+    get:
+      tags:
+      - "Site Settings"
+      summary: "Get site settings"
+      description: "Get site settings\n"
+      parameters: []
+      responses:
+        200:
+          description: "Site Settings"
+          schema:
+            $ref: "#/definitions/SettingsResp"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /settings/set:
+    post:
+      tags:
+      - "Site Settings"
+      summary: "Set site settings"
+      description: "Set site settings\n"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/SettingsSetReq"
+        x-exportParamName: "Body"
+      responses:
+        200:
+          description: "Site Settings"
+          schema:
+            $ref: "#/definitions/SettingsResp"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /settings/upload-logo-link:
+    get:
+      tags:
+      - "Site Settings"
+      - "Upload"
+      summary: "Get logo upload link"
+      description: "Get account logo upload link\n"
+      parameters: []
+      responses:
+        200:
+          description: "Upload logo link id"
+          schema:
+            $ref: "#/definitions/SettingsUploadLogoLinkResp"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /settings/auth-methods:
+    get:
+      tags:
+      - "Site Settings"
+      summary: "Get account auth-methods settings"
+      description: "Get account auth-methods settings\n"
+      parameters: []
+      responses:
+        200:
+          description: "Account auth-methods settings"
+          schema:
+            type: "array"
+            title: "SettingsAuthMethodsResp"
+            items:
+              $ref: "#/definitions/SettingsAuthMethodsRespItems"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /upload/link:
+    post:
+      tags:
+      - "Upload"
+      summary: "Get file upload link"
+      description: "Get file upload link\n"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/UploadLinkReq"
+        x-exportParamName: "Body"
+      responses:
+        200:
+          description: "Upload link metadata"
+          schema:
+            $ref: "#/definitions/FileModifyResp"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /upload/finalize/{id}:
+    get:
+      tags:
+      - "Upload"
+      summary: "Finalize chunked file upload"
+      description: "Finalize chunked file upload\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "Upload key"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      - name: "mtime"
+        in: "query"
+        description: "File modification timestamp"
+        required: false
+        type: "number"
+        format: "timestamp"
+        x-exportParamName: "Mtime"
+      responses:
+        200:
+          description: "Upload link metadata"
+          schema:
+            $ref: "#/definitions/UploadFinalizeResp"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /user:
+    get:
+      tags:
+      - "User"
+      summary: "List users"
+      description: "List users\n"
+      parameters: []
+      responses:
+        200:
+          description: "Users list"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/UserResp"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /user/metadata/{id}:
+    get:
+      tags:
+      - "User"
+      summary: "User metadata"
+      description: "Get user metadata\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of a user"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      responses:
+        200:
+          description: "User metadata"
+          schema:
+            $ref: "#/definitions/UserResp"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /user/create:
+    post:
+      tags:
+      - "User"
+      summary: "Create user"
+      description: "Create new user\n"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/UserCreateReq"
+        x-exportParamName: "Body"
+      responses:
+        201:
+          description: "User metadata"
+          schema:
+            $ref: "#/definitions/UserResp"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+          examples:
+            msg: "Email is already taken"
+            code: 31
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /user/edit:
+    post:
+      tags:
+      - "User"
+      summary: "User metadata"
+      description: "Edit user\n"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/UserEditReq"
+        x-exportParamName: "Body"
+      responses:
+        200:
+          description: "User metadata"
+          schema:
+            type: "array"
+            title: "UserEditResp"
+            items:
+              $ref: "#/definitions/UserResp"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /user/delete:
+    post:
+      tags:
+      - "User"
+      summary: "Delete users"
+      description: "Delete users\n"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/UserDeleteReq"
+        x-exportParamName: "Body"
+      responses:
+        202:
+          description: "Job response object"
+          schema:
+            $ref: "#/definitions/JobResp"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /user/pgp-key/{id}:
+    get:
+      tags:
+      - "User"
+      - "PGP"
+      summary: "User PGP key"
+      description: "Get user PGP key\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of a user"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      responses:
+        200:
+          description: "PGP key metadata object"
+          schema:
+            $ref: "#/definitions/PgpKeyResp"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /user/group:
+    get:
+      tags:
+      - "User"
+      - "Group"
+      summary: "All user groups"
+      description: "List all user groups\n"
+      parameters: []
+      responses:
+        200:
+          description: "Groups list"
+          schema:
+            type: "array"
+            title: "UserGroupResp"
+            items:
+              $ref: "#/definitions/Group"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /user/signup:
+    post:
+      tags:
+      - "User"
+      summary: "Signup existing user"
+      description: "Signup existing user\n"
+      produces:
+      - "raw"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/UserSignupReq"
+        x-exportParamName: "Body"
+      responses:
+        200:
+          description: "Successful signup"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+          examples:
+            msg: "Email is already taken"
+            code: 31
+      security: []
+  /user/set-mfa:
+    post:
+      tags:
+      - "User"
+      - "MFA"
+      summary: "Set MFA enabled for user"
+      description: "Set multi factor autorization method (MFA) enabled for user\n"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/UserSetMfaReq"
+        x-exportParamName: "Body"
+      responses:
+        200:
+          description: "success response"
+          schema:
+            $ref: "#/definitions/ProfileRemoveMfaResp"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /user/remove-mfa:
+    post:
+      tags:
+      - "User"
+      - "MFA"
+      summary: "Remove MFA for user"
+      description: "Remove MFA for user\n"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/UserRemoveMfaReq"
+        x-exportParamName: "Body"
+      responses:
+        200:
+          description: "success response"
+          schema:
+            $ref: "#/definitions/ProfileRemoveMfaResp"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /widget/metadata/{id}:
+    get:
+      tags:
+      - "Widget"
+      summary: "Widget metadata"
+      description: "Get widget metadata\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of a widget"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      responses:
+        200:
+          description: "Successful signup"
+          schema:
+            $ref: "#/definitions/IdResp"
+      security: []
+  /widget/upload-link/{id}:
+    post:
+      tags:
+      - "Widget"
+      summary: "Widget upload link"
+      description: "Get widget upload link\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of a widget"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      - in: "body"
+        name: "body"
+        required: false
+        schema:
+          $ref: "#/definitions/WidgetUploadLinkReq"
+        x-exportParamName: "Body"
+      responses:
+        200:
+          description: "Upload link metadata"
+          schema:
+            $ref: "#/definitions/WidgetUploadLinkResp"
+      security: []
+  /widget/finalize-upload/{id}:
+    get:
+      tags:
+      - "Widget"
+      summary: "Finalize widget chunked file upload"
+      description: "Finalize widget chunked file upload\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of a widget"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      responses:
+        200:
+          description: "Upload link metadata"
+          schema:
+            $ref: "#/definitions/WidgetFinalizeUploadResp"
+      security: []
+  /share/recipients:
+    get:
+      tags:
+      - "Share"
+      summary: "Share recipinets"
+      description: "List share available recipients\n"
+      parameters:
+      - name: "email"
+        in: "query"
+        description: "Start of recipient email"
+        required: false
+        type: "string"
+        x-exportParamName: "Email"
+      responses:
+        200:
+          description: "Recipient list"
+          schema:
+            $ref: "#/definitions/ShareRecipientsResp"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /share/create:
+    post:
+      tags:
+      - "Share"
+      summary: "Create share"
+      description: "Create share\n"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/ShareCreateReq"
+        x-exportParamName: "Body"
+      responses:
+        201:
+          description: "Share id"
+          schema:
+            $ref: "#/definitions/ShareCreateResp"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /share/login-pin:
+    post:
+      tags:
+      - "Share"
+      summary: "Login with pin on share"
+      description: "Login with pin on share protected with pin\n"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/ShareLoginPinReq"
+        x-exportParamName: "Body"
+      responses:
+        200:
+          description: "Logged in with pin successfully"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /quicklink/create:
+    post:
+      tags:
+      - "Share"
+      summary: "Create quicklink"
+      description: "Creating public share with no recipients\n"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/QuicklinkCreateReq"
+        x-exportParamName: "Body"
+      responses:
+        201:
+          description: "Share id, expires"
+          schema:
+            $ref: "#/definitions/QuicklinkCreateResp"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /quicklink/revoke/{id}:
+    get:
+      tags:
+      - "Share"
+      summary: "Revoke quicklink"
+      description: "Revoke quicklink\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "Share action ID"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      responses:
+        200:
+          description: "Revoked share action ID"
+          schema:
+            $ref: "#/definitions/IdResp"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /quicklink/login-pin:
+    post:
+      tags:
+      - "Share"
+      summary: "Login with PIN on quicklink"
+      description: "Login on quicklink protected with PIN\n"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/QuicklinkLoginPinReq"
+        x-exportParamName: "Body"
+      responses:
+        200:
+          description: "Logged in with pin successfully"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /tracking/activity:
+    get:
+      tags:
+      - "ActivityLog"
+      summary: "Activity log"
+      description: "List activity (action) log. For details - https://dev.maytech.net/wiki/display/ISV3/Activity+Log\n"
+      parameters:
+      - name: "id"
+        in: "query"
+        description: "Log id"
+        required: false
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      - name: "user_id"
+        in: "query"
+        description: "User id"
+        required: false
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "UserId"
+      - name: "limit"
+        in: "query"
+        description: "Rows per page"
+        required: false
+        type: "number"
+        default: 100.0
+        maximum: 1000
+        minimum: 1
+        x-exportParamName: "Limit"
+      - name: "from"
+        in: "query"
+        description: "UTC timestamp"
+        required: false
+        type: "number"
+        default: 0.0
+        x-exportParamName: "From"
+      - name: "to"
+        in: "query"
+        description: "UTC timestamp"
+        required: false
+        type: "number"
+        x-exportParamName: "To"
+      responses:
+        200:
+          description: "Activity log list"
+          schema:
+            type: "array"
+            title: "TrackingActivityResp"
+            items:
+              $ref: "#/definitions/TrackingActivityRespItems"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /tracking/csv:
+    get:
+      tags:
+      - "ActivityLog"
+      summary: "Download CSV file with Activity Log"
+      description: "Download CSV file content with Activity Log. For details - https://dev.maytech.net/wiki/display/ISV3/Activity+Log\n"
+      produces:
+      - "text/csv"
+      parameters:
+      - name: "user_id"
+        in: "query"
+        description: "User id"
+        required: false
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "UserId"
+      - name: "from"
+        in: "query"
+        description: "UTC timestamp"
+        required: false
+        type: "number"
+        x-exportParamName: "From"
+      - name: "to"
+        in: "query"
+        description: "UTC timestamp"
+        required: false
+        type: "number"
+        x-exportParamName: "To"
+      responses:
+        200:
+          description: "File content"
+          schema:
+            type: "array"
+            title: "TrackingCSVResp"
+            items:
+              $ref: "#/definitions/TrackingCSVRespItems"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /tracking/files/{id}:
+    get:
+      tags:
+      - "ActivityLog"
+      summary: "Share action files"
+      description: "List share action files\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "Share action ID"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      responses:
+        200:
+          description: "List of share files"
+          schema:
+            type: "array"
+            title: "TrackingFilesResp"
+            items:
+              $ref: "#/definitions/TrackingFilesRespItems"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /tracking/downloads/{id}:
+    get:
+      tags:
+      - "ActivityLog"
+      summary: "Share action file downloads"
+      description: "List share action file downloads\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "Shared file ID"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      responses:
+        200:
+          description: "List of share file downloads"
+          schema:
+            type: "array"
+            title: "TrackingDownloadsResp"
+            items:
+              $ref: "#/definitions/TrackingDownloadsRespItems"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /tracking/:
+    get:
+      tags:
+      - "Share"
+      summary: "List share actions"
+      description: "List share actions\n"
+      parameters:
+      - name: "date"
+        in: "query"
+        description: "Share date timestamp"
+        required: false
+        type: "number"
+        x-exportParamName: "Date"
+      responses:
+        200:
+          description: "List of shares"
+          schema:
+            type: "array"
+            title: "TrackingResp"
+            items:
+              $ref: "#/definitions/TrackingRespItems"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /tracking/{id}:
+    get:
+      tags:
+      - "Share"
+      summary: "List share actions"
+      description: "List share actions\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "User id"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      - name: "date"
+        in: "query"
+        description: "Share date timestamp"
+        required: false
+        type: "number"
+        x-exportParamName: "Date"
+      responses:
+        200:
+          description: "List of shares"
+          schema:
+            type: "array"
+            title: "TrackingIdResp"
+            items:
+              $ref: "#/definitions/TrackingIdRespItems"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /files-return/send:
+    post:
+      tags:
+      - "Share"
+      summary: "Send return files share"
+      description: "Create and send return files share\n"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/FilesReturnSendReq"
+        x-exportParamName: "Body"
+      responses:
+        202:
+          description: "Job id"
+          schema:
+            $ref: "#/definitions/JobResp"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /files-return/metadata/{id}:
+    get:
+      tags:
+      - "Share"
+      summary: "Get return files metadata"
+      description: "Get return files metadata\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "Share action ID"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      responses:
+        200:
+          description: "Share metadata"
+          schema:
+            $ref: "#/definitions/FilesReturnMetadataResp"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /files-return/upload-link/{id}:
+    post:
+      tags:
+      - "Share"
+      summary: "Get return files upload link"
+      description: "Get return files upload link\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "Share action ID"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/FilesReturnUploadLinkReq"
+        x-exportParamName: "Body"
+      responses:
+        200:
+          description: "File upload info"
+          schema:
+            $ref: "#/definitions/FilesReturnUploadLinkResp"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /files-return/makedir/{id}:
+    post:
+      tags:
+      - "Share"
+      summary: "Return files makedir"
+      description: "Create folder via return files\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "Share action ID"
+        required: true
+        type: "string"
+        x-exportParamName: "Id"
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/FilesReturnMakedirReq"
+        x-exportParamName: "Body"
+      responses:
+        201:
+          description: "Folder metadata"
+          schema:
+            $ref: "#/definitions/FilesReturnMakedirResps"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /share/download-info/{id}:
+    get:
+      tags:
+      - "Share"
+      summary: "Share download info"
+      description: "Get share download info\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "Share action ID"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      responses:
+        200:
+          description: "Share download info"
+          schema:
+            $ref: "#/definitions/ShareDownloadInfoResp"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /share/files/{id}:
+    get:
+      tags:
+      - "Share"
+      summary: "Share files"
+      description: "List share files\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "Share action ID"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      responses:
+        200:
+          description: "Share download info"
+          schema:
+            type: "array"
+            title: "ShareFilesResp"
+            items:
+              $ref: "#/definitions/ShareFilesRespItems"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /share/download-link/{id}:
+    get:
+      tags:
+      - "Share"
+      summary: "Download link"
+      description: "Download link for all files\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "Share action ID"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      responses:
+        200:
+          description: "All share files download link id"
+          schema:
+            $ref: "#/definitions/IdResp"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+    post:
+      tags:
+      - "Share"
+      summary: "Download link"
+      description: "Download link for selected files\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "Share action ID"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      - in: "body"
+        name: "body"
+        required: false
+        schema:
+          $ref: "#/definitions/ShareDownloadLinkReq"
+        x-exportParamName: "Body"
+      responses:
+        200:
+          description: "Selected share files download link id"
+          schema:
+            $ref: "#/definitions/IdResp"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /share/download/{id}:
+    get:
+      tags:
+      - "Share"
+      summary: "Download share files"
+      description: "Download share files content\n"
+      produces:
+      - "application/octet-stream"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "Download link ID"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      - name: "files"
+        in: "query"
+        description: "File ids"
+        required: false
+        type: "array"
+        items:
+          type: "string"
+          format: "uuid"
+        x-exportParamName: "Files"
+      responses:
+        200:
+          description: "Share files content"
+      security: []
+  /share/revoke/{id}:
+    get:
+      tags:
+      - "Share"
+      summary: "Revoke share"
+      description: "Revoke share\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "Share action ID"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      responses:
+        200:
+          description: "Revoked share action ID"
+          schema:
+            $ref: "#/definitions/IdResp"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /share/preview/{id}:
+    get:
+      tags:
+      - "Share"
+      summary: "Preview share file"
+      description: "Preview share file\n"
+      produces:
+      - "image/png"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "Share file ID"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      - name: "size"
+        in: "query"
+        required: false
+        type: "string"
+        enum:
+        - "small"
+        - "large"
+        x-exportParamName: "Size"
+      responses:
+        200:
+          description: "File preview data"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /share/request:
+    post:
+      tags:
+      - "Share"
+      summary: "Request share"
+      description: "Request share\n"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/ShareRequestReq"
+        x-exportParamName: "Body"
+      responses:
+        200:
+          description: "Return page metadata"
+          schema:
+            $ref: "#/definitions/ShareRequestResp"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /share/send-request/{id}:
+    post:
+      tags:
+      - "Share"
+      summary: "DEPRECATED! Use /share/request instead."
+      description: "Send share request email\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "Share Request ID"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      - in: "body"
+        name: "body"
+        required: false
+        schema:
+          $ref: "#/definitions/ShareSendRequestReq"
+        x-exportParamName: "Body"
+      responses:
+        202:
+          description: "Job response object"
+          schema:
+            $ref: "#/definitions/JobResp"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+      deprecated: true
+  /service:
+    get:
+      tags:
+      - "Service"
+      summary: "List services"
+      description: "List services\n"
+      parameters: []
+      responses:
+        200:
+          description: "List of services"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/ServiceResp"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /service/metadata/{id}:
+    get:
+      tags:
+      - "Service"
+      summary: "Service metadata"
+      description: "Get service metadata\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "Service ID"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      responses:
+        200:
+          description: "Service metadata"
+          schema:
+            $ref: "#/definitions/ServiceResp"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /automation:
+    get:
+      tags:
+      - "Automation"
+      summary: "List automations"
+      description: "List of all automations\n"
+      parameters: []
+      responses:
+        200:
+          description: "List of automations"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/AutomationResp"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /automation/metadata/{id}:
+    get:
+      tags:
+      - "Automation"
+      summary: "Automation metadata"
+      description: "Get automation metadata\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of an automation"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      responses:
+        200:
+          description: "Automation metadata"
+          schema:
+            $ref: "#/definitions/AutomationResp"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /automation/create:
+    post:
+      tags:
+      - "Automation"
+      summary: "Create automation"
+      description: "Create new automation\n"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/AutomationCreateReq"
+        x-exportParamName: "Body"
+      responses:
+        201:
+          description: "Automation metadata"
+          schema:
+            $ref: "#/definitions/AutomationResp"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /automation/edit/:
+    post:
+      tags:
+      - "Automation"
+      summary: "Edit automation"
+      description: "Edit automation\n"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/AutomationEditReq"
+        x-exportParamName: "Body"
+      responses:
+        200:
+          description: "Automation metadata"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/AutomationResp"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /automation/delete:
+    post:
+      tags:
+      - "Automation"
+      summary: "Delete automations"
+      description: "Delete automations\n"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/IdsReq"
+        x-exportParamName: "Body"
+      responses:
+        200:
+          description: "Deleted IDs"
+          schema:
+            $ref: "#/definitions/AutomationDeleteResp"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /inbox:
+    get:
+      tags:
+      - "Inbox"
+      summary: "User`s inbox"
+      description: "User`s shares and file request list\n"
+      parameters:
+      - name: "id"
+        in: "query"
+        description: "Inbox id"
+        required: false
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      - name: "limit"
+        in: "query"
+        description: "Rows per page"
+        required: false
+        type: "number"
+        default: 100.0
+        maximum: 1000
+        minimum: 1
+        x-exportParamName: "Limit"
+      - name: "from"
+        in: "query"
+        description: "UTC timestamp"
+        required: false
+        type: "number"
+        default: 0.0
+        x-exportParamName: "From"
+      - name: "to"
+        in: "query"
+        description: "UTC timestamp"
+        required: false
+        type: "number"
+        x-exportParamName: "To"
+      responses:
+        200:
+          description: "Activity log list"
+          schema:
+            type: "array"
+            title: "InboxResp"
+            items:
+              $ref: "#/definitions/InboxRespItems"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /ssh-key:
+    get:
+      tags:
+      - "SSH-Key"
+      summary: "List ssh keys"
+      description: "List ssh keys\n"
+      parameters: []
+      responses:
+        200:
+          description: "SSH-Key list"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/SshKeyResp"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /ssh-key/metadata/{id}:
+    get:
+      tags:
+      - "SSH-Key"
+      summary: "SSH key metadata"
+      description: "Get SSH key metadata\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of a SSH key"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      responses:
+        200:
+          description: "SSH key metadata"
+          schema:
+            $ref: "#/definitions/SshKeyResp"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /ssh-key/create:
+    post:
+      tags:
+      - "SSH-Key"
+      summary: "Create SSH key"
+      description: "Create new SSH key\n"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/SshKeyCreateReq"
+        x-exportParamName: "Body"
+      responses:
+        201:
+          description: "SSH key metadata"
+          schema:
+            $ref: "#/definitions/SshKeyResp"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /ssh-key/edit:
+    post:
+      tags:
+      - "SSH-Key"
+      summary: "Edit SSH key"
+      description: "Edit SSH key\n"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/SshKeyEditReq"
+        x-exportParamName: "Body"
+      responses:
+        200:
+          description: "SSH key metadata"
+          schema:
+            $ref: "#/definitions/SshKeyResp"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /ssh-key/delete:
+    post:
+      tags:
+      - "SSH-Key"
+      summary: "Delete SSH key"
+      description: "Delete SSH key\n"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/SshKeyDeleteReq"
+        x-exportParamName: "Body"
+      responses:
+        200:
+          description: "SSH-Key id"
+          schema:
+            $ref: "#/definitions/IdResp"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /ssh-key/delete/{id}:
+    get:
+      tags:
+      - "SSH-Key"
+      summary: "Delete SSH key"
+      description: "Delete SSH key\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of a SSH key"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      responses:
+        200:
+          description: "SSH-Key id"
+          schema:
+            $ref: "#/definitions/IdResp"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /billing/upgrade:
+    post:
+      tags:
+      - "Billing"
+      summary: "Upgrade"
+      description: "Upgrade\n"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/BillingUpgradeReq"
+        x-exportParamName: "Body"
+      responses:
+        200:
+          description: "success response"
+          schema:
+            $ref: "#/definitions/BillingUpgradeResp"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+  /check/ping:
+    get:
+      tags:
+      - "Check"
+      summary: "Ping(action)"
+      description: "Ping(action)\n"
+      parameters:
+      - name: "api_key"
+        in: "query"
+        description: "API key"
+        required: false
+        type: "string"
+        x-exportParamName: "ApiKey"
+      responses:
+        200:
+          description: "Ping response"
+          schema:
+            $ref: "#/definitions/CheckPingResp"
+      security: []
+securityDefinitions:
+  api_key:
+    type: "apiKey"
+    name: "X-Auth-Token"
+    in: "header"
+  basicAuth:
+    description: "HTTP Basic Authentication. Works over `HTTP` and `HTTPS`."
+    type: "basic"
+definitions:
+  SessionLoginResp:
+    type: "object"
+    properties:
+      session_id:
+        type: "string"
+        format: "uuid"
+        description: "New session id"
+    example:
+      session_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+  SessionUnblockCaptchaResp:
+    type: "object"
+    properties:
+      valid:
+        type: "boolean"
+    example:
+      valid: true
+  IdsReq:
+    type: "object"
+    required:
+    - "ids"
+    properties:
+      ids:
+        type: "array"
+        items:
+          type: "string"
+          format: "uuid"
+          description: "UUID"
+    example:
+      ids:
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+  IdResp:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+        description: "UUID"
+    example:
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+  IdsResp:
+    type: "object"
+    properties:
+      ids:
+        type: "array"
+        items:
+          type: "string"
+          format: "uuid"
+    example:
+      ids:
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+  CopyMoveFilesReq:
+    type: "object"
+    required:
+    - "ids"
+    - "target"
+    properties:
+      ids:
+        type: "array"
+        items:
+          type: "string"
+          format: "uuid"
+      target:
+        type: "string"
+        format: "uuid"
+      resolve:
+        type: "boolean"
+        default: true
+    example:
+      resolve: true
+      ids:
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      target: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+  FileResp:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+        description: "File ID"
+      created:
+        type: "number"
+        description: "File creation timestamp"
+      modified:
+        type: "number"
+        description: "File modification timestamp"
+      name:
+        type: "string"
+        description: "File name"
+      parent_id:
+        type: "string"
+        format: "uuid"
+        description: "File parent ID"
+      size:
+        type: "number"
+        format: "int"
+        description: "File size in bytes"
+      modified_ms:
+        type: "number"
+        format: "timestamp"
+        description: "File modification timestamp"
+      type:
+        type: "string"
+        description: "File type"
+      metadata:
+        type: "object"
+        description: "File metadata json"
+        properties: {}
+      operations:
+        type: "number"
+        format: "int"
+        description: "File operations bitmask"
+      sub_type:
+        type: "string"
+        description: "File origin info"
+    example:
+      metadata: "{}"
+      operations: 4.1456080298839363962315474054776132106781005859375
+      size: 3.61607674925191080461672754609026014804840087890625
+      sub_type: "sub_type"
+      created: 7.061401241503109105224211816675961017608642578125
+      parent_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      name: "name"
+      modified: 9.301444243932575517419536481611430644989013671875
+      modified_ms: 2.027123023002321833274663731572218239307403564453125
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      type: "type"
+  FileMetadataGetResp:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+        description: "File ID"
+      gid:
+        type: "number"
+        format: "int"
+        description: "Unix group id"
+      uid:
+        type: "number"
+        format: "int"
+        description: "Unix user id"
+      created:
+        type: "number"
+        description: "File creation timestamp"
+      modified:
+        type: "number"
+        description: "File modification timestamp"
+      name:
+        type: "string"
+        description: "File name"
+      parent_id:
+        type: "string"
+        format: "uuid"
+        description: "File parent ID"
+      size:
+        type: "number"
+        format: "int"
+        description: "File size in bytes"
+      type:
+        type: "string"
+        description: "File type"
+      metadata:
+        type: "object"
+        description: "File metadata json"
+        properties: {}
+      operations:
+        type: "number"
+        format: "int"
+        description: "File operations bitmask"
+      sub_type:
+        type: "string"
+        description: "File origin info"
+      content:
+        type: "array"
+        items:
+          $ref: "#/definitions/FileResp"
+    example:
+      metadata: "{}"
+      gid: 0.80082819046101150206595775671303272247314453125
+      created: 1.46581298050294517310021547018550336360931396484375
+      type: "type"
+      content:
+      - metadata: "{}"
+        operations: 4.1456080298839363962315474054776132106781005859375
+        size: 3.61607674925191080461672754609026014804840087890625
+        sub_type: "sub_type"
+        created: 7.061401241503109105224211816675961017608642578125
+        parent_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        name: "name"
+        modified: 9.301444243932575517419536481611430644989013671875
+        modified_ms: 2.027123023002321833274663731572218239307403564453125
+        id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        type: "type"
+      - metadata: "{}"
+        operations: 4.1456080298839363962315474054776132106781005859375
+        size: 3.61607674925191080461672754609026014804840087890625
+        sub_type: "sub_type"
+        created: 7.061401241503109105224211816675961017608642578125
+        parent_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        name: "name"
+        modified: 9.301444243932575517419536481611430644989013671875
+        modified_ms: 2.027123023002321833274663731572218239307403564453125
+        id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        type: "type"
+      uid: 6.02745618307040320615897144307382404804229736328125
+      operations: 2.3021358869347654518833223846741020679473876953125
+      size: 5.63737665663332876420099637471139430999755859375
+      sub_type: "sub_type"
+      parent_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      name: "name"
+      modified: 5.962133916683182377482808078639209270477294921875
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+  UserResp:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      parent_id:
+        type: "string"
+        format: "uuid"
+      home_id:
+        type: "string"
+        format: "uuid"
+      home_name:
+        type: "string"
+      super_admin:
+        type: "string"
+        enum:
+        - "Y"
+        - "N"
+      name:
+        type: "string"
+      email:
+        type: "string"
+        format: "email"
+      status:
+        type: "string"
+      quota:
+        type: "number"
+        format: "integer"
+      created:
+        type: "number"
+        format: "timestamp"
+      modified:
+        type: "number"
+        format: "timestamp"
+      groups:
+        type: "array"
+        items:
+          $ref: "#/definitions/Group"
+      user_operations:
+        type: "number"
+        format: "integer"
+      effective_operations:
+        type: "number"
+        format: "integer"
+      home_operations:
+        type: "number"
+        format: "integer"
+      language:
+        type: "string"
+      storage_id:
+        type: "string"
+        format: "uuid"
+      has_key:
+        type: "boolean"
+      services:
+        type: "array"
+        items:
+          $ref: "#/definitions/ShortUserService"
+      unique_login:
+        type: "string"
+      readonly:
+        type: "boolean"
+      auth_methods:
+        type: "array"
+        items:
+          type: "string"
+      last_login:
+        type: "number"
+        format: "timestamp"
+      storage_used:
+        type: "number"
+        format: "integer"
+      forced_auth:
+        type: "array"
+        items:
+          type: "string"
+    example:
+      effective_operations: 5.63737665663332876420099637471139430999755859375
+      home_operations: 2.3021358869347654518833223846741020679473876953125
+      language: "language"
+      readonly: true
+      home_name: "home_name"
+      storage_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      quota: 0.80082819046101150206595775671303272247314453125
+      modified: 1.46581298050294517310021547018550336360931396484375
+      home_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      email: "email"
+      created: 6.02745618307040320615897144307382404804229736328125
+      last_login: 7.061401241503109105224211816675961017608642578125
+      groups:
+      - metadata:
+          is_system: true
+          translation_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          visual_order: 6.02745618307040320615897144307382404804229736328125
+        name: "name"
+        id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      - metadata:
+          is_system: true
+          translation_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          visual_order: 6.02745618307040320615897144307382404804229736328125
+        name: "name"
+        id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      forced_auth:
+      - "forced_auth"
+      - "forced_auth"
+      services:
+      - service_key: "service_key"
+        id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      - service_key: "service_key"
+        id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      unique_login: "unique_login"
+      user_operations: 5.962133916683182377482808078639209270477294921875
+      has_key: true
+      parent_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      super_admin: "Y"
+      auth_methods:
+      - "auth_methods"
+      - "auth_methods"
+      name: "name"
+      status: "status"
+      storage_used: 9.301444243932575517419536481611430644989013671875
+  ShortUserService:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      service_key:
+        type: "string"
+    example:
+      service_key: "service_key"
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+  ContactResp:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      name:
+        type: "string"
+      email:
+        type: "string"
+        format: "email"
+      type:
+        type: "string"
+      status:
+        type: "string"
+      created:
+        type: "integer"
+        format: "timestamp"
+      owner_id:
+        type: "string"
+        format: "uuid"
+      readonly:
+        type: "boolean"
+      has_key:
+        type: "boolean"
+      groups:
+        type: "array"
+        items:
+          $ref: "#/definitions/Group"
+    example:
+      readonly: true
+      has_key: true
+      created: 0
+      owner_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      name: "name"
+      groups:
+      - metadata:
+          is_system: true
+          translation_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          visual_order: 6.02745618307040320615897144307382404804229736328125
+        name: "name"
+        id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      - metadata:
+          is_system: true
+          translation_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          visual_order: 6.02745618307040320615897144307382404804229736328125
+        name: "name"
+        id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      type: "type"
+      email: "email"
+      status: "status"
+  PgpKeyResp:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      name:
+        type: "string"
+      created:
+        type: "integer"
+        format: "timestamp"
+      modified:
+        type: "integer"
+        format: "timestamp"
+      public:
+        type: "string"
+        format: "base64"
+      private:
+        type: "string"
+        format: "base64"
+      email:
+        type: "string"
+        format: "email"
+    example:
+      private: "private"
+      public: "public"
+      created: 0
+      name: "name"
+      modified: 6
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      email: "email"
+  JobResp:
+    type: "object"
+    properties:
+      job_id:
+        type: "string"
+        format: "uuid"
+    example:
+      job_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+  FileTagResp:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      file_id:
+        type: "string"
+        format: "uuid"
+      type:
+        type: "string"
+      value:
+        type: "string"
+    example:
+      file_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      type: "type"
+      value: "value"
+  SearchReq:
+    type: "object"
+    properties:
+      _and:
+        type: "array"
+        items:
+          $ref: "#/definitions/SearchQuery"
+      _or:
+        type: "array"
+        items:
+          $ref: "#/definitions/SearchQuery"
+    example:
+      _or:
+      - created:
+          _or:
+          - 6.02745618307040320615897144307382404804229736328125
+          - 6.02745618307040320615897144307382404804229736328125
+          _and:
+          - 0.80082819046101150206595775671303272247314453125
+          - 0.80082819046101150206595775671303272247314453125
+        name:
+          _or:
+          - "_or"
+          - "_or"
+          _and:
+          - "_and"
+          - "_and"
+        modified:
+          _or:
+          - 6.02745618307040320615897144307382404804229736328125
+          - 6.02745618307040320615897144307382404804229736328125
+          _and:
+          - 0.80082819046101150206595775671303272247314453125
+          - 0.80082819046101150206595775671303272247314453125
+        tag:
+          _or:
+          - type: "text"
+            value: "value"
+          - type: "text"
+            value: "value"
+          _and:
+          - type: "text"
+            value: "value"
+          - type: "text"
+            value: "value"
+      - created:
+          _or:
+          - 6.02745618307040320615897144307382404804229736328125
+          - 6.02745618307040320615897144307382404804229736328125
+          _and:
+          - 0.80082819046101150206595775671303272247314453125
+          - 0.80082819046101150206595775671303272247314453125
+        name:
+          _or:
+          - "_or"
+          - "_or"
+          _and:
+          - "_and"
+          - "_and"
+        modified:
+          _or:
+          - 6.02745618307040320615897144307382404804229736328125
+          - 6.02745618307040320615897144307382404804229736328125
+          _and:
+          - 0.80082819046101150206595775671303272247314453125
+          - 0.80082819046101150206595775671303272247314453125
+        tag:
+          _or:
+          - type: "text"
+            value: "value"
+          - type: "text"
+            value: "value"
+          _and:
+          - type: "text"
+            value: "value"
+          - type: "text"
+            value: "value"
+      _and:
+      - created:
+          _or:
+          - 6.02745618307040320615897144307382404804229736328125
+          - 6.02745618307040320615897144307382404804229736328125
+          _and:
+          - 0.80082819046101150206595775671303272247314453125
+          - 0.80082819046101150206595775671303272247314453125
+        name:
+          _or:
+          - "_or"
+          - "_or"
+          _and:
+          - "_and"
+          - "_and"
+        modified:
+          _or:
+          - 6.02745618307040320615897144307382404804229736328125
+          - 6.02745618307040320615897144307382404804229736328125
+          _and:
+          - 0.80082819046101150206595775671303272247314453125
+          - 0.80082819046101150206595775671303272247314453125
+        tag:
+          _or:
+          - type: "text"
+            value: "value"
+          - type: "text"
+            value: "value"
+          _and:
+          - type: "text"
+            value: "value"
+          - type: "text"
+            value: "value"
+      - created:
+          _or:
+          - 6.02745618307040320615897144307382404804229736328125
+          - 6.02745618307040320615897144307382404804229736328125
+          _and:
+          - 0.80082819046101150206595775671303272247314453125
+          - 0.80082819046101150206595775671303272247314453125
+        name:
+          _or:
+          - "_or"
+          - "_or"
+          _and:
+          - "_and"
+          - "_and"
+        modified:
+          _or:
+          - 6.02745618307040320615897144307382404804229736328125
+          - 6.02745618307040320615897144307382404804229736328125
+          _and:
+          - 0.80082819046101150206595775671303272247314453125
+          - 0.80082819046101150206595775671303272247314453125
+        tag:
+          _or:
+          - type: "text"
+            value: "value"
+          - type: "text"
+            value: "value"
+          _and:
+          - type: "text"
+            value: "value"
+          - type: "text"
+            value: "value"
+  SearchQuery:
+    type: "object"
+    properties:
+      tag:
+        $ref: "#/definitions/TagSearchQueryElement"
+      name:
+        $ref: "#/definitions/StringSearchQueryElement"
+      created:
+        $ref: "#/definitions/TimestampSearchQueryElement"
+      modified:
+        $ref: "#/definitions/TimestampSearchQueryElement"
+    example:
+      created:
+        _or:
+        - 6.02745618307040320615897144307382404804229736328125
+        - 6.02745618307040320615897144307382404804229736328125
+        _and:
+        - 0.80082819046101150206595775671303272247314453125
+        - 0.80082819046101150206595775671303272247314453125
+      name:
+        _or:
+        - "_or"
+        - "_or"
+        _and:
+        - "_and"
+        - "_and"
+      modified:
+        _or:
+        - 6.02745618307040320615897144307382404804229736328125
+        - 6.02745618307040320615897144307382404804229736328125
+        _and:
+        - 0.80082819046101150206595775671303272247314453125
+        - 0.80082819046101150206595775671303272247314453125
+      tag:
+        _or:
+        - type: "text"
+          value: "value"
+        - type: "text"
+          value: "value"
+        _and:
+        - type: "text"
+          value: "value"
+        - type: "text"
+          value: "value"
+  SearchTag:
+    type: "object"
+    properties:
+      type:
+        type: "string"
+        enum:
+        - "text"
+        - "from"
+        - "to"
+      value:
+        type: "string"
+    example:
+      type: "text"
+      value: "value"
+  TagSearchQueryElement:
+    type: "object"
+    properties:
+      _and:
+        type: "array"
+        items:
+          $ref: "#/definitions/SearchTag"
+      _or:
+        type: "array"
+        items:
+          $ref: "#/definitions/SearchTag"
+    example:
+      _or:
+      - type: "text"
+        value: "value"
+      - type: "text"
+        value: "value"
+      _and:
+      - type: "text"
+        value: "value"
+      - type: "text"
+        value: "value"
+  StringSearchQueryElement:
+    type: "object"
+    properties:
+      _and:
+        type: "array"
+        items:
+          type: "string"
+      _or:
+        type: "array"
+        items:
+          type: "string"
+    example:
+      _or:
+      - "_or"
+      - "_or"
+      _and:
+      - "_and"
+      - "_and"
+  TimestampSearchQueryElement:
+    type: "object"
+    properties:
+      _and:
+        type: "array"
+        items:
+          type: "number"
+          format: "timestamp"
+      _or:
+        type: "array"
+        items:
+          type: "number"
+          format: "timestamp"
+    example:
+      _or:
+      - 6.02745618307040320615897144307382404804229736328125
+      - 6.02745618307040320615897144307382404804229736328125
+      _and:
+      - 0.80082819046101150206595775671303272247314453125
+      - 0.80082819046101150206595775671303272247314453125
+  GroupMetadata:
+    type: "object"
+    properties:
+      is_system:
+        type: "boolean"
+      translation_id:
+        type: "string"
+        format: "uuid"
+      visual_order:
+        type: "number"
+        format: "integer"
+    example:
+      is_system: true
+      translation_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      visual_order: 6.02745618307040320615897144307382404804229736328125
+  Group:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      metadata:
+        $ref: "#/definitions/GroupMetadata"
+      name:
+        type: "string"
+    example:
+      metadata:
+        is_system: true
+        translation_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        visual_order: 6.02745618307040320615897144307382404804229736328125
+      name: "name"
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+  GroupResp:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      parent_id:
+        type: "string"
+        format: "uuid"
+      parent_name:
+        type: "string"
+      name:
+        type: "string"
+      type:
+        type: "string"
+      operations:
+        type: "number"
+        format: "integer"
+      users:
+        type: "array"
+        items:
+          $ref: "#/definitions/IdName"
+      groups:
+        type: "array"
+        items:
+          $ref: "#/definitions/IdName"
+      metadata:
+        $ref: "#/definitions/GroupMetadata"
+    example:
+      parent_name: "parent_name"
+      metadata:
+        is_system: true
+        translation_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        visual_order: 6.02745618307040320615897144307382404804229736328125
+      operations: 0.80082819046101150206595775671303272247314453125
+      parent_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      name: "name"
+      groups:
+      - name: "name"
+        id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      - name: "name"
+        id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      type: "type"
+      users:
+      - name: "name"
+        id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      - name: "name"
+        id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+  IdName:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      name:
+        type: "string"
+    example:
+      name: "name"
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+  ProjectOwner:
+    type: "object"
+    properties:
+      email:
+        type: "string"
+      name:
+        type: "string"
+      id:
+        type: "string"
+        format: "uuid"
+    example:
+      name: "name"
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      email: "email"
+  UserPermissionReq:
+    type: "object"
+    properties:
+      user_id:
+        type: "string"
+        format: "uuid"
+      operations:
+        type: "number"
+        format: "integer"
+      notify:
+        type: "boolean"
+        default: false
+    example:
+      operations: 6.02745618307040320615897144307382404804229736328125
+      user_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      notify: false
+  UserPermissionResp:
+    type: "object"
+    properties:
+      user_id:
+        type: "string"
+        format: "uuid"
+      operations:
+        type: "number"
+        format: "integer"
+      owns:
+        type: "boolean"
+      notify:
+        type: "boolean"
+    example:
+      operations: 0.80082819046101150206595775671303272247314453125
+      user_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      owns: true
+      notify: true
+  SettingsResp:
+    type: "object"
+    properties:
+      title:
+        type: "string"
+      bcc:
+        type: "array"
+        items:
+          type: "string"
+      billing_emails:
+        type: "array"
+        items:
+          type: "string"
+      email_footer:
+        type: "string"
+      modified:
+        type: "number"
+      language:
+        type: "string"
+      pgp_enabled:
+        type: "boolean"
+      share_types:
+        type: "object"
+        properties: {}
+      virus_scan:
+        type: "boolean"
+    example:
+      pgp_enabled: true
+      billing_emails:
+      - "billing_emails"
+      - "billing_emails"
+      bcc:
+      - "bcc"
+      - "bcc"
+      email_footer: "email_footer"
+      virus_scan: true
+      modified: 0.80082819046101150206595775671303272247314453125
+      language: "language"
+      share_types: "{}"
+      title: "title"
+  ServiceResp:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      key:
+        type: "string"
+      base:
+        type: "boolean"
+      properties:
+        type: "object"
+        properties: {}
+      users:
+        type: "array"
+        items:
+          $ref: "#/definitions/ServiceResp_users"
+      forced_auth:
+        type: "array"
+        items:
+          type: "string"
+    example:
+      forced_auth:
+      - "forced_auth"
+      - "forced_auth"
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      key: "key"
+      properties: "{}"
+      users:
+      - name: "name"
+        id: "id"
+      - name: "name"
+        id: "id"
+      base: true
+  AutomationResp:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      owner_id:
+        type: "string"
+        format: "uuid"
+      file_id:
+        type: "string"
+        format: "uuid"
+      created:
+        type: "number"
+        format: "integer"
+      modified:
+        type: "number"
+        format: "integer"
+      status:
+        type: "string"
+        enum:
+        - "A"
+        - "D"
+      action:
+        type: "string"
+        enum:
+        - "autodelete"
+      options:
+        $ref: "#/definitions/AutomationOptions"
+      email:
+        type: "array"
+        items:
+          type: "string"
+      file_path:
+        type: "string"
+      rule_num:
+        type: "number"
+        format: "integer"
+    example:
+      file_path: "file_path"
+      rule_num: 5.962133916683182377482808078639209270477294921875
+      owner_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      created: 0.80082819046101150206595775671303272247314453125
+      file_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      options:
+        skip_shared_folders: true
+        protected_folder_ids:
+        - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        keep_folder_structure: true
+        oauth_code: "oauth_code"
+        expire: 1.46581298050294517310021547018550336360931396484375
+        skip_home_folders: true
+        super_trash: true
+      modified: 6.02745618307040320615897144307382404804229736328125
+      action: "autodelete"
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      email:
+      - "email"
+      - "email"
+      status: "A"
+  AutomationOptions:
+    type: "object"
+    properties:
+      expire:
+        type: "number"
+        format: "integer"
+      keep_folder_structure:
+        type: "boolean"
+      protected_folder_ids:
+        type: "array"
+        items:
+          type: "string"
+          format: "uuid"
+      skip_home_folders:
+        type: "boolean"
+      skip_shared_folders:
+        type: "boolean"
+      super_trash:
+        type: "boolean"
+      oauth_code:
+        type: "string"
+    format: "json"
+    description: "automation metadata json"
+    example:
+      skip_shared_folders: true
+      protected_folder_ids:
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      keep_folder_structure: true
+      oauth_code: "oauth_code"
+      expire: 1.46581298050294517310021547018550336360931396484375
+      skip_home_folders: true
+      super_trash: true
+  SshKeyResp:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      caption:
+        type: "string"
+      fingerprint:
+        type: "string"
+      modified:
+        type: "number"
+        format: "integer"
+      expires:
+        type: "number"
+        format: "integer"
+      status:
+        type: "string"
+        enum:
+        - "A"
+        - "D"
+    example:
+      expires: 6.02745618307040320615897144307382404804229736328125
+      fingerprint: "fingerprint"
+      caption: "caption"
+      modified: 0.80082819046101150206595775671303272247314453125
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      status: "A"
+  ErrorModel:
+    type: "object"
+    required:
+    - "code"
+    - "msg"
+    properties:
+      msg:
+        type: "string"
+        description: "error details"
+      code:
+        type: "integer"
+        minimum: -1
+        maximum: 100
+      details:
+        type: "object"
+        description: "additional information per call"
+        properties: {}
+  SessionLoginPostResp:
+    type: "object"
+    required:
+    - "auth_type"
+    - "code"
+    properties:
+      auth_type:
+        type: "string"
+        enum:
+        - "2FA"
+        - "PIN"
+      code:
+        type: "string"
+        description: "Auth code for MFA"
+    title: "SessionLoginPostResp"
+    example:
+      auth_type: "2FA"
+      code: "code"
+  UnblockCaptchaReq:
+    type: "object"
+    required:
+    - "token"
+    properties:
+      token:
+        type: "string"
+    title: "UnblockCaptchaReq"
+    example:
+      token: "token"
+  AccountMetadataResp:
+    properties:
+      status:
+        type: "string"
+      title:
+        type: "string"
+      language:
+        type: "string"
+      default_logo:
+        type: "boolean"
+    example:
+      default_logo: true
+      language: "language"
+      title: "title"
+      status: "status"
+  AccountRolesRespItems:
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      email:
+        type: "string"
+        format: "email"
+      name:
+        type: "string"
+    example:
+      name: "name"
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      email: "email"
+  AccountInfoResp:
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      key:
+        type: "string"
+      base:
+        type: "boolean"
+      properties:
+        type: "object"
+        description: "account service properties json"
+        properties: {}
+      server_location:
+        type: "string"
+    example:
+      server_location: "server_location"
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      key: "key"
+      properties: "{}"
+      base: true
+  AccountListRespItems:
+    properties:
+      id:
+        type: "string"
+      hostname:
+        type: "string"
+      plan:
+        type: "string"
+      status:
+        type: "string"
+      current:
+        type: "boolean"
+        description: "true if logged in to this account"
+    example:
+      hostname: "hostname"
+      current: true
+      id: "id"
+      plan: "plan"
+      status: "status"
+  LanguagesRespItems:
+    properties:
+      id:
+        type: "string"
+      name:
+        type: "string"
+      filename:
+        type: "string"
+    example:
+      filename: "filename"
+      name: "name"
+      id: "id"
+  LanguagesDefaultResp:
+    properties:
+      id:
+        type: "string"
+    example:
+      id: "id"
+  ContactCreateReq:
+    type: "object"
+    required:
+    - "email"
+    - "name"
+    properties:
+      name:
+        type: "string"
+        minLength: 1
+        maxLength: 511
+      email:
+        type: "string"
+        description: "valid email"
+        minLength: 6
+        maxLength: 254
+      personal:
+        type: "boolean"
+        description: "should be 'true' for personal contact"
+      groups:
+        type: "array"
+        description: "Group IDs. Could be omitted for site contact."
+        items:
+          type: "string"
+          format: "uuid"
+    title: "ContactCreateReq"
+    example:
+      name: "name"
+      groups:
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      personal: true
+      email: "email"
+  ContactEditResp:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+        minLength: 1
+        maxLength: 511
+      email:
+        type: "string"
+        description: "valid email"
+        minLength: 6
+        maxLength: 254
+      personal:
+        type: "boolean"
+        description: "should be 'true' for personal contact"
+      groups:
+        type: "array"
+        description: "Group IDs. Could be omitted for site contact."
+        items:
+          type: "string"
+          format: "uuid"
+    title: "ContactEditResp"
+    example:
+      name: "name"
+      groups:
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      personal: true
+      email: "email"
+  ContactDeleteRespItems:
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+    example:
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+  ContactGroupRespItems:
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      name:
+        type: "string"
+      global:
+        type: "boolean"
+      readonly:
+        type: "boolean"
+    example:
+      readonly: true
+      name: "name"
+      global: true
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+  FileMetadataPostReq:
+    type: "object"
+    required:
+    - "id"
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      mtime:
+        type: "number"
+        format: "timestamp"
+    title: "FileMetadataPostReq"
+    example:
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      mtime: 0.80082819046101150206595775671303272247314453125
+  FileMetadataPostResp:
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+        description: "File ID"
+      parent_id:
+        type: "string"
+        format: "uuid"
+        description: "File parent ID"
+      name:
+        type: "string"
+        description: "File name"
+      created:
+        type: "number"
+        description: "File creation timestamp"
+      modified:
+        type: "number"
+        description: "File modification timestamp"
+      modified_ms:
+        type: "number"
+        format: "timestamp"
+        description: "File modification timestamp with microseconds"
+      size:
+        type: "number"
+        format: "int"
+        description: "File size in bytes"
+      type:
+        type: "string"
+        description: "File type"
+      gid:
+        type: "number"
+        format: "int"
+        description: "Unix group id"
+      uid:
+        type: "number"
+        format: "int"
+        description: "Unix user id"
+      metadata:
+        type: "object"
+        description: "File metadata json"
+        properties: {}
+      operations:
+        type: "number"
+        format: "int"
+        description: "File operations bitmask"
+    example:
+      uid: 2.3021358869347654518833223846741020679473876953125
+      metadata: "{}"
+      gid: 5.63737665663332876420099637471139430999755859375
+      operations: 7.061401241503109105224211816675961017608642578125
+      size: 5.962133916683182377482808078639209270477294921875
+      parent_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      created: 0.80082819046101150206595775671303272247314453125
+      name: "name"
+      modified: 6.02745618307040320615897144307382404804229736328125
+      modified_ms: 1.46581298050294517310021547018550336360931396484375
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      type: "type"
+  FileInfoResp:
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+        description: "File ID"
+      created:
+        type: "number"
+        description: "File creation timestamp"
+      modified:
+        type: "number"
+        description: "File modification timestamp"
+      content_modified:
+        type: "number"
+        description: "File content modification timestamp"
+      name:
+        type: "string"
+        description: "File name"
+      size:
+        type: "number"
+        format: "int"
+        description: "File size in bytes"
+      type:
+        type: "string"
+        description: "File type"
+      file_owner:
+        type: "object"
+        description: "Owner of Folder/File"
+        properties: {}
+      action_role:
+        type: "object"
+        description: "Role that created/uploaded Folder/File"
+        properties: {}
+      paths:
+        type: "object"
+        description: "Path and Type of path to File"
+        properties: {}
+    example:
+      content_modified: 1.46581298050294517310021547018550336360931396484375
+      size: 5.962133916683182377482808078639209270477294921875
+      created: 0.80082819046101150206595775671303272247314453125
+      paths: "{}"
+      name: "name"
+      modified: 6.02745618307040320615897144307382404804229736328125
+      file_owner: "{}"
+      action_role: "{}"
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      type: "type"
+  MakeDirReq:
+    type: "object"
+    properties:
+      target:
+        type: "string"
+        format: "uuid"
+      name:
+        type: "string"
+        format: "filename"
+      resolve:
+        type: "boolean"
+        default: true
+    title: "MakeDirReq"
+    example:
+      resolve: true
+      name: "name"
+      target: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+  FileCsvResp:
+    properties:
+      Path:
+        type: "string"
+        description: "File Path"
+      Name:
+        type: "string"
+        description: "File name"
+      Size:
+        type: "number"
+        description: "File Size"
+      Type:
+        type: "string"
+        description: "File Type (F-file, D-directory, T-trash)"
+        enum:
+        - "D"
+        - "F"
+        - "T"
+      Created:
+        type: "string"
+        description: "File creation time"
+      Modified:
+        type: "string"
+        description: "File modification time"
+      Content_modified:
+        type: "string"
+        description: "File content modification time"
+      Created_by:
+        type: "object"
+        description: "Who created a file"
+        properties: {}
+      Owner:
+        type: "object"
+        description: "Who owns a file"
+        properties: {}
+    description: "File content"
+  FileRenameReq:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+        format: "filename"
+      resolve:
+        type: "boolean"
+        default: true
+    title: "FileRenameReq"
+    example:
+      resolve: true
+      name: "name"
+  FileRenameResp:
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+        description: "File ID"
+      created:
+        type: "number"
+        description: "File creation timestamp"
+      modified:
+        type: "number"
+        description: "File modification timestamp"
+      name:
+        type: "string"
+        description: "File name"
+      parent_id:
+        type: "string"
+        format: "uuid"
+        description: "File parent ID"
+      size:
+        type: "number"
+        format: "int"
+        description: "File size in bytes"
+      type:
+        type: "string"
+        description: "File type"
+      metadata:
+        type: "object"
+        description: "File metadata json"
+        properties: {}
+      operations:
+        type: "number"
+        format: "int"
+        description: "File operations bitmask"
+      old_name:
+        type: "string"
+        description: "File name before rename"
+    example:
+      metadata: "{}"
+      operations: 5.962133916683182377482808078639209270477294921875
+      size: 1.46581298050294517310021547018550336360931396484375
+      old_name: "old_name"
+      created: 0.80082819046101150206595775671303272247314453125
+      parent_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      name: "name"
+      modified: 6.02745618307040320615897144307382404804229736328125
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      type: "type"
+  FileAddTagReq:
+    type: "object"
+    properties:
+      type:
+        type: "string"
+      value:
+        type: "string"
+    title: "FileAddTagReq"
+    example:
+      type: "type"
+      value: "value"
+  FilePreviewResp:
+    properties:
+      type:
+        type: "string"
+        enum:
+        - "image"
+        - "video"
+        - "document"
+      source:
+        type: "string"
+      source_pdf:
+        type: "string"
+    example:
+      source: "source"
+      source_pdf: "source_pdf"
+      type: "image"
+  FileDiffResp_data:
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      action:
+        type: "string"
+      parent_id:
+        type: "string"
+        format: "uuid"
+      name:
+        type: "string"
+      type:
+        type: "string"
+      size:
+        type: "number"
+        format: "int64"
+      modified:
+        type: "number"
+      operations:
+        type: "number"
+        format: "int"
+      metadata:
+        type: "object"
+        properties: {}
+    example:
+      metadata: "{}"
+      operations: 5.63737665663332876420099637471139430999755859375
+      size: 1.46581298050294517310021547018550336360931396484375
+      parent_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      name: "name"
+      action: "action"
+      modified: 5.962133916683182377482808078639209270477294921875
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      type: "type"
+  FileDiffResp:
+    properties:
+      from:
+        type: "number"
+      to:
+        type: "number"
+      data:
+        type: "array"
+        items:
+          $ref: "#/definitions/FileDiffResp_data"
+    example:
+      data:
+      - metadata: "{}"
+        operations: 5.63737665663332876420099637471139430999755859375
+        size: 1.46581298050294517310021547018550336360931396484375
+        parent_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        name: "name"
+        action: "action"
+        modified: 5.962133916683182377482808078639209270477294921875
+        id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        type: "type"
+      - metadata: "{}"
+        operations: 5.63737665663332876420099637471139430999755859375
+        size: 1.46581298050294517310021547018550336360931396484375
+        parent_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        name: "name"
+        action: "action"
+        modified: 5.962133916683182377482808078639209270477294921875
+        id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        type: "type"
+      from: 0.80082819046101150206595775671303272247314453125
+      to: 6.02745618307040320615897144307382404804229736328125
+  FileModifyReq:
+    type: "object"
+    required:
+    - "id"
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      truncate:
+        type: "number"
+        format: "integer"
+      name:
+        type: "string"
+        format: "filename"
+    title: "FileModifyReq"
+    example:
+      truncate: 0.80082819046101150206595775671303272247314453125
+      name: "name"
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+  FileModifyResp:
+    properties:
+      name:
+        type: "string"
+      file_id:
+        type: "string"
+        format: "uuid"
+      parent_id:
+        type: "string"
+        format: "uuid"
+      upload_key:
+        type: "string"
+        format: "uuid"
+    example:
+      parent_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      upload_key: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      file_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      name: "name"
+  PgpKeyRecipientsRespItems:
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      name:
+        type: "string"
+      created:
+        type: "integer"
+        format: "timestamp"
+      modified:
+        type: "integer"
+        format: "timestamp"
+      public:
+        type: "string"
+        format: "base64"
+      recipient_id:
+        type: "string"
+        format: "uuid"
+      email:
+        type: "string"
+        format: "email"
+    example:
+      public: "public"
+      created: 0
+      name: "name"
+      modified: 6
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      email: "email"
+      recipient_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+  PgpCreateReq:
+    type: "object"
+    required:
+    - "name"
+    - "public"
+    properties:
+      name:
+        type: "string"
+      public:
+        type: "string"
+      private:
+        type: "string"
+    title: "PgpCreateReq"
+    example:
+      private: "private"
+      public: "public"
+      name: "name"
+  PgpEditReq:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      public:
+        type: "string"
+      private:
+        type: "string"
+    title: "PgpEditReq"
+    example:
+      private: "private"
+      public: "public"
+      name: "name"
+  KeyRequestMetadataResp:
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      sender_name:
+        type: "string"
+      sender_email:
+        type: "string"
+      user_name:
+        type: "string"
+      user_email:
+        type: "string"
+      locale:
+        type: "string"
+      is_contact:
+        type: "boolean"
+    example:
+      user_email: "user_email"
+      user_name: "user_name"
+      sender_name: "sender_name"
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      locale: "locale"
+      sender_email: "sender_email"
+      is_contact: true
+  KeyRequestRespondReq:
+    type: "object"
+    required:
+    - "name"
+    - "public"
+    properties:
+      name:
+        type: "string"
+      public:
+        type: "string"
+      private:
+        type: "string"
+    title: "KeyRequestRespondReq"
+    example:
+      private: "private"
+      public: "public"
+      name: "name"
+  ResetPasswordRequestReq:
+    type: "object"
+    required:
+    - "email"
+    properties:
+      email:
+        type: "array"
+        items:
+          type: "string"
+    title: "ResetPasswordRequestReq"
+    example:
+      email:
+      - "email"
+      - "email"
+  ResetPasswordRequestResp:
+    properties:
+      email:
+        type: "array"
+        items:
+          type: "string"
+    example:
+      email:
+      - "email"
+      - "email"
+  ResetPasswordMetadataResp:
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      multiple_accounts:
+        type: "boolean"
+    example:
+      multiple_accounts: true
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+  ResetPasswordResetReq:
+    type: "object"
+    required:
+    - "password"
+    properties:
+      password:
+        type: "string"
+    title: "ResetPasswordResetReq"
+    example:
+      password: "password"
+  ProfileResp_share_types:
+    properties:
+      restricted_share:
+        type: "boolean"
+      public_share:
+        type: "boolean"
+      tracked_share:
+        type: "boolean"
+    example:
+      tracked_share: true
+      restricted_share: true
+      public_share: true
+  ProfileResp:
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      name:
+        type: "string"
+      email:
+        type: "string"
+      super_admin:
+        type: "string"
+      home_id:
+        type: "string"
+        format: "uuid"
+      operations:
+        type: "number"
+        format: "integer"
+      max_file_size:
+        type: "number"
+        format: "integer"
+      max_files_per_share:
+        type: "number"
+        format: "integer"
+      plan:
+        type: "string"
+      is_contact:
+        type: "boolean"
+      language:
+        type: "string"
+      channel_id:
+        type: "string"
+        format: "uuid"
+      account_id:
+        type: "string"
+        format: "uuid"
+      storage_id:
+        type: "string"
+        format: "uuid"
+      created:
+        type: "number"
+      modified:
+        type: "number"
+      quota:
+        type: "number"
+        format: "integer"
+      status:
+        type: "string"
+      uid:
+        type: "number"
+        format: "integer"
+      gid:
+        type: "number"
+        format: "integer"
+      has_key:
+        type: "boolean"
+      pgp_enabled:
+        type: "boolean"
+      message_signature:
+        type: "string"
+      outgoing_id:
+        type: "string"
+      incoming_id:
+        type: "string"
+      services:
+        type: "array"
+        items:
+          $ref: "#/definitions/ShortUserService"
+      share_types:
+        $ref: "#/definitions/ProfileResp_share_types"
+      unique_login:
+        type: "string"
+      auth_methods:
+        type: "array"
+        items:
+          type: "string"
+      account_status:
+        type: "string"
+        enum:
+        - "A"
+        - "S"
+      sftp_url:
+        type: "string"
+      forced_auth:
+        type: "array"
+        items:
+          type: "string"
+    example:
+      gid: 9.301444243932575517419536481611430644989013671875
+      language: "language"
+      share_types:
+        tracked_share: true
+        restricted_share: true
+        public_share: true
+      account_status: "A"
+      max_file_size: 6.02745618307040320615897144307382404804229736328125
+      uid: 7.061401241503109105224211816675961017608642578125
+      operations: 0.80082819046101150206595775671303272247314453125
+      sftp_url: "sftp_url"
+      storage_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      quota: 2.3021358869347654518833223846741020679473876953125
+      modified: 5.63737665663332876420099637471139430999755859375
+      home_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      outgoing_id: "outgoing_id"
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      max_files_per_share: 1.46581298050294517310021547018550336360931396484375
+      plan: "plan"
+      email: "email"
+      created: 5.962133916683182377482808078639209270477294921875
+      forced_auth:
+      - "forced_auth"
+      - "forced_auth"
+      message_signature: "message_signature"
+      services:
+      - service_key: "service_key"
+        id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      - service_key: "service_key"
+        id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      is_contact: true
+      pgp_enabled: true
+      unique_login: "unique_login"
+      account_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      incoming_id: "incoming_id"
+      has_key: true
+      super_admin: "super_admin"
+      auth_methods:
+      - "auth_methods"
+      - "auth_methods"
+      name: "name"
+      channel_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      status: "status"
+  ProfileSetReq:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      email:
+        type: "string"
+      language:
+        type: "string"
+      message_signature:
+        type: "string"
+    title: "ProfileSetReq"
+    example:
+      name: "name"
+      language: "language"
+      message_signature: "message_signature"
+      email: "email"
+  ProfileSetResp:
+    properties:
+      name:
+        type: "string"
+      email:
+        type: "string"
+      language:
+        type: "string"
+      message_signature:
+        type: "string"
+    example:
+      name: "name"
+      language: "language"
+      message_signature: "message_signature"
+      email: "email"
+  ProfileSetPasswordReq:
+    type: "object"
+    required:
+    - "new_password"
+    - "password"
+    properties:
+      password:
+        type: "string"
+        description: "current password in base64"
+      new_password:
+        type: "string"
+        description: "new password in base64"
+    title: "ProfileSetPasswordReq"
+    example:
+      password: "password"
+      new_password: "new_password"
+  ProfileSetPasswordResp:
+    properties:
+      email:
+        type: "string"
+    example:
+      email: "email"
+  ProfileInfoResp:
+    properties:
+      user_used:
+        type: "number"
+        format: "integer"
+      user_limit:
+        type: "number"
+        format: "integer"
+      acc_used:
+        type: "number"
+        format: "integer"
+      acc_limit:
+        type: "number"
+        format: "integer"
+    example:
+      acc_limit: 5.962133916683182377482808078639209270477294921875
+      acc_used: 1.46581298050294517310021547018550336360931396484375
+      user_used: 0.80082819046101150206595775671303272247314453125
+      user_limit: 6.02745618307040320615897144307382404804229736328125
+  ProfileSetMfaReq:
+    type: "object"
+    required:
+    - "auth_type"
+    - "code"
+    properties:
+      auth_type:
+        type: "string"
+        enum:
+        - "2FA"
+        - "PIN"
+      code:
+        type: "string"
+        description: "Auth code for MFA"
+    title: "ProfileSetMfaReq"
+    example:
+      auth_type: "2FA"
+      code: "code"
+  ProfileSetMfaResp:
+    properties:
+      session_ids:
+        type: "string"
+        format: "uuid"
+    example:
+      session_ids: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+  ProfileRemoveMfaReq:
+    type: "object"
+    required:
+    - "auth_type"
+    properties:
+      auth_type:
+        type: "string"
+        enum:
+        - "2FA"
+        - "PIN"
+    title: "ProfileRemoveMfaReq"
+    example:
+      auth_type: "2FA"
+  ProfileRemoveMfaResp:
+    properties:
+      status:
+        type: "string"
+        description: "Action status"
+        enum:
+        - "success"
+    example:
+      status: "success"
+  ProjectFoldersListRespItem:
+    properties:
+      owner:
+        $ref: "#/definitions/ProjectOwner"
+      project_id:
+        type: "string"
+        format: "uuid"
+      ctime:
+        type: "number"
+        format: "integer"
+      name:
+        type: "string"
+      file_id:
+        type: "string"
+        format: "uuid"
+    example:
+      owner:
+        name: "name"
+        id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        email: "email"
+      project_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      file_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      name: "name"
+      ctime: 0.80082819046101150206595775671303272247314453125
+  PfcreateReq:
+    type: "object"
+    required:
+    - "file_id"
+    - "name"
+    - "users_permissions"
+    properties:
+      created:
+        type: "number"
+      name:
+        type: "string"
+      file_id:
+        type: "string"
+        format: "uuid"
+      users_permissions:
+        type: "array"
+        items:
+          $ref: "#/definitions/UserPermissionReq"
+      notify:
+        type: "boolean"
+        default: false
+    title: "PfcreateReq"
+    example:
+      users_permissions:
+      - operations: 6.02745618307040320615897144307382404804229736328125
+        user_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        notify: false
+      - operations: 6.02745618307040320615897144307382404804229736328125
+        user_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        notify: false
+      created: 0.80082819046101150206595775671303272247314453125
+      file_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      name: "name"
+      notify: false
+  PfCreateResp:
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      name:
+        type: "string"
+    example:
+      name: "name"
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+  PfUsersListReq:
+    type: "object"
+    required:
+    - "ids"
+    properties:
+      ids:
+        type: "array"
+        items:
+          type: "string"
+          format: "uuid"
+    title: "PfUsersListReq"
+    example:
+      ids:
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+  PfUsersListRespItems:
+    properties:
+      operations:
+        type: "number"
+        format: "integer"
+      owner:
+        type: "boolean"
+      project_id:
+        type: "string"
+        format: "uuid"
+      user_id:
+        type: "string"
+        format: "uuid"
+      notify:
+        type: "boolean"
+    example:
+      owner: true
+      operations: 0.80082819046101150206595775671303272247314453125
+      project_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      user_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      notify: true
+  projectfoldersetusers_params:
+    properties:
+      operations:
+        type: "number"
+        format: "integer"
+      project_id:
+        type: "string"
+        format: "uuid"
+      notify:
+        type: "boolean"
+        default: true
+    example:
+      operations: 0.80082819046101150206595775671303272247314453125
+      project_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      notify: true
+  projectfoldersetusers_users:
+    properties:
+      user_id:
+        type: "string"
+        format: "uuid"
+      params:
+        type: "array"
+        items:
+          $ref: "#/definitions/projectfoldersetusers_params"
+    example:
+      user_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      params:
+      - operations: 0.80082819046101150206595775671303272247314453125
+        project_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        notify: true
+      - operations: 0.80082819046101150206595775671303272247314453125
+        project_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        notify: true
+  PfSetUsersReq:
+    type: "object"
+    required:
+    - "users"
+    properties:
+      users:
+        type: "array"
+        items:
+          $ref: "#/definitions/projectfoldersetusers_users"
+    title: "PfSetUsersReq"
+    example:
+      users:
+      - user_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        params:
+        - operations: 0.80082819046101150206595775671303272247314453125
+          project_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          notify: true
+        - operations: 0.80082819046101150206595775671303272247314453125
+          project_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          notify: true
+      - user_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        params:
+        - operations: 0.80082819046101150206595775671303272247314453125
+          project_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          notify: true
+        - operations: 0.80082819046101150206595775671303272247314453125
+          project_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          notify: true
+  PfSetUsersRespItems:
+    properties:
+      operations:
+        type: "number"
+        format: "int"
+        description: "File operations bitmask"
+      project_id:
+        type: "string"
+        format: "uuid"
+      user_id:
+        type: "string"
+        format: "uuid"
+      notify:
+        type: "boolean"
+    example:
+      operations: 0.80082819046101150206595775671303272247314453125
+      project_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      user_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      notify: true
+  PfMetadataResp:
+    properties:
+      folder_name:
+        type: "string"
+        format: "text"
+      created:
+        type: "number"
+      creator:
+        type: "object"
+        properties: {}
+      users:
+        type: "array"
+        items:
+          $ref: "#/definitions/UserPermissionResp"
+    example:
+      creator: "{}"
+      created: 0.80082819046101150206595775671303272247314453125
+      folder_name: "folder_name"
+      users:
+      - operations: 0.80082819046101150206595775671303272247314453125
+        user_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        owns: true
+        notify: true
+      - operations: 0.80082819046101150206595775671303272247314453125
+        user_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        owns: true
+        notify: true
+  PfaddUsersReq:
+    type: "object"
+    required:
+    - "users_permissions"
+    properties:
+      users_permissions:
+        type: "array"
+        items:
+          $ref: "#/definitions/UserPermissionReq"
+    title: "PfaddUsersReq"
+    example:
+      users_permissions:
+      - operations: 6.02745618307040320615897144307382404804229736328125
+        user_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        notify: false
+      - operations: 6.02745618307040320615897144307382404804229736328125
+        user_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        notify: false
+  PfeditUsersReq:
+    type: "object"
+    required:
+    - "users_permissions"
+    properties:
+      users_permissions:
+        type: "array"
+        items:
+          $ref: "#/definitions/UserPermissionReq"
+      notify:
+        type: "boolean"
+        default: false
+    title: "PfeditUsersReq"
+    example:
+      users_permissions:
+      - operations: 6.02745618307040320615897144307382404804229736328125
+        user_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        notify: false
+      - operations: 6.02745618307040320615897144307382404804229736328125
+        user_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        notify: false
+      notify: false
+  projectfolderdeleteusers_users:
+    properties:
+      user_id:
+        type: "string"
+        format: "uuid"
+      project_id:
+        type: "array"
+        items:
+          type: "string"
+          format: "uuid"
+    example:
+      user_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      project_id:
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+  PfdeleteUsersReq:
+    type: "object"
+    required:
+    - "users"
+    properties:
+      users:
+        type: "array"
+        title: "PfDeleteUsersReqItems"
+        items:
+          $ref: "#/definitions/projectfolderdeleteusers_users"
+    title: "PfdeleteUsersReq"
+    example:
+      users:
+      - user_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        project_id:
+        - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      - user_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        project_id:
+        - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+  PfDeleteUsersRespItems:
+    properties:
+      user_id:
+        type: "string"
+        format: "uuid"
+      project_id:
+        type: "string"
+        format: "uuid"
+    example:
+      user_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      project_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+  SettingsSetReq:
+    type: "object"
+    properties:
+      title:
+        type: "string"
+      bcc:
+        type: "array"
+        items:
+          type: "string"
+      billing_emails:
+        type: "array"
+        items:
+          type: "string"
+      email_footer:
+        type: "string"
+      language:
+        type: "string"
+      enable_pgp:
+        type: "boolean"
+      virus_scan:
+        type: "boolean"
+      share_types:
+        type: "object"
+        properties: {}
+      auth_methods:
+        type: "array"
+        items:
+          type: "string"
+    title: "SettingsSetReq"
+    example:
+      enable_pgp: true
+      billing_emails:
+      - "billing_emails"
+      - "billing_emails"
+      bcc:
+      - "bcc"
+      - "bcc"
+      auth_methods:
+      - "auth_methods"
+      - "auth_methods"
+      email_footer: "email_footer"
+      virus_scan: true
+      language: "language"
+      share_types: "{}"
+      title: "title"
+  SettingsUploadLogoLinkResp:
+    properties:
+      upload_key:
+        type: "string"
+        format: "uuid"
+    example:
+      upload_key: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+  SettingsAuthMethodsRespItems:
+    properties:
+      rank:
+        type: "integer"
+      id:
+        type: "string"
+        format: "uuid"
+      key:
+        type: "string"
+    example:
+      rank: 0
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      key: "key"
+  UploadLinkReq:
+    type: "object"
+    required:
+    - "name"
+    - "parent_id"
+    properties:
+      name:
+        type: "string"
+        format: "filename"
+      parent_id:
+        type: "string"
+        format: "uuid"
+        description: "File parent ID"
+      resolve:
+        type: "boolean"
+        default: true
+      file_size:
+        type: "number"
+    title: "UploadLinkReq"
+    example:
+      resolve: true
+      parent_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      name: "name"
+      file_size: 0.80082819046101150206595775671303272247314453125
+  UploadFinalizeResp:
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      parent_id:
+        type: "string"
+        format: "uuid"
+      size:
+        type: "number"
+        format: "integer"
+      modified:
+        type: "number"
+        format: "timestamp"
+        description: "File modification timestamp"
+    example:
+      size: 0.80082819046101150206595775671303272247314453125
+      parent_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      modified: 6.02745618307040320615897144307382404804229736328125
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+  UserCreateReq:
+    type: "object"
+    required:
+    - "email"
+    - "name"
+    properties:
+      name:
+        type: "string"
+      email:
+        type: "string"
+      parent_id:
+        type: "string"
+        format: "uuid"
+      quota:
+        type: "number"
+        format: "integer"
+      status:
+        type: "string"
+        enum:
+        - "A"
+        - "D"
+      super_admin:
+        type: "string"
+        enum:
+        - "Y"
+        - "N"
+      home_id:
+        type: "string"
+        format: "uuid"
+      user_operations:
+        type: "number"
+        format: "integer"
+      home_operations:
+        type: "number"
+        format: "integer"
+      language:
+        type: "string"
+      groups:
+        type: "array"
+        items:
+          type: "string"
+          format: "uuid"
+      services:
+        type: "array"
+        items:
+          type: "string"
+          format: "uuid"
+    title: "UserCreateReq"
+    example:
+      user_operations: 6.02745618307040320615897144307382404804229736328125
+      parent_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      super_admin: "Y"
+      quota: 0.80082819046101150206595775671303272247314453125
+      home_operations: 1.46581298050294517310021547018550336360931396484375
+      name: "name"
+      groups:
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      home_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      language: "language"
+      services:
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      email: "email"
+      status: "A"
+  UserEditReq:
+    type: "object"
+    required:
+    - "ids"
+    properties:
+      ids:
+        type: "array"
+        items:
+          type: "string"
+          format: "uuid"
+      name:
+        type: "string"
+      email:
+        type: "string"
+      parent_id:
+        type: "string"
+        format: "uuid"
+      quota:
+        type: "number"
+        format: "integer"
+      status:
+        type: "string"
+        enum:
+        - "A"
+        - "D"
+      super_admin:
+        type: "string"
+        enum:
+        - "Y"
+        - "N"
+      home_id:
+        type: "string"
+        format: "uuid"
+      user_operations:
+        type: "number"
+        format: "integer"
+      home_operations:
+        type: "number"
+        format: "integer"
+      language:
+        type: "string"
+      groups:
+        type: "array"
+        items:
+          type: "string"
+          format: "uuid"
+      services:
+        type: "array"
+        items:
+          type: "string"
+          format: "uuid"
+    title: "UserEditReq"
+    example:
+      home_operations: 1.46581298050294517310021547018550336360931396484375
+      groups:
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      language: "language"
+      services:
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      user_operations: 6.02745618307040320615897144307382404804229736328125
+      parent_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      super_admin: "Y"
+      quota: 0.80082819046101150206595775671303272247314453125
+      name: "name"
+      ids:
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      home_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      email: "email"
+      status: "A"
+  UserDeleteReq:
+    type: "object"
+    required:
+    - "ids"
+    properties:
+      ids:
+        type: "array"
+        items:
+          type: "string"
+          format: "uuid"
+      delete_home:
+        type: "boolean"
+    title: "UserDeleteReq"
+    example:
+      ids:
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      delete_home: true
+  UserSignupReq:
+    type: "object"
+    required:
+    - "email"
+    - "password"
+    properties:
+      email:
+        type: "string"
+      password:
+        type: "string"
+        format: "base64"
+    title: "UserSignupReq"
+    example:
+      password: "password"
+      email: "email"
+  UserSetMfaReq:
+    type: "object"
+    required:
+    - "auth_type"
+    - "code"
+    - "ids"
+    properties:
+      ids:
+        type: "array"
+        items:
+          type: "string"
+          format: "uuid"
+      auth_type:
+        type: "string"
+        enum:
+        - "2FA"
+        - "PIN"
+      code:
+        type: "string"
+        description: "Auth code for MFA"
+    title: "UserSetMfaReq"
+    example:
+      auth_type: "2FA"
+      code: "code"
+      ids:
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+  UserRemoveMfaReq:
+    type: "object"
+    required:
+    - "auth_type"
+    - "ids"
+    properties:
+      ids:
+        type: "array"
+        items:
+          type: "string"
+          format: "uuid"
+      auth_type:
+        type: "string"
+        enum:
+        - "2FA"
+        - "PIN"
+    title: "UserRemoveMfaReq"
+    example:
+      auth_type: "2FA"
+      ids:
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+  WidgetUploadLinkReq:
+    type: "object"
+    properties:
+      file_size:
+        type: "number"
+    title: "WidgetUploadLinkReq"
+    example:
+      file_size: 0.80082819046101150206595775671303272247314453125
+  WidgetUploadLinkResp:
+    properties:
+      file_id:
+        type: "string"
+        format: "uuid"
+      file_path:
+        type: "string"
+        format: "uuid"
+      parent_id:
+        type: "string"
+        format: "uuid"
+      role_id:
+        type: "string"
+        format: "uuid"
+    example:
+      file_path: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      role_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      parent_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      file_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+  WidgetFinalizeUploadResp:
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      parent_id:
+        type: "string"
+        format: "uuid"
+      size:
+        type: "number"
+        format: "integer"
+    example:
+      size: 0.80082819046101150206595775671303272247314453125
+      parent_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+  ShareRecipientsResp:
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      name:
+        type: "string"
+      email:
+        type: "string"
+      has_key:
+        type: "boolean"
+    example:
+      has_key: true
+      name: "name"
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      email: "email"
+  ShareCreateReq:
+    type: "object"
+    required:
+    - "contacts"
+    - "files"
+    - "folder_id"
+    properties:
+      folder_id:
+        type: "string"
+      files:
+        type: "array"
+        items:
+          type: "string"
+          format: "uuid"
+      contacts:
+        type: "array"
+        items:
+          type: "string"
+          format: "uuid"
+      subject:
+        type: "string"
+      message:
+        type: "string"
+      expires:
+        type: "number"
+        format: "timestamp"
+      activates:
+        type: "number"
+        format: "timestamp"
+      return_files:
+        type: "boolean"
+      pgp_encrypted:
+        type: "boolean"
+      return_pgp_encrypted:
+        type: "boolean"
+      message_signature:
+        type: "string"
+      notify:
+        type: "boolean"
+      share_type:
+        type: "string"
+        enum:
+        - "P"
+        - "T"
+        - "C"
+        default: "T"
+      pin:
+        type: "string"
+        format: "base64"
+      send_email:
+        type: "boolean"
+        description: "create share with sending email or just create share"
+        default: false
+    title: "ShareCreateReq"
+    example:
+      expires: 0.80082819046101150206595775671303272247314453125
+      subject: "subject"
+      send_email: false
+      return_files: true
+      message_signature: "message_signature"
+      message: "message"
+      activates: 6.02745618307040320615897144307382404804229736328125
+      notify: true
+      return_pgp_encrypted: true
+      share_type: "T"
+      pin: "pin"
+      pgp_encrypted: true
+      files:
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      folder_id: "folder_id"
+      contacts:
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+  ShareCreateResp:
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      activates:
+        type: "number"
+    example:
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      activates: 0.80082819046101150206595775671303272247314453125
+  ShareLoginPinReq:
+    type: "object"
+    required:
+    - "id"
+    - "pin"
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      pin:
+        type: "string"
+        format: "base64"
+    title: "ShareLoginPinReq"
+    example:
+      pin: "pin"
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+  QuicklinkCreateReq:
+    type: "object"
+    required:
+    - "files"
+    properties:
+      subject:
+        type: "string"
+      files:
+        type: "array"
+        items:
+          type: "string"
+          format: "uuid"
+      pin:
+        type: "string"
+        format: "base64"
+    title: "QuicklinkCreateReq"
+    example:
+      pin: "pin"
+      subject: "subject"
+      files:
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+  QuicklinkCreateResp:
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      expires:
+        type: "number"
+        format: "timestamp"
+      activates:
+        type: "number"
+        format: "timestamp"
+      files:
+        type: "array"
+        items:
+          type: "string"
+          format: "uuid"
+    example:
+      expires: 0.80082819046101150206595775671303272247314453125
+      files:
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      activates: 6.02745618307040320615897144307382404804229736328125
+  QuicklinkLoginPinReq:
+    type: "object"
+    required:
+    - "id"
+    - "pin"
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      pin:
+        type: "string"
+        format: "base64"
+    title: "QuicklinkLoginPinReq"
+    example:
+      pin: "pin"
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+  TrackingActivityRespItems:
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      email:
+        type: "string"
+      user_name:
+        type: "string"
+        description: "User name"
+      user_status:
+        type: "string"
+        enum:
+        - "A"
+        - "D"
+        - "R"
+      timestamp:
+        type: "number"
+        format: "integer"
+      protocol:
+        type: "string"
+        enum:
+        - "web"
+        - "SFTP"
+      event:
+        type: "string"
+        enum:
+        - "share"
+        - "file"
+        - "files-return"
+      action:
+        type: "string"
+        enum:
+        - "create"
+        - "revoke"
+        - "created-link"
+        - "sent-email"
+        - "replied"
+        - "upload"
+        - "download"
+        - "move-rename"
+        - "delete"
+        - "makedir"
+      share_status:
+        type: "string"
+        enum:
+        - "A"
+        - "D"
+        - "null"
+      payload:
+        type: "object"
+        description: "other information(share id, files, etc)"
+        properties: {}
+      duration:
+        type: "number"
+        format: "float"
+        description: "duration in seconds"
+    example:
+      duration: 6.0274563
+      user_status: "A"
+      protocol: "web"
+      share_status: "A"
+      payload: "{}"
+      user_name: "user_name"
+      action: "create"
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      event: "share"
+      email: "email"
+      timestamp: 0.80082819046101150206595775671303272247314453125
+  TrackingCSVRespItems:
+    properties:
+      Time:
+        type: "string"
+      Event:
+        type: "string"
+        enum:
+        - "share"
+        - "file"
+        - "files-return"
+      Action:
+        type: "string"
+        enum:
+        - "create"
+        - "revoke"
+        - "created-link"
+        - "sent-email"
+        - "replied"
+        - "upload"
+        - "download"
+        - "move-rename"
+        - "rename"
+        - "delete"
+        - "makedir"
+        - "copy"
+      Client IPs:
+        type: "string"
+      User name:
+        type: "string"
+      Email:
+        type: "string"
+      User status:
+        type: "string"
+        enum:
+        - "A"
+        - "D"
+        - "R"
+      Protocol:
+        type: "string"
+        enum:
+        - "web"
+        - "SFTP"
+      Payload:
+        type: "object"
+        description: "other information(share id, files, etc)"
+        properties: {}
+  TrackingFilesRespItems:
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      name:
+        type: "string"
+      size:
+        type: "number"
+      type:
+        type: "string"
+      downloads:
+        type: "number"
+    example:
+      size: 0.80082819046101150206595775671303272247314453125
+      downloads: 6.02745618307040320615897144307382404804229736328125
+      name: "name"
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      type: "type"
+  TrackingDownloadsRespItems:
+    properties:
+      ip:
+        type: "string"
+      name:
+        type: "string"
+      size:
+        type: "number"
+      duration:
+        type: "number"
+      time:
+        type: "number"
+      recipient:
+        type: "string"
+    example:
+      duration: 6.02745618307040320615897144307382404804229736328125
+      size: 0.80082819046101150206595775671303272247314453125
+      ip: "ip"
+      name: "name"
+      recipient: "recipient"
+      time: 1.46581298050294517310021547018550336360931396484375
+  TrackingRespItems:
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      subject:
+        type: "string"
+      type:
+        type: "string"
+      is_reply:
+        type: "boolean"
+      release_date:
+        type: "number"
+      expire_date:
+        type: "number"
+      created:
+        type: "number"
+      status:
+        type: "string"
+      email:
+        type: "string"
+      emails:
+        type: "array"
+        items:
+          type: "string"
+      owner_id:
+        type: "string"
+      is_request:
+        type: "boolean"
+      can_reply:
+        type: "boolean"
+      folder:
+        type: "string"
+    example:
+      is_request: true
+      subject: "subject"
+      created: 1.46581298050294517310021547018550336360931396484375
+      owner_id: "owner_id"
+      type: "type"
+      is_reply: true
+      emails:
+      - "emails"
+      - "emails"
+      expire_date: 6.02745618307040320615897144307382404804229736328125
+      can_reply: true
+      folder: "folder"
+      release_date: 0.80082819046101150206595775671303272247314453125
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      email: "email"
+      status: "status"
+  TrackingIdRespItems:
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      subject:
+        type: "string"
+      type:
+        type: "string"
+      is_reply:
+        type: "boolean"
+      release_date:
+        type: "number"
+      expire_date:
+        type: "number"
+      created:
+        type: "number"
+      status:
+        type: "string"
+      email:
+        type: "string"
+      emails:
+        type: "array"
+        items:
+          type: "string"
+      owner_id:
+        type: "string"
+    example:
+      emails:
+      - "emails"
+      - "emails"
+      expire_date: 6.02745618307040320615897144307382404804229736328125
+      release_date: 0.80082819046101150206595775671303272247314453125
+      subject: "subject"
+      created: 1.46581298050294517310021547018550336360931396484375
+      owner_id: "owner_id"
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      type: "type"
+      email: "email"
+      is_reply: true
+      status: "status"
+  FilesReturnSendReq:
+    type: "object"
+    required:
+    - "files"
+    - "id"
+    properties:
+      id:
+        type: "string"
+      files:
+        type: "array"
+        items:
+          type: "string"
+          format: "uuid"
+      message:
+        type: "string"
+    title: "FilesReturnSendReq"
+    example:
+      files:
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      id: "id"
+      message: "message"
+  FilesReturnMetadataResp:
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      subject:
+        type: "string"
+      sender_name:
+        type: "string"
+      sender_key:
+        type: "string"
+      sender_email:
+        type: "string"
+      user_name:
+        type: "string"
+      user_email:
+        type: "string"
+      locale:
+        type: "string"
+      return_pgp_encrypted:
+        type: "boolean"
+      title:
+        type: "string"
+      pgp_enabled:
+        type: "boolean"
+      share_type:
+        type: "string"
+      folder_id:
+        type: "string"
+      activates:
+        type: "number"
+      expires:
+        type: "number"
+      files_per_share:
+        type: "number"
+      message:
+        type: "string"
+    example:
+      user_email: "user_email"
+      expires: 6.02745618307040320615897144307382404804229736328125
+      subject: "subject"
+      user_name: "user_name"
+      sender_name: "sender_name"
+      locale: "locale"
+      title: "title"
+      message: "message"
+      activates: 0.80082819046101150206595775671303272247314453125
+      sender_key: "sender_key"
+      pgp_enabled: true
+      return_pgp_encrypted: true
+      share_type: "share_type"
+      files_per_share: 1.46581298050294517310021547018550336360931396484375
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      folder_id: "folder_id"
+      sender_email: "sender_email"
+  FilesReturnUploadLinkReq:
+    type: "object"
+    required:
+    - "parent_id"
+    properties:
+      parent_id:
+        type: "string"
+        format: "uuid"
+      file_size:
+        type: "number"
+    title: "FilesReturnUploadLinkReq"
+    example:
+      parent_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      file_size: 0.80082819046101150206595775671303272247314453125
+  FilesReturnUploadLinkResp:
+    properties:
+      file_id:
+        type: "string"
+        format: "uuid"
+      upload_key:
+        type: "string"
+        format: "uuid"
+      parent_id:
+        type: "string"
+        format: "uuid"
+    example:
+      upload_key: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      parent_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      file_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+  FilesReturnMakedirReq:
+    type: "object"
+    required:
+    - "name"
+    properties:
+      name:
+        type: "string"
+      parent_id:
+        type: "string"
+        format: "uuid"
+    title: "FilesReturnMakedirReq"
+    example:
+      parent_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      name: "name"
+  FilesReturnMakedirResps:
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      parent_id:
+        type: "string"
+        format: "uuid"
+      modified:
+        type: "number"
+    example:
+      parent_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      modified: 0.80082819046101150206595775671303272247314453125
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+  ShareDownloadInfoResp:
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      message:
+        type: "string"
+      subject:
+        type: "string"
+      activates:
+        type: "number"
+        format: "timestamp"
+      expires:
+        type: "number"
+        format: "timestamp"
+      sender_name:
+        type: "string"
+      sender_email:
+        type: "string"
+      user_name:
+        type: "string"
+        description: "user name from current session"
+      user_email:
+        type: "string"
+        description: "user email from current session"
+      locale:
+        type: "string"
+      user_id:
+        type: "string"
+        format: "uuid"
+      pgp_encrypted:
+        type: "boolean"
+        description: "PGP protected share"
+      private_key:
+        type: "string"
+        description: "for PGP"
+      pgp_enabled:
+        type: "boolean"
+        description: "Shows that user from current session has PGP key. If True -\
+          \ user will get his private_key."
+      status:
+        type: "string"
+      share_type:
+        type: "string"
+        enum:
+        - "P"
+        - "C"
+        - "T"
+      title:
+        type: "string"
+      expired:
+        type: "boolean"
+      is_reply:
+        type: "boolean"
+      pin_protected:
+        type: "boolean"
+    example:
+      expires: 6.02745618307040320615897144307382404804229736328125
+      user_email: "user_email"
+      subject: "subject"
+      user_name: "user_name"
+      sender_name: "sender_name"
+      private_key: "private_key"
+      pin_protected: true
+      message: "message"
+      locale: "locale"
+      title: "title"
+      activates: 0.80082819046101150206595775671303272247314453125
+      is_reply: true
+      pgp_enabled: true
+      expired: true
+      share_type: "P"
+      user_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      pgp_encrypted: true
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      sender_email: "sender_email"
+      status: "status"
+  ShareFilesRespItems:
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      size:
+        type: "number"
+      count:
+        type: "number"
+      name:
+        type: "string"
+      type:
+        type: "string"
+    example:
+      size: 0.80082819046101150206595775671303272247314453125
+      count: 6.02745618307040320615897144307382404804229736328125
+      name: "name"
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      type: "type"
+  ShareDownloadLinkReq:
+    type: "object"
+    properties:
+      files:
+        type: "array"
+        items:
+          type: "string"
+          format: "uuid"
+          description: "File ID"
+    title: "ShareDownloadLinkReq"
+    example:
+      files:
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+  ShareRequestReq:
+    type: "object"
+    properties:
+      return_pgp_encrypted:
+        type: "boolean"
+      send_email:
+        type: "boolean"
+      ids:
+        type: "array"
+        description: "List of recipient ids"
+        items:
+          type: "string"
+          format: "uuid"
+      message:
+        type: "string"
+    title: "ShareRequestReq"
+    example:
+      return_pgp_encrypted: true
+      send_email: true
+      ids:
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      message: "message"
+  ShareRequestResp:
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      url:
+        type: "string"
+      job_id:
+        type: "string"
+        format: "uuid"
+    example:
+      job_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      url: "url"
+  ShareSendRequestReq:
+    type: "object"
+    properties:
+      message:
+        type: "string"
+    title: "ShareSendRequestReq"
+    example:
+      message: "message"
+  AutomationCreateReq:
+    type: "object"
+    required:
+    - "action"
+    - "file_id"
+    properties:
+      file_id:
+        type: "string"
+        format: "uuid"
+      action:
+        type: "string"
+        enum:
+        - "autodelete"
+        - "video_upload"
+      status:
+        type: "string"
+        enum:
+        - "A"
+        - "D"
+      options:
+        $ref: "#/definitions/AutomationOptions"
+      comment:
+        type: "string"
+      expires:
+        type: "number"
+        format: "integer"
+      email:
+        type: "array"
+        items:
+          type: "string"
+    title: "AutomationCreateReq"
+    example:
+      expires: 0.80082819046101150206595775671303272247314453125
+      file_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      options:
+        skip_shared_folders: true
+        protected_folder_ids:
+        - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        keep_folder_structure: true
+        oauth_code: "oauth_code"
+        expire: 1.46581298050294517310021547018550336360931396484375
+        skip_home_folders: true
+        super_trash: true
+      action: "autodelete"
+      comment: "comment"
+      email:
+      - "email"
+      - "email"
+      status: "A"
+  AutomationEditReq:
+    type: "object"
+    required:
+    - "ids"
+    properties:
+      ids:
+        type: "array"
+        items:
+          type: "string"
+          format: "uuid"
+      action:
+        type: "string"
+        enum:
+        - "autodelete"
+        - "video_upload"
+      file_id:
+        type: "string"
+        format: "uuid"
+      status:
+        type: "string"
+        enum:
+        - "A"
+        - "D"
+      options:
+        $ref: "#/definitions/AutomationOptions"
+      comment:
+        type: "string"
+      expires:
+        type: "number"
+        format: "integer"
+      email:
+        type: "array"
+        items:
+          type: "string"
+    title: "AutomationEditReq"
+    example:
+      expires: 0.80082819046101150206595775671303272247314453125
+      file_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      options:
+        skip_shared_folders: true
+        protected_folder_ids:
+        - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        keep_folder_structure: true
+        oauth_code: "oauth_code"
+        expire: 1.46581298050294517310021547018550336360931396484375
+        skip_home_folders: true
+        super_trash: true
+      ids:
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      action: "autodelete"
+      comment: "comment"
+      email:
+      - "email"
+      - "email"
+      status: "A"
+  AutomationDeleteResp:
+    properties:
+      ids:
+        type: "array"
+        items:
+          type: "string"
+          format: "uuid"
+    example:
+      ids:
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+  InboxRespItems:
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      sender_name:
+        type: "string"
+        description: "Sender name"
+      activates:
+        type: "number"
+        format: "integer"
+      is_reply:
+        type: "boolean"
+      replied:
+        type: "boolean"
+      subject:
+        type: "string"
+      type:
+        type: "string"
+        enum:
+        - "P"
+        - "C"
+        - "T"
+      file_request:
+        type: "boolean"
+      expires:
+        type: "number"
+        format: "integer"
+      protected:
+        type: "boolean"
+    example:
+      expires: 6.02745618307040320615897144307382404804229736328125
+      file_request: true
+      protected: true
+      replied: true
+      subject: "subject"
+      sender_name: "sender_name"
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      type: "P"
+      activates: 0.80082819046101150206595775671303272247314453125
+      is_reply: true
+  SshKeyCreateReq:
+    type: "object"
+    required:
+    - "caption"
+    - "key"
+    properties:
+      caption:
+        type: "string"
+        minLength: 1
+        maxLength: 255
+      key:
+        type: "string"
+        minLength: 256
+        maxLength: 16384
+      expires:
+        type: "number"
+        format: "integer"
+    title: "SshKeyCreateReq"
+    example:
+      expires: 0.80082819046101150206595775671303272247314453125
+      caption: "caption"
+      key: "key"
+  SshKeyEditReq:
+    type: "object"
+    required:
+    - "id"
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      caption:
+        type: "string"
+        minLength: 1
+        maxLength: 255
+      status:
+        type: "string"
+        enum:
+        - "A"
+        - "D"
+      expires:
+        type: "number"
+        format: "integer"
+    title: "SshKeyEditReq"
+    example:
+      expires: 0.80082819046101150206595775671303272247314453125
+      caption: "caption"
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      status: "A"
+  SshKeyDeleteReq:
+    type: "object"
+    required:
+    - "id"
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+    title: "SshKeyDeleteReq"
+    example:
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+  BillingUpgradeReq:
+    type: "object"
+    required:
+    - "currency"
+    - "renewal_period"
+    properties:
+      qx_max_users:
+        type: "number"
+        format: "integer"
+      sftp_max_users:
+        type: "number"
+        format: "integer"
+      currency:
+        type: "string"
+        enum:
+        - "USD"
+        - "GBP"
+        - "EUR"
+      renewal_period:
+        type: "string"
+        enum:
+        - "1 month"
+        - "1 year"
+      recurring_renewal:
+        type: "boolean"
+      package_keys:
+        type: "array"
+        description: "package keys"
+        items:
+          type: "string"
+    title: "BillingUpgradeReq"
+    example:
+      renewal_period: "1 month"
+      sftp_max_users: 6.02745618307040320615897144307382404804229736328125
+      package_keys:
+      - "package_keys"
+      - "package_keys"
+      qx_max_users: 0.80082819046101150206595775671303272247314453125
+      recurring_renewal: true
+      currency: "USD"
+  BillingUpgradeResp:
+    properties:
+      status:
+        type: "string"
+        enum:
+        - "success"
+        - "error"
+      upgrade_invoice_id:
+        type: "string"
+        format: "uuid"
+      invoice_ids:
+        type: "array"
+        items:
+          type: "string"
+          format: "uuid"
+      error_text:
+        type: "string"
+    example:
+      error_text: "error_text"
+      upgrade_invoice_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      invoice_ids:
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      status: "success"
+  CheckPingResp:
+    properties:
+      response:
+        type: "string"
+    example:
+      response: "response"
+  ServiceResp_users:
+    properties:
+      id:
+        type: "string"
+      name:
+        type: "string"
+    example:
+      name: "name"
+      id: "id"
+parameters:
+  ContactId:
+    name: "id"
+    in: "path"
+    description: "ID of a contact"
+    required: true
+    type: "string"
+    format: "uuid"
+    x-exportParamName: "Id"
+  FileId:
+    name: "id"
+    in: "path"
+    description: "ID of a file"
+    required: true
+    type: "string"
+    format: "uuid"
+    x-exportParamName: "Id"
+  FileContentFlag:
+    name: "content"
+    in: "query"
+    description: "Return content flag"
+    required: false
+    type: "number"
+    default: 1.0
+    format: "int"
+    enum:
+    - 0.0
+    - 1.0
+    x-exportParamName: "Content"
+  WidgetId:
+    name: "id"
+    in: "path"
+    description: "ID of a widget"
+    required: true
+    type: "string"
+    format: "uuid"
+    x-exportParamName: "Id"
+responses:
+  Unauthorized:
+    description: "Unauthorized"
+    schema:
+      $ref: "#/definitions/ErrorModel"

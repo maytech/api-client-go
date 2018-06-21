@@ -1,0 +1,15 @@
+# SshKeyResp
+
+## Properties
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**Id** | **string** |  | [optional] [default to null]
+**Caption** | **string** |  | [optional] [default to null]
+**Fingerprint** | **string** |  | [optional] [default to null]
+**Modified** | **float32** |  | [optional] [default to null]
+**Expires** | **float32** |  | [optional] [default to null]
+**Status** | **string** |  | [optional] [default to null]
+
+[[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
+
+
