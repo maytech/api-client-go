@@ -1,7 +1,13 @@
 ---
 swagger: "2.0"
 info:
-  description: "File Transfer And Sharing API"
+  description: "The Quatrix API enables you to automate your interaction with Quatrix\
+    \ using any scripting or programming language.\nYou can test API calls on [Swagger](https://docs.maytech.net/swagger/),\
+    \ the interactive environment we use as the repository for the Quatrix API.\n\
+    In order to authorize to Quatrix API you will need to have a Quatrix account https://yourcompanyname.quatrix.it/\
+    \ (e.g. https://test-api.quatrix.it/).\nYou can set up a free trial account [here](https://www.maytech.net/freetrial.html#trial=qtrx).\n\
+    Below you'll find information on how to authenticate in a Quatrix session, how\
+    \ to construct JSON formatted API call and what JSON responses to expect."
   version: "1.0.0"
   title: "Quatrix API"
 host: "api.quatrix.it"
