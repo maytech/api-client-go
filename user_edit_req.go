@@ -36,4 +36,6 @@ type UserEditReq struct {
 	Groups []string `json:"groups,omitempty"`
 
 	Services []string `json:"services,omitempty"`
+
+	SftpHomeId string `json:"sftp_home_id,omitempty"`
 }

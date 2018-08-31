@@ -3696,6 +3696,11 @@ definitions:
           $ref: "#/definitions/ShortUserService"
       unique_login:
         type: "string"
+      sftp_home_id:
+        type: "string"
+        format: "uuid"
+      sftp_home:
+        type: "string"
       readonly:
         type: "boolean"
       auth_methods:
@@ -3723,7 +3728,9 @@ definitions:
       modified: 1.46581298050294517310021547018550336360931396484375
       home_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
       id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      sftp_home: "sftp_home"
       email: "email"
+      sftp_home_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
       created: 6.02745618307040320615897144307382404804229736328125
       last_login: 7.061401241503109105224211816675961017608642578125
       groups:
@@ -5920,23 +5927,27 @@ definitions:
         items:
           type: "string"
           format: "uuid"
+      sftp_home_id:
+        type: "string"
+        format: "uuid"
     title: "UserCreateReq"
     example:
-      user_operations: 6.02745618307040320615897144307382404804229736328125
-      parent_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
-      super_admin: "Y"
-      quota: 0.80082819046101150206595775671303272247314453125
       home_operations: 1.46581298050294517310021547018550336360931396484375
-      name: "name"
       groups:
       - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
       - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
-      home_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
       language: "language"
       services:
       - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
       - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      user_operations: 6.02745618307040320615897144307382404804229736328125
+      parent_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      super_admin: "Y"
+      quota: 0.80082819046101150206595775671303272247314453125
+      name: "name"
+      home_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
       email: "email"
+      sftp_home_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
       status: "A"
   UserEditReq:
     type: "object"
@@ -5989,6 +6000,9 @@ definitions:
         items:
           type: "string"
           format: "uuid"
+      sftp_home_id:
+        type: "string"
+        format: "uuid"
     title: "UserEditReq"
     example:
       home_operations: 1.46581298050294517310021547018550336360931396484375
@@ -6009,6 +6023,7 @@ definitions:
       - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
       home_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
       email: "email"
+      sftp_home_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
       status: "A"
   UserDeleteReq:
     type: "object"

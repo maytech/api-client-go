@@ -51,6 +51,10 @@ type UserResp struct {
 
 	UniqueLogin string `json:"unique_login,omitempty"`
 
+	SftpHomeId string `json:"sftp_home_id,omitempty"`
+
+	SftpHome string `json:"sftp_home,omitempty"`
+
 	Readonly bool `json:"readonly,omitempty"`
 
 	AuthMethods []string `json:"auth_methods,omitempty"`
