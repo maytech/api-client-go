@@ -51,7 +51,7 @@ type UserResp struct {
 
 	UniqueLogin string `json:"unique_login,omitempty"`
 
-	SftpHomeId string `json:"sftp_home_id,omitempty"`
+	CustomSftpHome bool `json:"custom_sftp_home,omitempty"`
 
 	SftpHome string `json:"sftp_home,omitempty"`
 

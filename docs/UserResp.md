@@ -23,7 +23,7 @@ Name | Type | Description | Notes
 **HasKey** | **bool** |  | [optional] [default to null]
 **Services** | [**[]ShortUserService**](ShortUserService.md) |  | [optional] [default to null]
 **UniqueLogin** | **string** |  | [optional] [default to null]
-**SftpHomeId** | **string** |  | [optional] [default to null]
+**CustomSftpHome** | **bool** |  | [optional] [default to null]
 **SftpHome** | **string** |  | [optional] [default to null]
 **Readonly** | **bool** |  | [optional] [default to null]
 **AuthMethods** | **[]string** |  | [optional] [default to null]

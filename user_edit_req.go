@@ -37,5 +37,5 @@ type UserEditReq struct {
 
 	Services []string `json:"services,omitempty"`
 
-	SftpHomeId string `json:"sftp_home_id,omitempty"`
+	CustomSftpHome bool `json:"custom_sftp_home,omitempty"`
 }

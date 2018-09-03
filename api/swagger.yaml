@@ -3696,9 +3696,8 @@ definitions:
           $ref: "#/definitions/ShortUserService"
       unique_login:
         type: "string"
-      sftp_home_id:
-        type: "string"
-        format: "uuid"
+      custom_sftp_home:
+        type: "boolean"
       sftp_home:
         type: "string"
       readonly:
@@ -3730,7 +3729,6 @@ definitions:
       id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
       sftp_home: "sftp_home"
       email: "email"
-      sftp_home_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
       created: 6.02745618307040320615897144307382404804229736328125
       last_login: 7.061401241503109105224211816675961017608642578125
       groups:
@@ -3749,6 +3747,7 @@ definitions:
       forced_auth:
       - "forced_auth"
       - "forced_auth"
+      custom_sftp_home: true
       services:
       - service_key: "service_key"
         id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
@@ -5927,9 +5926,8 @@ definitions:
         items:
           type: "string"
           format: "uuid"
-      sftp_home_id:
-        type: "string"
-        format: "uuid"
+      custom_sftp_home:
+        type: "boolean"
     title: "UserCreateReq"
     example:
       home_operations: 1.46581298050294517310021547018550336360931396484375
@@ -5937,6 +5935,7 @@ definitions:
       - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
       - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
       language: "language"
+      custom_sftp_home: true
       services:
       - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
       - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
@@ -5947,7 +5946,6 @@ definitions:
       name: "name"
       home_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
       email: "email"
-      sftp_home_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
       status: "A"
   UserEditReq:
     type: "object"
@@ -6000,9 +5998,8 @@ definitions:
         items:
           type: "string"
           format: "uuid"
-      sftp_home_id:
-        type: "string"
-        format: "uuid"
+      custom_sftp_home:
+        type: "boolean"
     title: "UserEditReq"
     example:
       home_operations: 1.46581298050294517310021547018550336360931396484375
@@ -6010,6 +6007,7 @@ definitions:
       - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
       - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
       language: "language"
+      custom_sftp_home: true
       services:
       - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
       - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
@@ -6023,7 +6021,6 @@ definitions:
       - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
       home_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
       email: "email"
-      sftp_home_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
       status: "A"
   UserDeleteReq:
     type: "object"
