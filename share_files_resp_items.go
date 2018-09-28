@@ -20,4 +20,6 @@ type ShareFilesRespItems struct {
 	Name string `json:"name,omitempty"`
 
 	Type_ string `json:"type,omitempty"`
+
+	DownloadLocked bool `json:"download_locked,omitempty"`
 }

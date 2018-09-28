@@ -9,7 +9,6 @@ Name | Type | Description | Notes
 **EmailFooter** | **string** |  | [optional] [default to null]
 **Language** | **string** |  | [optional] [default to null]
 **EnablePgp** | **bool** |  | [optional] [default to null]
-**VirusScan** | **bool** |  | [optional] [default to null]
 **ShareTypes** | [***interface{}**](interface{}.md) |  | [optional] [default to null]
 **AuthMethods** | **[]string** |  | [optional] [default to null]
 

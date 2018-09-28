@@ -26,6 +26,4 @@ type SettingsResp struct {
 	PgpEnabled bool `json:"pgp_enabled,omitempty"`
 
 	ShareTypes *interface{} `json:"share_types,omitempty"`
-
-	VirusScan bool `json:"virus_scan,omitempty"`
 }

@@ -4308,8 +4308,6 @@ definitions:
       share_types:
         type: "object"
         properties: {}
-      virus_scan:
-        type: "boolean"
     example:
       pgp_enabled: true
       billing_emails:
@@ -4319,7 +4317,6 @@ definitions:
       - "bcc"
       - "bcc"
       email_footer: "email_footer"
-      virus_scan: true
       modified: 0.80082819046101150206595775671303272247314453125
       language: "language"
       share_types: "{}"
@@ -5789,8 +5786,6 @@ definitions:
         type: "string"
       enable_pgp:
         type: "boolean"
-      virus_scan:
-        type: "boolean"
       share_types:
         type: "object"
         properties: {}
@@ -5811,7 +5806,6 @@ definitions:
       - "auth_methods"
       - "auth_methods"
       email_footer: "email_footer"
-      virus_scan: true
       language: "language"
       share_types: "{}"
       title: "title"
@@ -6793,11 +6787,14 @@ definitions:
         type: "string"
       type:
         type: "string"
+      download_locked:
+        type: "boolean"
     example:
       size: 0.80082819046101150206595775671303272247314453125
       count: 6.02745618307040320615897144307382404804229736328125
       name: "name"
       id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      download_locked: true
       type: "type"
   ShareDownloadLinkReq:
     type: "object"
