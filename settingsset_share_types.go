@@ -9,24 +9,11 @@
 
 package quatrix
 
-type SettingsSetReq struct {
+type SettingssetShareTypes struct {
 
-	Title string `json:"title,omitempty"`
+	PublicShare bool `json:"public_share,omitempty"`
 
-	Bcc []string `json:"bcc,omitempty"`
+	TrackedShare bool `json:"tracked_share,omitempty"`
 
-	BillingEmails []string `json:"billing_emails,omitempty"`
-
-	EmailFooter string `json:"email_footer,omitempty"`
-
-	Language string `json:"language,omitempty"`
-
-	PgpEnabled bool `json:"pgp_enabled,omitempty"`
-
-	ShareTypes *SettingssetShareTypes `json:"share_types,omitempty"`
-
-	AuthMethods []string `json:"auth_methods,omitempty"`
-
-	// Available formats 1.1.1.1, 1.1.1.1\\32, 1.1.1.1-255
-	IpWhitelist []string `json:"ip_whitelist,omitempty"`
+	RestrictedShare bool `json:"restricted_share,omitempty"`
 }

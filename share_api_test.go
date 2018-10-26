@@ -506,8 +506,8 @@ func TestShareApiService_FilesReturnSendPost(t *testing.T) {
 	tearDown := initClient()
 	defer tearDown()
 
-	JobResp := &JobResp{
-		JobId: testStringValue,
+	JobResp := &FilesReturnSendResp{
+		FileIds: []string{testStringValue},
 	}
 
 	mu.HandleFunc("/files-return/send", func(w http.ResponseWriter, r *http.Request) {

@@ -193,14 +193,14 @@ func (a *ShareApiService) FilesReturnMetadataIdGet(ctx context.Context, id strin
  Create and send return files share 
  * @param ctx context.Context for authentication, logging, tracing, etc.
  @param body 
- @return JobResp*/
-func (a *ShareApiService) FilesReturnSendPost(ctx context.Context, body FilesReturnSendReq) (JobResp,  *http.Response, error) {
+ @return FilesReturnSendResp*/
+func (a *ShareApiService) FilesReturnSendPost(ctx context.Context, body FilesReturnSendReq) (FilesReturnSendResp,  *http.Response, error) {
 	var (
 		localVarHttpMethod = strings.ToUpper("Post")
 		localVarPostBody interface{}
 		localVarFileName string
 		localVarFileBytes []byte
-	 	successPayload  JobResp
+	 	successPayload  FilesReturnSendResp
 	)
 
 	// validate body params

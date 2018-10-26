@@ -85,7 +85,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **FilesReturnSendPost**
-> JobResp FilesReturnSendPost(ctx, body)
+> FilesReturnSendResp FilesReturnSendPost(ctx, body)
 Send return files share
 
 Create and send return files share 
@@ -99,7 +99,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**JobResp**](JobResp.md)
+[**FilesReturnSendResp**](FilesReturnSendResp.md)
 
 ### Authorization
 

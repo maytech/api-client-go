@@ -9,24 +9,7 @@
 
 package quatrix
 
-type SettingsSetReq struct {
+type FilesReturnSendResp struct {
 
-	Title string `json:"title,omitempty"`
-
-	Bcc []string `json:"bcc,omitempty"`
-
-	BillingEmails []string `json:"billing_emails,omitempty"`
-
-	EmailFooter string `json:"email_footer,omitempty"`
-
-	Language string `json:"language,omitempty"`
-
-	PgpEnabled bool `json:"pgp_enabled,omitempty"`
-
-	ShareTypes *SettingssetShareTypes `json:"share_types,omitempty"`
-
-	AuthMethods []string `json:"auth_methods,omitempty"`
-
-	// Available formats 1.1.1.1, 1.1.1.1\\32, 1.1.1.1-255
-	IpWhitelist []string `json:"ip_whitelist,omitempty"`
+	FileIds []string `json:"file_ids,omitempty"`
 }

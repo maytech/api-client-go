@@ -2660,10 +2660,10 @@ paths:
           $ref: "#/definitions/FilesReturnSendReq"
         x-exportParamName: "Body"
       responses:
-        202:
-          description: "Job id"
+        201:
+          description: "Sended files ids"
           schema:
-            $ref: "#/definitions/JobResp"
+            $ref: "#/definitions/FilesReturnSendResp"
         400:
           description: "Parameter Error"
           schema:
@@ -5767,6 +5767,18 @@ definitions:
     example:
       user_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
       project_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+  settingsset_share_types:
+    properties:
+      public_share:
+        type: "boolean"
+      tracked_share:
+        type: "boolean"
+      restricted_share:
+        type: "boolean"
+    example:
+      tracked_share: true
+      restricted_share: true
+      public_share: true
   SettingsSetReq:
     type: "object"
     properties:
@@ -5784,18 +5796,25 @@ definitions:
         type: "string"
       language:
         type: "string"
-      enable_pgp:
+      pgp_enabled:
         type: "boolean"
       share_types:
-        type: "object"
-        properties: {}
+        $ref: "#/definitions/settingsset_share_types"
       auth_methods:
         type: "array"
         items:
           type: "string"
+          enum:
+          - "IP"
+          - "2FA"
+      ip_whitelist:
+        type: "array"
+        description: "Available formats 1.1.1.1, 1.1.1.1\\32, 1.1.1.1-255"
+        items:
+          type: "string"
     title: "SettingsSetReq"
     example:
-      enable_pgp: true
+      pgp_enabled: true
       billing_emails:
       - "billing_emails"
       - "billing_emails"
@@ -5803,11 +5822,17 @@ definitions:
       - "bcc"
       - "bcc"
       auth_methods:
-      - "auth_methods"
-      - "auth_methods"
+      - "IP"
+      - "IP"
       email_footer: "email_footer"
+      ip_whitelist:
+      - "ip_whitelist"
+      - "ip_whitelist"
       language: "language"
-      share_types: "{}"
+      share_types:
+        tracked_share: true
+        restricted_share: true
+        public_share: true
       title: "title"
   SettingsUploadLogoLinkResp:
     properties:
@@ -6585,6 +6610,17 @@ definitions:
       - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
       id: "id"
       message: "message"
+  FilesReturnSendResp:
+    properties:
+      file_ids:
+        type: "array"
+        items:
+          type: "string"
+          format: "uuid"
+    example:
+      file_ids:
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
   FilesReturnMetadataResp:
     properties:
       id:
