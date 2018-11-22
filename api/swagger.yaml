@@ -593,6 +593,29 @@ paths:
           description: "Unauthorized"
           schema:
             $ref: "#/definitions/ErrorModel"
+  /file/size/{id}:
+    get:
+      tags:
+      - "File"
+      summary: "Get file size"
+      description: "Get file size\n"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of a file"
+        required: true
+        type: "string"
+        format: "uuid"
+        x-exportParamName: "Id"
+      responses:
+        200:
+          description: "File size"
+          schema:
+            $ref: "#/definitions/FileSizeResp"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
   /file/wopi-token/{id}:
     get:
       tags:
@@ -4815,6 +4838,14 @@ definitions:
       action_role: "{}"
       id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
       type: "type"
+  FileSizeResp:
+    properties:
+      size:
+        type: "number"
+        format: "int"
+        description: "File size in bytes"
+    example:
+      size: 0.80082819046101150206595775671303272247314453125
   MakeDirReq:
     type: "object"
     properties:

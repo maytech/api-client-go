@@ -21,6 +21,7 @@ Method | HTTP request | Description
 [**FilePreviewIdGet**](FileApi.md#FilePreviewIdGet) | **Get** /file/preview/{id} | File preview
 [**FileRenameIdPost**](FileApi.md#FileRenameIdPost) | **Post** /file/rename/{id} | Rename file or folder
 [**FileSearchPost**](FileApi.md#FileSearchPost) | **Post** /file/search | Search files
+[**FileSizeIdGet**](FileApi.md#FileSizeIdGet) | **Get** /file/size/{id} | Get file size
 [**FileTagsIdGet**](FileApi.md#FileTagsIdGet) | **Get** /file/tags/{id} | File tags
 [**FileWopiTokenIdGet**](FileApi.md#FileWopiTokenIdGet) | **Get** /file/wopi-token/{id} | Get wopi token for file
 
@@ -518,6 +519,34 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**[]FileResp**](FileResp.md)
+
+### Authorization
+
+[api_key](../README.md#api_key)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **FileSizeIdGet**
+> FileSizeResp FileSizeIdGet(ctx, id)
+Get file size
+
+Get file size 
+
+### Required Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **ctx** | **context.Context** | context for logging, tracing, authentication, etc.
+  **id** | [**string**](.md)| ID of a file | 
+
+### Return type
+
+[**FileSizeResp**](FileSizeResp.md)
 
 ### Authorization
 

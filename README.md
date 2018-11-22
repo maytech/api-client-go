@@ -67,6 +67,7 @@ Class | Method | HTTP request | Description
 *FileApi* | [**FilePreviewIdGet**](docs/FileApi.md#filepreviewidget) | **Get** /file/preview/{id} | File preview
 *FileApi* | [**FileRenameIdPost**](docs/FileApi.md#filerenameidpost) | **Post** /file/rename/{id} | Rename file or folder
 *FileApi* | [**FileSearchPost**](docs/FileApi.md#filesearchpost) | **Post** /file/search | Search files
+*FileApi* | [**FileSizeIdGet**](docs/FileApi.md#filesizeidget) | **Get** /file/size/{id} | Get file size
 *FileApi* | [**FileTagsIdGet**](docs/FileApi.md#filetagsidget) | **Get** /file/tags/{id} | File tags
 *FileApi* | [**FileWopiTokenIdGet**](docs/FileApi.md#filewopitokenidget) | **Get** /file/wopi-token/{id} | Get wopi token for file
 *GroupApi* | [**ContactGroupGet**](docs/GroupApi.md#contactgroupget) | **Get** /contact/group | All contact groups
@@ -202,6 +203,7 @@ Class | Method | HTTP request | Description
  - [FileRenameReq](docs/FileRenameReq.md)
  - [FileRenameResp](docs/FileRenameResp.md)
  - [FileResp](docs/FileResp.md)
+ - [FileSizeResp](docs/FileSizeResp.md)
  - [FileTagResp](docs/FileTagResp.md)
  - [FilesReturnMakedirReq](docs/FilesReturnMakedirReq.md)
  - [FilesReturnMakedirResps](docs/FilesReturnMakedirResps.md)
