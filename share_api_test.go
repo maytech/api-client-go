@@ -31,6 +31,7 @@ func TestShareApiService_ShareRequestPost(t *testing.T) {
 	})
 
 	body := ShareRequestReq{
+		Ids:[]string{testStringValue},
 		ReturnPgpEncrypted: testBoolValue,
 	}
 
@@ -126,6 +127,7 @@ func TestShareApiService_FilesReturnUploadLinkIdPost(t *testing.T) {
 	body := FilesReturnUploadLinkReq{
 		ParentId: testStringValue,
 		FileSize: testDigitalValue,
+		Name:testStringValue,
 	}
 
 	result, response, err := client.ShareApi.FilesReturnUploadLinkIdPost(context.Background(), testStringValue, body)

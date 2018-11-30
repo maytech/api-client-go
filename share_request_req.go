@@ -16,7 +16,10 @@ type ShareRequestReq struct {
 	SendEmail bool `json:"send_email,omitempty"`
 
 	// List of recipient ids
-	Ids []string `json:"ids,omitempty"`
+	Ids []string `json:"ids"`
 
 	Message string `json:"message,omitempty"`
+
+	// Target folder id for requested files
+	FolderId string `json:"folder_id,omitempty"`
 }

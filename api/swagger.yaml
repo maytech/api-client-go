@@ -6708,18 +6708,20 @@ definitions:
       folder_id: "folder_id"
       sender_email: "sender_email"
   FilesReturnUploadLinkReq:
-    type: "object"
     required:
-    - "parent_id"
+    - "name"
     properties:
       parent_id:
         type: "string"
         format: "uuid"
       file_size:
         type: "number"
+      name:
+        type: "string"
     title: "FilesReturnUploadLinkReq"
     example:
       parent_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      name: "name"
       file_size: 0.80082819046101150206595775671303272247314453125
   FilesReturnUploadLinkResp:
     properties:
@@ -6879,11 +6881,15 @@ definitions:
       - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
   ShareRequestReq:
     type: "object"
+    required:
+    - "ids"
     properties:
       return_pgp_encrypted:
         type: "boolean"
+        default: false
       send_email:
         type: "boolean"
+        default: true
       ids:
         type: "array"
         description: "List of recipient ids"
@@ -6892,14 +6898,20 @@ definitions:
           format: "uuid"
       message:
         type: "string"
+      folder_id:
+        type: "string"
+        format: "uuid"
+        description: "Target folder id for requested files"
+        default: "Incoming Shares folder id"
     title: "ShareRequestReq"
     example:
-      return_pgp_encrypted: true
+      return_pgp_encrypted: false
       send_email: true
       ids:
       - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
       - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
       message: "message"
+      folder_id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
   ShareRequestResp:
     properties:
       id:

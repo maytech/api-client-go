@@ -11,7 +11,9 @@ package quatrix
 
 type FilesReturnUploadLinkReq struct {
 
-	ParentId string `json:"parent_id"`
+	ParentId string `json:"parent_id,omitempty"`
 
 	FileSize float32 `json:"file_size,omitempty"`
+
+	Name string `json:"name"`
 }
