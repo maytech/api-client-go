@@ -4,17 +4,17 @@ All URIs are relative to *https://api.quatrix.it/api/1.0*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**FileModifyPost**](UploadApi.md#FileModifyPost) | **Post** /file/modify | Get file modify link
-[**SettingsUploadLogoLinkGet**](UploadApi.md#SettingsUploadLogoLinkGet) | **Get** /settings/upload-logo-link | Get logo upload link
+[**FileModifyPost**](UploadApi.md#FileModifyPost) | **Post** /file/modify | Get file modification link
+[**SettingsUploadLogoLinkGet**](UploadApi.md#SettingsUploadLogoLinkGet) | **Get** /settings/upload-logo-link | Get a new logo upload link
 [**UploadFinalizeIdGet**](UploadApi.md#UploadFinalizeIdGet) | **Get** /upload/finalize/{id} | Finalize chunked file upload
 [**UploadLinkPost**](UploadApi.md#UploadLinkPost) | **Post** /upload/link | Get file upload link
 
 
 # **FileModifyPost**
 > FileModifyResp FileModifyPost(ctx, body)
-Get file modify link
+Get file modification link
 
-Get file modify link 
+Get file modification link 
 
 ### Required Parameters
 
@@ -40,9 +40,9 @@ Name | Type | Description  | Notes
 
 # **SettingsUploadLogoLinkGet**
 > SettingsUploadLogoLinkResp SettingsUploadLogoLinkGet(ctx, )
-Get logo upload link
+Get a new logo upload link
 
-Get account logo upload link 
+Get a unique key for uploading a new logo 
 
 ### Required Parameters
 This endpoint does not need any parameter.
@@ -66,7 +66,7 @@ This endpoint does not need any parameter.
 > UploadFinalizeResp UploadFinalizeIdGet(ctx, id, optional)
 Finalize chunked file upload
 
-Finalize chunked file upload 
+Complete the chunked upload of a file. 
 
 ### Required Parameters
 
@@ -103,7 +103,7 @@ Name | Type | Description  | Notes
 > FileModifyResp UploadLinkPost(ctx, body)
 Get file upload link
 
-Get file upload link 
+Retrieve a link for uploading a file. 
 
 ### Required Parameters
 

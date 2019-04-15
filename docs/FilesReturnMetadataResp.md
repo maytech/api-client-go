@@ -3,7 +3,7 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Id** | **string** |  | [optional] [default to null]
+**Id** | **string** | already created share ID. | [optional] [default to null]
 **Subject** | **string** |  | [optional] [default to null]
 **SenderName** | **string** |  | [optional] [default to null]
 **SenderKey** | **string** |  | [optional] [default to null]

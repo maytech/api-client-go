@@ -4,15 +4,15 @@ All URIs are relative to *https://api.quatrix.it/api/1.0*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**LanguagesDefaultGet**](LanguageApi.md#LanguagesDefaultGet) | **Get** /languages/default | Default language
-[**LanguagesGet**](LanguageApi.md#LanguagesGet) | **Get** /languages | List languages
+[**LanguagesDefaultGet**](LanguageApi.md#LanguagesDefaultGet) | **Get** /languages/default | Get default language
+[**LanguagesGet**](LanguageApi.md#LanguagesGet) | **Get** /languages | List available languages
 
 
 # **LanguagesDefaultGet**
 > LanguagesDefaultResp LanguagesDefaultGet(ctx, )
-Default language
+Get default language
 
-Get default language 
+Get the default language ID. English (GB) is set as the default language for Quatrix. 
 
 ### Required Parameters
 This endpoint does not need any parameter.
@@ -34,9 +34,9 @@ No authorization required
 
 # **LanguagesGet**
 > []LanguagesRespItems LanguagesGet(ctx, )
-List languages
+List available languages
 
-List languages 
+Get the list of languages that can be set for the account. English and Chinese are currently available. 
 
 ### Required Parameters
 This endpoint does not need any parameter.

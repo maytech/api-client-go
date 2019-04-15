@@ -4,23 +4,23 @@ All URIs are relative to *https://api.quatrix.it/api/1.0*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**ProjectFolderAddUsersIdPost**](ProjectFolderApi.md#ProjectFolderAddUsersIdPost) | **Post** /project-folder/add-users/{id} | Add project folder users
-[**ProjectFolderCreatePost**](ProjectFolderApi.md#ProjectFolderCreatePost) | **Post** /project-folder/create | Create project folder
-[**ProjectFolderDeleteIdGet**](ProjectFolderApi.md#ProjectFolderDeleteIdGet) | **Get** /project-folder/delete/{id} | Remove project folder
+[**ProjectFolderAddUsersIdPost**](ProjectFolderApi.md#ProjectFolderAddUsersIdPost) | **Post** /project-folder/add-users/{id} | Add users to the project folder
+[**ProjectFolderCreatePost**](ProjectFolderApi.md#ProjectFolderCreatePost) | **Post** /project-folder/create | Create a project folder
+[**ProjectFolderDeleteIdGet**](ProjectFolderApi.md#ProjectFolderDeleteIdGet) | **Get** /project-folder/delete/{id} | Convert a project folder to a folder
 [**ProjectFolderDeleteUsersPost**](ProjectFolderApi.md#ProjectFolderDeleteUsersPost) | **Post** /project-folder/delete-users/ | Remove project folder users
-[**ProjectFolderEditUsersIdPost**](ProjectFolderApi.md#ProjectFolderEditUsersIdPost) | **Post** /project-folder/edit-users/{id} | Update project folder users
-[**ProjectFolderGet**](ProjectFolderApi.md#ProjectFolderGet) | **Get** /project-folder | List of valid project folder for current user
-[**ProjectFolderMetadataIdGet**](ProjectFolderApi.md#ProjectFolderMetadataIdGet) | **Get** /project-folder/metadata/{id} | Project folder metadata
-[**ProjectFolderProjectUsersPost**](ProjectFolderApi.md#ProjectFolderProjectUsersPost) | **Post** /project-folder/project-users | List of project folders for users
-[**ProjectFolderSetUsersPost**](ProjectFolderApi.md#ProjectFolderSetUsersPost) | **Post** /project-folder/set-users | Add users to project folders. Replace exists permissions if users exists
-[**ProjectFolderUsersIdGet**](ProjectFolderApi.md#ProjectFolderUsersIdGet) | **Get** /project-folder/users/{id} | List project folder users
+[**ProjectFolderEditUsersIdPost**](ProjectFolderApi.md#ProjectFolderEditUsersIdPost) | **Post** /project-folder/edit-users/{id} | Update users’ permissions of the project folder
+[**ProjectFolderGet**](ProjectFolderApi.md#ProjectFolderGet) | **Get** /project-folder | List available project folders for a logged-in user
+[**ProjectFolderMetadataIdGet**](ProjectFolderApi.md#ProjectFolderMetadataIdGet) | **Get** /project-folder/metadata/{id} | Get project folder metadata
+[**ProjectFolderProjectUsersPost**](ProjectFolderApi.md#ProjectFolderProjectUsersPost) | **Post** /project-folder/project-users | List all project folders for given users
+[**ProjectFolderSetUsersPost**](ProjectFolderApi.md#ProjectFolderSetUsersPost) | **Post** /project-folder/set-users | Add users to project folders.
+[**ProjectFolderUsersIdGet**](ProjectFolderApi.md#ProjectFolderUsersIdGet) | **Get** /project-folder/users/{id} | List users of the project folder
 
 
 # **ProjectFolderAddUsersIdPost**
 > []UserPermissionResp ProjectFolderAddUsersIdPost(ctx, id, body)
-Add project folder users
+Add users to the project folder
 
-Add project folder users 
+Add users to the specified project folder. 
 
 ### Required Parameters
 
@@ -47,9 +47,9 @@ Name | Type | Description  | Notes
 
 # **ProjectFolderCreatePost**
 > PfCreateResp ProjectFolderCreatePost(ctx, body)
-Create project folder
+Create a project folder
 
-Create new project folder 
+Create a new project folder for a user. 
 
 ### Required Parameters
 
@@ -75,9 +75,9 @@ Name | Type | Description  | Notes
 
 # **ProjectFolderDeleteIdGet**
 > IdResp ProjectFolderDeleteIdGet(ctx, id)
-Remove project folder
+Convert a project folder to a folder
 
-Remove project folder 
+Convert the project folder to regular folder keeping the same name and location. 
 
 ### Required Parameters
 
@@ -105,7 +105,7 @@ Name | Type | Description  | Notes
 > []PfDeleteUsersRespItems ProjectFolderDeleteUsersPost(ctx, body)
 Remove project folder users
 
-Remove project folder users 
+Delete users of the given project folder. 
 
 ### Required Parameters
 
@@ -131,9 +131,9 @@ Name | Type | Description  | Notes
 
 # **ProjectFolderEditUsersIdPost**
 > []UserPermissionResp ProjectFolderEditUsersIdPost(ctx, id, body)
-Update project folder users
+Update users’ permissions of the project folder
 
-Update project folder users 
+Edit users’ permissions of the given project folder. 
 
 ### Required Parameters
 
@@ -160,9 +160,9 @@ Name | Type | Description  | Notes
 
 # **ProjectFolderGet**
 > []ProjectFoldersListRespItem ProjectFolderGet(ctx, )
-List of valid project folder for current user
+List available project folders for a logged-in user
 
-Get list of project folders 
+Retrieve a list of all project folders of a current logged-in user. 
 
 ### Required Parameters
 This endpoint does not need any parameter.
@@ -184,9 +184,9 @@ This endpoint does not need any parameter.
 
 # **ProjectFolderMetadataIdGet**
 > PfMetadataResp ProjectFolderMetadataIdGet(ctx, id)
-Project folder metadata
+Get project folder metadata
 
-Project folder metadata 
+Retrieve the metadata of the project folder. 
 
 ### Required Parameters
 
@@ -212,9 +212,9 @@ Name | Type | Description  | Notes
 
 # **ProjectFolderProjectUsersPost**
 > []PfUsersListRespItems ProjectFolderProjectUsersPost(ctx, body)
-List of project folders for users
+List all project folders for given users
 
-List of project folders for users 
+Get a list of all project folders for given users. 
 
 ### Required Parameters
 
@@ -240,9 +240,9 @@ Name | Type | Description  | Notes
 
 # **ProjectFolderSetUsersPost**
 > []PfSetUsersRespItems ProjectFolderSetUsersPost(ctx, body)
-Add users to project folders. Replace exists permissions if users exists
+Add users to project folders.
 
-Set users to project folders 
+Add users to specified project folders. If the users exist in the given project folder, their permissions will be updated based on given parameters. 
 
 ### Required Parameters
 
@@ -268,9 +268,9 @@ Name | Type | Description  | Notes
 
 # **ProjectFolderUsersIdGet**
 > []UserPermissionResp ProjectFolderUsersIdGet(ctx, id)
-List project folder users
+List users of the project folder
 
-List project folder users 
+Retrieve a list of users by given project folder ID. 
 
 ### Required Parameters
 

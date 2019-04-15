@@ -4,17 +4,17 @@ All URIs are relative to *https://api.quatrix.it/api/1.0*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**ContactGroupGet**](GroupApi.md#ContactGroupGet) | **Get** /contact/group | All contact groups
-[**GroupGet**](GroupApi.md#GroupGet) | **Get** /group | List user groups
-[**GroupMetadataIdGet**](GroupApi.md#GroupMetadataIdGet) | **Get** /group/metadata/{id} | Group metadata
-[**UserGroupGet**](GroupApi.md#UserGroupGet) | **Get** /user/group | All user groups
+[**ContactGroupGet**](GroupApi.md#ContactGroupGet) | **Get** /contact/group | List available contact groups.
+[**GroupGet**](GroupApi.md#GroupGet) | **Get** /group | List available user groups
+[**GroupMetadataIdGet**](GroupApi.md#GroupMetadataIdGet) | **Get** /group/metadata/{id} | Get group metadata
+[**UserGroupGet**](GroupApi.md#UserGroupGet) | **Get** /user/group | List all user groups
 
 
 # **ContactGroupGet**
 > []ContactGroupRespItems ContactGroupGet(ctx, )
-All contact groups
+List available contact groups.
 
-List all contact groups 
+Get a list of available contact groups. 
 
 ### Required Parameters
 This endpoint does not need any parameter.
@@ -36,9 +36,9 @@ This endpoint does not need any parameter.
 
 # **GroupGet**
 > []GroupResp GroupGet(ctx, )
-List user groups
+List available user groups
 
-List user groups 
+Get a list of available contact groups. 
 
 ### Required Parameters
 This endpoint does not need any parameter.
@@ -60,9 +60,9 @@ This endpoint does not need any parameter.
 
 # **GroupMetadataIdGet**
 > GroupResp GroupMetadataIdGet(ctx, id)
-Group metadata
+Get group metadata
 
-Get group metadata 
+Retrieve information about the group by the specified group ID. 
 
 ### Required Parameters
 
@@ -88,9 +88,9 @@ Name | Type | Description  | Notes
 
 # **UserGroupGet**
 > []Group UserGroupGet(ctx, )
-All user groups
+List all user groups
 
-List all user groups 
+Retrieve a list of all user groups that can be set for users. 
 
 ### Required Parameters
 This endpoint does not need any parameter.

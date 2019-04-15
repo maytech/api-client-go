@@ -199,43 +199,13 @@ func TestFileApiService_FileDiffIdGet(t *testing.T) {
 	checkStatusCode(t, response.StatusCode, http.StatusOK)
 }
 
-func TestFileApiService_FileWopiTokenIdGet(t *testing.T) {
-	tearDown := initClient()
-	defer tearDown()
-
-	IdResp := &IdResp{
-		Id: testStringValue,
-	}
-
-	mu.HandleFunc("/file/wopi-token/{id}", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-
-		IdRespJson, err := json.Marshal(*IdResp)
-		if err != nil {
-			return
-		}
-
-		w.Write(IdRespJson)
-	})
-
-	result, response, err := client.FileApi.FileWopiTokenIdGet(context.Background(), testStringValue)
-	if err != nil {
-		t.Error(err)
-	}
-
-	deepEqual(t, result, *IdResp)
-	checkStatusCode(t, response.StatusCode, http.StatusOK)
-}
-
 func TestFileApiService_FilePreviewIdGet(t *testing.T) {
 	tearDown := initClient()
 	defer tearDown()
 
 	FilePreviewResp := &FilePreviewResp{
 		Type_:     testStringValue,
-		Source:    testStringValue,
-		SourcePdf: testStringValue,
+		Uri:	   testStringValue,
 	}
 
 	mu.HandleFunc("/file/preview/{id}", func(w http.ResponseWriter, r *http.Request) {

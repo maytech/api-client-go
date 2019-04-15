@@ -4,18 +4,18 @@ All URIs are relative to *https://api.quatrix.it/api/1.0*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**AutomationCreatePost**](AutomationApi.md#AutomationCreatePost) | **Post** /automation/create | Create automation
+[**AutomationCreatePost**](AutomationApi.md#AutomationCreatePost) | **Post** /automation/create | Create a new automation
 [**AutomationDeletePost**](AutomationApi.md#AutomationDeletePost) | **Post** /automation/delete | Delete automations
-[**AutomationEditPost**](AutomationApi.md#AutomationEditPost) | **Post** /automation/edit/ | Edit automation
-[**AutomationGet**](AutomationApi.md#AutomationGet) | **Get** /automation | List automations
-[**AutomationMetadataIdGet**](AutomationApi.md#AutomationMetadataIdGet) | **Get** /automation/metadata/{id} | Automation metadata
+[**AutomationEditPost**](AutomationApi.md#AutomationEditPost) | **Post** /automation/edit/ | Edit an existing automation
+[**AutomationGet**](AutomationApi.md#AutomationGet) | **Get** /automation | List all automations
+[**AutomationMetadataIdGet**](AutomationApi.md#AutomationMetadataIdGet) | **Get** /automation/metadata/{id} | Get automation metadata
 
 
 # **AutomationCreatePost**
 > AutomationResp AutomationCreatePost(ctx, body)
-Create automation
+Create a new automation
 
-Create new automation 
+Add a new automatic operation. 
 
 ### Required Parameters
 
@@ -43,7 +43,7 @@ Name | Type | Description  | Notes
 > AutomationDeleteResp AutomationDeletePost(ctx, body)
 Delete automations
 
-Delete automations 
+Delete a rule set for automatic operations. 
 
 ### Required Parameters
 
@@ -69,9 +69,9 @@ Name | Type | Description  | Notes
 
 # **AutomationEditPost**
 > []AutomationResp AutomationEditPost(ctx, body)
-Edit automation
+Edit an existing automation
 
-Edit automation 
+Update an existing rule for a specified automatic operation. 
 
 ### Required Parameters
 
@@ -97,9 +97,9 @@ Name | Type | Description  | Notes
 
 # **AutomationGet**
 > []AutomationResp AutomationGet(ctx, )
-List automations
+List all automations
 
-List of all automations 
+Retrieve a list of all automations of the user. 
 
 ### Required Parameters
 This endpoint does not need any parameter.
@@ -121,16 +121,16 @@ This endpoint does not need any parameter.
 
 # **AutomationMetadataIdGet**
 > AutomationResp AutomationMetadataIdGet(ctx, id)
-Automation metadata
+Get automation metadata
 
-Get automation metadata 
+Get the automation metadata by the specified automation ID. 
 
 ### Required Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **ctx** | **context.Context** | context for logging, tracing, authentication, etc.
-  **id** | [**string**](.md)| ID of an automation | 
+  **id** | [**string**](.md)| automation ID | 
 
 ### Return type
 

@@ -4,27 +4,26 @@ All URIs are relative to *https://api.quatrix.it/api/1.0*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**PreviewDocumentPdfIdGet**](PreviewApi.md#PreviewDocumentPdfIdGet) | **Get** /preview/document_pdf/{id} | File document page preview
-[**PreviewImageIdGet**](PreviewApi.md#PreviewImageIdGet) | **Get** /preview/image/{id} | File image preview
-[**PreviewVideoIdGet**](PreviewApi.md#PreviewVideoIdGet) | **Get** /preview/video/{id} | File video preview
+[**FilePreviewIdGet**](PreviewApi.md#FilePreviewIdGet) | **Get** /file/preview/{id} | Get a file preview
+[**PreviewIdGet**](PreviewApi.md#PreviewIdGet) | **Get** /preview/{id} | Get binary preview data
 
 
-# **PreviewDocumentPdfIdGet**
-> PreviewDocumentPdfIdGet(ctx, id)
-File document page preview
+# **FilePreviewIdGet**
+> FilePreviewResp FilePreviewIdGet(ctx, id)
+Get a file preview
 
-Get file document page preview 
+Retrieve a file preview by the given ID of the file. 
 
 ### Required Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **ctx** | **context.Context** | context for logging, tracing, authentication, etc.
-  **id** | [**string**](.md)| File document preview page ID | 
+  **id** | [**string**](.md)| ID of a file | 
 
 ### Return type
 
- (empty response body)
+[**FilePreviewResp**](FilePreviewResp.md)
 
 ### Authorization
 
@@ -33,52 +32,15 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
  - **Content-Type**: application/json
- - **Accept**: image/png
+ - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **PreviewImageIdGet**
-> PreviewImageIdGet(ctx, id, optional)
-File image preview
+# **PreviewIdGet**
+> PreviewIdGet(ctx, id)
+Get binary preview data
 
-Get file image preview 
-
-### Required Parameters
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **ctx** | **context.Context** | context for logging, tracing, authentication, etc.
-  **id** | [**string**](.md)| File ID | 
- **optional** | **map[string]interface{}** | optional parameters | nil if no parameters
-
-### Optional Parameters
-Optional parameters are passed through a map[string]interface{}.
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **id** | [**string**](.md)| File ID | 
- **size** | **string**|  | 
-
-### Return type
-
- (empty response body)
-
-### Authorization
-
-[api_key](../README.md#api_key)
-
-### HTTP request headers
-
- - **Content-Type**: application/json
- - **Accept**: image/png
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
-# **PreviewVideoIdGet**
-> PreviewVideoIdGet(ctx, id)
-File video preview
-
-Get file video preview 
+Get a preview with the response content type based on the file type e.g. image/jpeg for images. 
 
 ### Required Parameters
 
@@ -98,7 +60,7 @@ Name | Type | Description  | Notes
 ### HTTP request headers
 
  - **Content-Type**: application/json
- - **Accept**: image/mp4
+ - **Accept**: image/jpeg, video/mp4, application/pdf
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

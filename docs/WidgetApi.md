@@ -4,16 +4,16 @@ All URIs are relative to *https://api.quatrix.it/api/1.0*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**WidgetFinalizeUploadIdGet**](WidgetApi.md#WidgetFinalizeUploadIdGet) | **Get** /widget/finalize-upload/{id} | Finalize widget chunked file upload
-[**WidgetMetadataIdGet**](WidgetApi.md#WidgetMetadataIdGet) | **Get** /widget/metadata/{id} | Widget metadata
-[**WidgetUploadLinkIdPost**](WidgetApi.md#WidgetUploadLinkIdPost) | **Post** /widget/upload-link/{id} | Widget upload link
+[**WidgetFinalizeUploadIdGet**](WidgetApi.md#WidgetFinalizeUploadIdGet) | **Get** /widget/finalize-upload/{id} | Finalize chunked upload of the widget
+[**WidgetMetadataIdGet**](WidgetApi.md#WidgetMetadataIdGet) | **Get** /widget/metadata/{id} | Get all widget metadata
+[**WidgetUploadLinkIdPost**](WidgetApi.md#WidgetUploadLinkIdPost) | **Post** /widget/upload-link/{id} | Get widget upload link
 
 
 # **WidgetFinalizeUploadIdGet**
 > WidgetFinalizeUploadResp WidgetFinalizeUploadIdGet(ctx, id)
-Finalize widget chunked file upload
+Finalize chunked upload of the widget
 
-Finalize widget chunked file upload 
+Complete the chunked upload of the widget. 
 
 ### Required Parameters
 
@@ -39,9 +39,9 @@ No authorization required
 
 # **WidgetMetadataIdGet**
 > IdResp WidgetMetadataIdGet(ctx, id)
-Widget metadata
+Get all widget metadata
 
-Get widget metadata 
+Retrieve available metadata of the widget. 
 
 ### Required Parameters
 
@@ -67,9 +67,9 @@ No authorization required
 
 # **WidgetUploadLinkIdPost**
 > WidgetUploadLinkResp WidgetUploadLinkIdPost(ctx, id, optional)
-Widget upload link
+Get widget upload link
 
-Get widget upload link 
+Retrieve a link for uploading the widget. 
 
 ### Required Parameters
 

@@ -4,18 +4,18 @@ All URIs are relative to *https://api.quatrix.it/api/1.0*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**AccountInfoGet**](AccountApi.md#AccountInfoGet) | **Get** /account/info | Account info
+[**AccountInfoGet**](AccountApi.md#AccountInfoGet) | **Get** /account/info | Get account usage info
 [**AccountListGet**](AccountApi.md#AccountListGet) | **Get** /account/list | List user accounts
-[**AccountLogoGet**](AccountApi.md#AccountLogoGet) | **Get** /account/logo | Account logo
-[**AccountMetadataGet**](AccountApi.md#AccountMetadataGet) | **Get** /account/metadata | Account metadata
-[**AccountRolesGet**](AccountApi.md#AccountRolesGet) | **Get** /account/roles | Account roles
+[**AccountLogoGet**](AccountApi.md#AccountLogoGet) | **Get** /account/logo | Get account logo
+[**AccountMetadataGet**](AccountApi.md#AccountMetadataGet) | **Get** /account/metadata | Get account metadata
+[**AccountRolesGet**](AccountApi.md#AccountRolesGet) | **Get** /account/roles | Call users of the account
 
 
 # **AccountInfoGet**
 > AccountInfoResp AccountInfoGet(ctx, )
-Account info
+Get account usage info
 
-Account usage info 
+Retrieve details of the account e.g. service settings, virus scan details, available and used storage, set automations, etc. 
 
 ### Required Parameters
 This endpoint does not need any parameter.
@@ -39,7 +39,7 @@ This endpoint does not need any parameter.
 > []AccountListRespItems AccountListGet(ctx, )
 List user accounts
 
-List user accounts 
+Get the list with user accounts displaying the ID, host name, plan and status. 
 
 ### Required Parameters
 This endpoint does not need any parameter.
@@ -61,9 +61,9 @@ This endpoint does not need any parameter.
 
 # **AccountLogoGet**
 > AccountLogoGet(ctx, )
-Account logo
+Get account logo
 
-Returns account logo body 
+Retrieve the logo set for the current account. 
 
 ### Required Parameters
 This endpoint does not need any parameter.
@@ -85,9 +85,9 @@ No authorization required
 
 # **AccountMetadataGet**
 > AccountMetadataResp AccountMetadataGet(ctx, )
-Account metadata
+Get account metadata
 
-Get Account Public Metadata 
+Retrieve general settings for the account e.g. status of the user, identity providers, language, set logo and banner text. 
 
 ### Required Parameters
 This endpoint does not need any parameter.
@@ -109,9 +109,9 @@ No authorization required
 
 # **AccountRolesGet**
 > []AccountRolesRespItems AccountRolesGet(ctx, )
-Account roles
+Call users of the account
 
-List account roles 
+Get the list of the current account users with their IDs, names and emails 
 
 ### Required Parameters
 This endpoint does not need any parameter.

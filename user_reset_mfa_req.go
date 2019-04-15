@@ -9,11 +9,9 @@
 
 package quatrix
 
-type SshKeyCreateReq struct {
+type UserResetMfaReq struct {
 
-	Caption string `json:"caption"`
+	Ids []string `json:"ids"`
 
-	Key string `json:"key"`
-
-	Expires float32 `json:"expires,omitempty"`
+	AuthType string `json:"auth_type"`
 }

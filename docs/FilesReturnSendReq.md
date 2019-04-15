@@ -3,7 +3,7 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Id** | **string** |  | [default to null]
+**Id** | **string** | already created share ID. | [default to null]
 **Files** | **[]string** |  | [default to null]
 **Message** | **string** |  | [optional] [default to null]
 

@@ -16,7 +16,7 @@ Name | Type | Description | Notes
 **UserId** | **string** |  | [optional] [default to null]
 **PgpEncrypted** | **bool** | PGP protected share | [optional] [default to null]
 **PrivateKey** | **string** | for PGP | [optional] [default to null]
-**PgpEnabled** | **bool** | Shows that user from current session has PGP key. If True - user will get his private_key. | [optional] [default to null]
+**PgpEnabled** | **bool** | It shows that the user from the current session has PGP key. If True - the user will get his private_key. | [optional] [default to null]
 **Status** | **string** |  | [optional] [default to null]
 **ShareType** | **string** |  | [optional] [default to null]
 **Title** | **string** |  | [optional] [default to null]

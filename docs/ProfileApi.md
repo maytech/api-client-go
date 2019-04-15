@@ -4,20 +4,20 @@ All URIs are relative to *https://api.quatrix.it/api/1.0*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**Profile2faGenerateGet**](ProfileApi.md#Profile2faGenerateGet) | **Get** /profile/2fa/generate | Generate new 2fa code
-[**ProfileGet**](ProfileApi.md#ProfileGet) | **Get** /profile | Profile metadata
-[**ProfileInfoGet**](ProfileApi.md#ProfileInfoGet) | **Get** /profile/info | Additional profile info
-[**ProfileRemoveMfaPost**](ProfileApi.md#ProfileRemoveMfaPost) | **Post** /profile/remove-mfa | Remove MFA for account
-[**ProfileSetMfaPost**](ProfileApi.md#ProfileSetMfaPost) | **Post** /profile/set-mfa | Set MFA enabled for account
+[**Profile2faGenerateGet**](ProfileApi.md#Profile2faGenerateGet) | **Get** /profile/2fa/generate | Generate a new 2FA code
+[**ProfileGet**](ProfileApi.md#ProfileGet) | **Get** /profile | Get profile metadata
+[**ProfileInfoGet**](ProfileApi.md#ProfileInfoGet) | **Get** /profile/info | Retrieve additional profile info
+[**ProfileRemoveMfaPost**](ProfileApi.md#ProfileRemoveMfaPost) | **Post** /profile/remove-mfa | Disable MFA for the logged-in user
+[**ProfileSetMfaPost**](ProfileApi.md#ProfileSetMfaPost) | **Post** /profile/set-mfa | Enable MFA for the logged-in user
 [**ProfileSetPasswordPost**](ProfileApi.md#ProfileSetPasswordPost) | **Post** /profile/set-password | Change profile password
 [**ProfileSetPost**](ProfileApi.md#ProfileSetPost) | **Post** /profile/set | Update profile metadata
 
 
 # **Profile2faGenerateGet**
 > Profile2faGenerateGet(ctx, )
-Generate new 2fa code
+Generate a new 2FA code
 
-Generate new 2fa code QR code 
+Generate a new verification code for 2FA with QR code. 
 
 ### Required Parameters
 This endpoint does not need any parameter.
@@ -39,9 +39,9 @@ This endpoint does not need any parameter.
 
 # **ProfileGet**
 > ProfileResp ProfileGet(ctx, )
-Profile metadata
+Get profile metadata
 
-Get profile metadata 
+Retrieve profile information of the current user. 
 
 ### Required Parameters
 This endpoint does not need any parameter.
@@ -63,9 +63,9 @@ This endpoint does not need any parameter.
 
 # **ProfileInfoGet**
 > ProfileInfoResp ProfileInfoGet(ctx, )
-Additional profile info
+Retrieve additional profile info
 
-Get additional profile info 
+Get additional details about the account e.g. number of used and available user licenses. 
 
 ### Required Parameters
 This endpoint does not need any parameter.
@@ -87,9 +87,9 @@ This endpoint does not need any parameter.
 
 # **ProfileRemoveMfaPost**
 > ProfileRemoveMfaResp ProfileRemoveMfaPost(ctx, body)
-Remove MFA for account
+Disable MFA for the logged-in user
 
-Remove MFA for account if it was not forced by admin 
+Trun off MFA (multifactor authentication) for the user who requested 2FA deactivation while editing their profile. This operation is possible if it was not forced by the administrator. 
 
 ### Required Parameters
 
@@ -115,9 +115,9 @@ Name | Type | Description  | Notes
 
 # **ProfileSetMfaPost**
 > ProfileSetMfaResp ProfileSetMfaPost(ctx, body)
-Set MFA enabled for account
+Enable MFA for the logged-in user
 
-Set multi factor autorization method (MFA) enabled for account 
+Turn on MFA (multifactor authentication) for the user who requested 2FA activation while editing their profile. MFA adds an additional secure step on the way to log in to the account by using one more authentication method beyond the email and password. 
 
 ### Required Parameters
 
@@ -145,7 +145,7 @@ Name | Type | Description  | Notes
 > ProfileSetPasswordResp ProfileSetPasswordPost(ctx, body)
 Change profile password
 
-Change profile password 
+Change the account password for the logged-in user. 
 
 ### Required Parameters
 
@@ -173,7 +173,7 @@ Name | Type | Description  | Notes
 > ProfileSetResp ProfileSetPost(ctx, optional)
 Update profile metadata
 
-Update profile metadata 
+Edit profile information of the current user including name, email, language and message signature. 
 
 ### Required Parameters
 

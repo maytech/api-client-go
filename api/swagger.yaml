@@ -1,68 +1,62 @@
 ---
 swagger: "2.0"
 info:
-  description: "The Quatrix API enables you to automate your interaction with Quatrix\
-    \ using any scripting or programming language.\nYou can test API calls on [Swagger](https://docs.maytech.net/swagger/),\
-    \ the interactive environment we use as the repository for the Quatrix API.\n\
-    In order to authorize to Quatrix API you will need to have a Quatrix account https://yourcompanyname.quatrix.it/\
-    \ (e.g. https://test-api.quatrix.it/).\nYou can set up a free trial account [here](https://www.maytech.net/freetrial.html#trial=qtrx).\n\
-    Below you'll find information on how to authenticate in a Quatrix session, how\
-    \ to construct JSON formatted API call and what JSON responses to expect."
+  description: "Download and upload files or folders, share them with predefined security\
+    \ options, manage your account and profile settings and a lot more functionalities\
+    \ can be easily integrated into your application using our Quatrix APIs. Learn\
+    \ more how to authenticate the Quatrix session, how to construct JSON formatted\
+    \ API calls and what responses to expect in our [API Guide](https://docs.maytech.net/display/MD/API+Guide)."
   version: "1.0.0"
   title: "Quatrix API"
 host: "api.quatrix.it"
 basePath: "/api/1.0"
 tags:
 - name: "Auth"
-  description: "Authenticating to Quatrix account"
+  description: "Authenticate Quatrix account"
 - name: "Account"
-  description: "Getting general information about Quatrix account"
+  description: "Get general information about the current account account"
 - name: "Language"
-  description: "Getting information about account language"
+  description: "Get details about account language"
 - name: "Contact"
-  description: "Creating and managing Personal and Site contacts"
+  description: "Create and manage contacts"
 - name: "PGP"
-  description: "Setting and managing PGP keys"
+  description: "Generate and manage PGP keys"
 - name: "Group"
-  description: "Getting information about users and contacts"
+  description: "Get information about users and contacts"
 - name: "File"
-  description: "Retrieving and modifying of file(s)"
+  description: "Retrieve and modify files/folders (hereinafter files)"
 - name: "Upload"
   description: "File(s) uploading"
 - name: "Password Reset"
-  description: "Setting/Resetting of Password"
+  description: "Reset password for existing users"
 - name: "Preview"
-  description: "Previewing of Photo(s)/Video(s)/File(s)"
+  description: "Preview photos, videos or files"
 - name: "Profile"
-  description: "Editing your profile information"
+  description: "Update profile information of the user"
 - name: "MFA"
-  description: "Enabling/disabling MFA"
+  description: "Enable and disable MFA"
 - name: "Project Folder"
-  description: "Creating and Managing Project Folders"
+  description: "Create and manage project folders"
 - name: "Site Settings"
-  description: "Managing service settings"
+  description: "Manage service settings"
 - name: "User"
-  description: "Creating and managing users"
+  description: "Create and manage users"
 - name: "Widget"
-  description: "Setting of widget"
+  description: "Set the widget"
 - name: "Share"
-  description: "Creating shares / Quick links / Request file(s) links"
+  description: "Create shares, quicklinks, file sharing requests"
 - name: "ActivityLog"
-  description: "Tracking all activities"
+  description: "Track activity history"
 - name: "Service"
-  description: "Getting information about the service"
+  description: "Get information about the service"
 - name: "Automation"
-  description: "Setting and modifying automatic rules"
+  description: "Create and administer automatic rules"
 - name: "Inbox"
-  description: "Information about folders of your contacts"
+  description: "Activity tracking of a logged-in contact"
 - name: "SSH-Key"
-  description: "Retrieving and modifying of SSH-keys"
+  description: "Create and manage SSH keys"
 - name: "Billing"
-  description: "Upgrading the account"
-- name: "Check"
-  description: "API status checks"
-- name: "WOPI"
-  description: "Calls for Office Online integration"
+  description: "Upgrade the account"
 schemes:
 - "https"
 consumes:
@@ -76,16 +70,21 @@ paths:
     get:
       tags:
       - "Auth"
-      summary: "Login and get session ID"
-      description: "Basic Authentication with the Authorization header\nThe Authorization\
-        \ header is constructed as follows\n  1. The user email and password are combined\
-        \ with a single colon. (:)\n  2. The resulting string is encoded using a variant\
-        \ of Base64.\n  3. The authorization method and a space is then prepended\
-        \ to the encoded string, separated with a space (e.g. \"Basic \").\n  For\
-        \ example, 'test@example.com' as the user email and 'qwerty' as the password,\
-        \ then the field's value is the\n  base64-encoding of test@example.com:qwerty,\
-        \ or dGVzdEBleGFtcGxlLmNvbTpxd2VydHk=.\n  Then the Authorization header will\
-        \ appear as\n  'Authorization: Basic dGVzdEBleGFtcGxlLmNvbTpxd2VydHk='\n"
+      summary: "Log in and get session ID details"
+      description: "Get session information for the given session ID and log in to\
+        \ the account.\n The easiest way to authenticate is using [Basic HTTP Authentication\
+        \ Scheme](https://en.wikipedia.org/wiki/Basic_access_authentication).\n To\
+        \ proceed with the authorization, you need to have Quatrix account. If you\
+        \ don’t have the one, you can set up a free trial account [here](https://www.maytech.net/freetrial.html#trial=qtrx).\n\
+        \ As the basic authentication requires the authentication of the user with\
+        \ the user ID and password, the Authorization header should be constructed\
+        \ as follows:\n   1. The user email and password are combined with a single\
+        \ colon. (:)\n   2. The resulting string is encoded using a variant of Base64.\n\
+        \   3. The authorization method and a space is then prepended to the encoded\
+        \ string, separated with a space (e.g. \"Basic \").\n   For example, 'test@example.com'\
+        \ as the user email and 'qwerty' as the password, then the field's value is\
+        \ the following:\n   base64-encoding of test@example.com:qwerty, or dGVzdEBleGFtcGxlLmNvbTpxd2VydHk=.\n\
+        \   The authorization header will appear as\n   'Authorization: Basic dGVzdEBleGFtcGxlLmNvbTpxd2VydHk='\n"
       parameters: []
       responses:
         200:
@@ -110,8 +109,9 @@ paths:
       tags:
       - "Auth"
       - "MFA"
-      summary: "MFA"
-      description: "Login with MFA\n"
+      summary: "Log in to the account using MFA"
+      description: "Use to generate a session login token in scenarios in which 2FA\
+        \ or PIN are required.\n"
       parameters:
       - in: "body"
         name: "body"
@@ -132,8 +132,9 @@ paths:
     get:
       tags:
       - "Auth"
-      summary: "Keepalive"
-      description: "Keep alive current session\n"
+      summary: "Refresh session expiration time"
+      description: "Refresh the existing session using the ID for the session. The\
+        \ session will expire if there were no API actions for 15 minutes.\n"
       parameters: []
       responses:
         200:
@@ -146,8 +147,8 @@ paths:
     get:
       tags:
       - "Auth"
-      summary: "Logout"
-      description: "Logout of current session\n"
+      summary: "Close the user's session"
+      description: "Close the session for the currently logged in user.\n"
       parameters: []
       responses:
         200:
@@ -156,8 +157,8 @@ paths:
     post:
       tags:
       - "Auth"
-      summary: "Unblock captcha"
-      description: "Unblock captcha\n"
+      summary: "Unblock the session using CAPTCHA"
+      description: "Enter CAPTCHA to log in the user to the current session.\n"
       parameters:
       - in: "body"
         name: "body"
@@ -182,8 +183,9 @@ paths:
     get:
       tags:
       - "Account"
-      summary: "Account metadata"
-      description: "Get Account Public Metadata\n"
+      summary: "Get account metadata"
+      description: "Retrieve general settings for the account e.g. status of the user,\
+        \ identity providers, language, set logo and banner text.\n"
       parameters: []
       responses:
         200:
@@ -195,8 +197,9 @@ paths:
     get:
       tags:
       - "Account"
-      summary: "Account roles"
-      description: "List account roles\n"
+      summary: "Call users of the account"
+      description: "Get the list of the current account users with their IDs, names\
+        \ and emails\n"
       parameters: []
       responses:
         200:
@@ -214,8 +217,8 @@ paths:
     get:
       tags:
       - "Account"
-      summary: "Account logo"
-      description: "Returns account logo body\n"
+      summary: "Get account logo"
+      description: "Retrieve the logo set for the current account.\n"
       parameters: []
       responses:
         200:
@@ -225,8 +228,9 @@ paths:
     get:
       tags:
       - "Account"
-      summary: "Account info"
-      description: "Account usage info\n"
+      summary: "Get account usage info"
+      description: "Retrieve details of the account e.g. service settings, virus scan\
+        \ details, available and used storage, set automations, etc.\n"
       parameters: []
       responses:
         200:
@@ -242,7 +246,8 @@ paths:
       tags:
       - "Account"
       summary: "List user accounts"
-      description: "List user accounts\n"
+      description: "Get the list with user accounts displaying the ID, host name,\
+        \ plan and status.\n"
       parameters: []
       responses:
         200:
@@ -260,12 +265,13 @@ paths:
     get:
       tags:
       - "Language"
-      summary: "List languages"
-      description: "List languages\n"
+      summary: "List available languages"
+      description: "Get the list of languages that can be set for the account. English\
+        \ and Chinese are currently available.\n"
       parameters: []
       responses:
         200:
-          description: "Languages list"
+          description: "Language list"
           schema:
             type: "array"
             title: "LanguagesResp"
@@ -279,8 +285,9 @@ paths:
     get:
       tags:
       - "Language"
-      summary: "Default language"
-      description: "Get default language\n"
+      summary: "Get default language"
+      description: "Get the default language ID. English (GB) is set as the default\
+        \ language for Quatrix.\n"
       parameters: []
       responses:
         200:
@@ -293,7 +300,8 @@ paths:
       tags:
       - "Contact"
       summary: "List user contacts"
-      description: "List user contacts\n"
+      description: "Retrieve the list of contacts (personal and site) available in\
+        \ the current account.\n"
       parameters: []
       responses:
         200:
@@ -310,8 +318,9 @@ paths:
     get:
       tags:
       - "Contact"
-      summary: "Contact metadata"
-      description: "Get contact metadata\n"
+      summary: "Get contact metadata"
+      description: "Retrieve contact details containing the ID, name, email, status,\
+        \ time it was created, PGP key details, assigned group and permissions.\n"
       parameters:
       - name: "id"
         in: "path"
@@ -333,8 +342,9 @@ paths:
     post:
       tags:
       - "Contact"
-      summary: "Create contact"
-      description: "Create new contact\n"
+      summary: "Create a new contact"
+      description: "Add a new contact to the account. The contact will be assigned\
+        \ a unique ID that can be used to look up the contact inside of Quatrix later.\n"
       parameters:
       - in: "body"
         name: "body"
@@ -362,8 +372,8 @@ paths:
     post:
       tags:
       - "Contact"
-      summary: "Contact metadata"
-      description: "Get contact metadata\n"
+      summary: "Edit contact metadata"
+      description: "Use to edit the existing contact details.\n"
       parameters:
       - name: "id"
         in: "path"
@@ -391,8 +401,8 @@ paths:
     post:
       tags:
       - "Contact"
-      summary: "Delete contact"
-      description: "Delete contact\n"
+      summary: "Delete a contact"
+      description: "Delete an existing contact from the account.\n"
       parameters:
       - in: "body"
         name: "body"
@@ -421,8 +431,8 @@ paths:
     get:
       tags:
       - "Contact"
-      summary: "Upgrade contact"
-      description: "Upgrade contact to user\n"
+      summary: "Upgrade a contact"
+      description: "Convert an existing contact to the user.\n"
       parameters:
       - name: "id"
         in: "path"
@@ -445,8 +455,8 @@ paths:
       tags:
       - "Contact"
       - "PGP"
-      summary: "Contact PGP key"
-      description: "Get contact PGP key. Not used.\n"
+      summary: "Get contact's PGP key"
+      description: "Use to retrieve PGP key generated by the contact.\n"
       parameters:
       - name: "id"
         in: "path"
@@ -472,13 +482,14 @@ paths:
           description: "Contact doesn't have a PGP key"
           schema:
             $ref: "#/definitions/ErrorModel"
+      deprecated: true
   /contact/group:
     get:
       tags:
       - "Contact"
       - "Group"
-      summary: "All contact groups"
-      description: "List all contact groups\n"
+      summary: "List available contact groups."
+      description: "Get a list of available contact groups.\n"
       parameters: []
       responses:
         200:
@@ -496,8 +507,8 @@ paths:
     get:
       tags:
       - "File"
-      summary: "Get all file metadata"
-      description: "Get all file metadata in current user home folder\n"
+      summary: "Get metadata of files"
+      description: "Get information about files in the current User Home folder.\n"
       parameters:
       - name: "content"
         in: "query"
@@ -522,8 +533,8 @@ paths:
     post:
       tags:
       - "File"
-      summary: "Set file metadata"
-      description: "Set file metadata\n"
+      summary: "Modify file metadata"
+      description: "Update file metadata with the given payload.\n"
       parameters:
       - in: "body"
         name: "body"
@@ -540,8 +551,9 @@ paths:
     get:
       tags:
       - "File"
-      summary: "Get file metadata"
-      description: "Get file metadata\n"
+      summary: "Get all file metadata"
+      description: "Retrieve all metadata associated with a given file. If ID endpoint\
+        \ is not provided, get the metadata of a current Use Home folder.\n"
       parameters:
       - name: "id"
         in: "path"
@@ -575,7 +587,7 @@ paths:
       tags:
       - "File"
       summary: "Get file info"
-      description: "Get file info\n"
+      description: "Retrieve the file information by the specified ID.\n"
       parameters:
       - name: "id"
         in: "path"
@@ -598,7 +610,7 @@ paths:
       tags:
       - "File"
       summary: "Get file size"
-      description: "Get file size\n"
+      description: "Get details about the file size by the given ID.\n"
       parameters:
       - name: "id"
         in: "path"
@@ -616,36 +628,14 @@ paths:
           description: "Unauthorized"
           schema:
             $ref: "#/definitions/ErrorModel"
-  /file/wopi-token/{id}:
-    get:
-      tags:
-      - "File"
-      - "WOPI"
-      summary: "Get wopi token for file"
-      description: "Get wopi token for file\n"
-      parameters:
-      - name: "id"
-        in: "path"
-        description: "ID of a file"
-        required: true
-        type: "string"
-        format: "uuid"
-        x-exportParamName: "Id"
-      responses:
-        200:
-          description: "ID of a wopi token"
-          schema:
-            $ref: "#/definitions/IdResp"
-        401:
-          description: "Unauthorized"
-          schema:
-            $ref: "#/definitions/ErrorModel"
   /file/copy:
     post:
       tags:
       - "File"
       summary: "Copy files"
-      description: "Copy files\n"
+      description: "Creates a copy of a file or a folder. The original version of\
+        \ the file will not be changed. On success 202 response it returns “job_id”\
+        . To check the result, see the API call “job/status\".\n"
       parameters:
       - in: "body"
         name: "body"
@@ -671,7 +661,9 @@ paths:
       tags:
       - "File"
       summary: "Delete files"
-      description: "Delete number of files\n"
+      description: "Move a file or folder to Trash. If you delete less than 10 files,\
+        \ it returns 200 and the IDs of the deleted files. In case you delete more\
+        \ than 10 files, the API returns 202 response.\n"
       parameters:
       - in: "body"
         name: "body"
@@ -701,7 +693,7 @@ paths:
       tags:
       - "File"
       summary: "Move files"
-      description: "Move files\n"
+      description: "Move a file or folder from one location to another.\n"
       parameters:
       - in: "body"
         name: "body"
@@ -730,8 +722,8 @@ paths:
     post:
       tags:
       - "File"
-      summary: "Create new folder"
-      description: "Create new folder\n"
+      summary: "Create a new folder"
+      description: "Create a new folder\n"
       parameters:
       - in: "body"
         name: "body"
@@ -757,7 +749,9 @@ paths:
       tags:
       - "File"
       summary: "Download CSV file with Folder Content"
-      description: "Download CSV file content with Folder Content.\n"
+      description: "Return CSV file with information containing file metadata. It\
+        \ contains the path for each file displaying the hierarchy of files. This\
+        \ API returns the content-type: ”raw\".\n"
       produces:
       - "text/csv"
       parameters:
@@ -785,8 +779,8 @@ paths:
     post:
       tags:
       - "File"
-      summary: "Rename file or folder"
-      description: "Rename file or folder\n"
+      summary: "Rename a file"
+      description: "Change a file name.\n"
       parameters:
       - name: "id"
         in: "path"
@@ -818,8 +812,8 @@ paths:
     get:
       tags:
       - "File"
-      summary: "File tags"
-      description: "List file tags\n"
+      summary: "Get a list of file tags"
+      description: "Retrieve a list of available file tags.\n"
       parameters:
       - name: "id"
         in: "path"
@@ -843,8 +837,8 @@ paths:
     post:
       tags:
       - "File"
-      summary: "Add file tag"
-      description: "Add tag to file\n"
+      summary: "Add a file tag"
+      description: "Add a tag to filter the file list.\n"
       parameters:
       - name: "id"
         in: "path"
@@ -877,7 +871,7 @@ paths:
       tags:
       - "File"
       summary: "Get download link"
-      description: "Get files download link\n"
+      description: "Get a unique key for downloading files.\n"
       parameters:
       - in: "body"
         name: "body"
@@ -903,13 +897,14 @@ paths:
       tags:
       - "File"
       summary: "Download file"
-      description: "Download file content\n"
+      description: "Download a file or files by given ID. Multiple file download returns\
+        \ files in Zip format.\n"
       produces:
       - "application/octet-stream"
       parameters:
       - name: "id"
         in: "path"
-        description: "ID of a file"
+        description: "ID of a file download link"
         required: true
         type: "string"
         format: "uuid"
@@ -926,7 +921,7 @@ paths:
       tags:
       - "File"
       summary: "Search files"
-      description: "Search files\n"
+      description: "Search any file by the given directory.\n"
       parameters:
       - in: "body"
         name: "body"
@@ -953,8 +948,9 @@ paths:
     get:
       tags:
       - "File"
-      summary: "File preview"
-      description: "Get file preview metadata\n"
+      - "Preview"
+      summary: "Get a file preview"
+      description: "Retrieve a file preview by the given ID of the file.\n"
       parameters:
       - name: "id"
         in: "path"
@@ -976,8 +972,8 @@ paths:
     get:
       tags:
       - "File"
-      summary: "File diff"
-      description: "Get file changes diff\n"
+      summary: "Display changes of the file"
+      description: "Get file changes for specified preiod.\n"
       parameters:
       - name: "id"
         in: "path"
@@ -1010,8 +1006,8 @@ paths:
       tags:
       - "File"
       - "Upload"
-      summary: "Get file modify link"
-      description: "Get file modify link\n"
+      summary: "Get file modification link"
+      description: "Get file modification link\n"
       parameters:
       - in: "body"
         name: "body"
@@ -1036,8 +1032,8 @@ paths:
     get:
       tags:
       - "Group"
-      summary: "List user groups"
-      description: "List user groups\n"
+      summary: "List available user groups"
+      description: "Get a list of available contact groups.\n"
       parameters: []
       responses:
         200:
@@ -1054,8 +1050,8 @@ paths:
     get:
       tags:
       - "Group"
-      summary: "Group metadata"
-      description: "Get group metadata\n"
+      summary: "Get group metadata"
+      description: "Retrieve information about the group by the specified group ID.\n"
       parameters:
       - name: "id"
         in: "path"
@@ -1077,7 +1073,7 @@ paths:
     post:
       tags:
       - "PGP"
-      summary: "Recipients PGP keys"
+      summary: "Get recipients' PGP keys"
       description: "Get public PGP keys for given recipients\n"
       parameters:
       - in: "body"
@@ -1106,8 +1102,10 @@ paths:
     get:
       tags:
       - "PGP"
-      summary: "PGP key metadata"
-      description: "Get PGP key metadata\n"
+      summary: "Get PGP key metadata"
+      description: "Retrieve information about PGP key containing the ID, name and\
+        \ email of the creator, date it was created and modified, public and private\
+        \ keys.\n"
       parameters:
       - name: "id"
         in: "path"
@@ -1130,7 +1128,7 @@ paths:
       tags:
       - "PGP"
       summary: "Create PGP key"
-      description: "Create new PGP key\n"
+      description: "Generate a new PGP key\n"
       parameters:
       - in: "body"
         name: "body"
@@ -1156,7 +1154,7 @@ paths:
       tags:
       - "PGP"
       summary: "Edit PGP key"
-      description: "Edit PGP key\n"
+      description: "Edit an existing PGP key.\n"
       parameters:
       - name: "id"
         in: "path"
@@ -1189,7 +1187,7 @@ paths:
       tags:
       - "PGP"
       summary: "Delete PGP key"
-      description: "Delete PGP key\n"
+      description: "Delete an existing PGP key.\n"
       parameters:
       - name: "id"
         in: "path"
@@ -1212,7 +1210,7 @@ paths:
       tags:
       - "PGP"
       summary: "Request PGP key"
-      description: "Send request PGP key email to user or contact\n"
+      description: "Send PGP key generation request to a user or a contact.\n"
       parameters:
       - name: "ids[]"
         in: "path"
@@ -1234,8 +1232,8 @@ paths:
     get:
       tags:
       - "PGP"
-      summary: "PGP key request metadata"
-      description: "Get PGP key request metadata\n"
+      summary: "Get PGP key request metadata"
+      description: "Retrieve details about PGP key generation request.\n"
       parameters:
       - name: "id"
         in: "path"
@@ -1291,7 +1289,8 @@ paths:
       tags:
       - "Password Reset"
       summary: "Request password reset"
-      description: "Send request password reset email\n"
+      description: "Send an email with the request to reset password (including the\
+        \ link) to the user.\n"
       parameters:
       - in: "body"
         name: "body"
@@ -1317,8 +1316,8 @@ paths:
     get:
       tags:
       - "Password Reset"
-      summary: "Password reset request metadata"
-      description: "Get password reset request metadata\n"
+      summary: "Get password reset request metadata"
+      description: "Retrieve information about the password reset request.\n"
       parameters:
       - name: "id"
         in: "path"
@@ -1341,7 +1340,7 @@ paths:
       tags:
       - "Password Reset"
       summary: "Reset password"
-      description: "Reset password\n"
+      description: "Change the password based on the existing password reset request.\n"
       parameters:
       - name: "id"
         in: "path"
@@ -1369,45 +1368,17 @@ paths:
           description: "Unauthorized"
           schema:
             $ref: "#/definitions/ErrorModel"
-  /preview/image/{id}:
+  /preview/{id}:
     get:
       tags:
       - "Preview"
-      summary: "File image preview"
-      description: "Get file image preview\n"
+      summary: "Get binary preview data"
+      description: "Get a preview with the response content type based on the file\
+        \ type e.g. image/jpeg for images.\n"
       produces:
-      - "image/png"
-      parameters:
-      - name: "id"
-        in: "path"
-        description: "File ID"
-        required: true
-        type: "string"
-        format: "uuid"
-        x-exportParamName: "Id"
-      - name: "size"
-        in: "query"
-        required: false
-        type: "string"
-        enum:
-        - "small"
-        - "large"
-        x-exportParamName: "Size"
-      responses:
-        200:
-          description: "Image content"
-        401:
-          description: "Unauthorized"
-          schema:
-            $ref: "#/definitions/ErrorModel"
-  /preview/video/{id}:
-    get:
-      tags:
-      - "Preview"
-      summary: "File video preview"
-      description: "Get file video preview\n"
-      produces:
-      - "image/mp4"
+      - "image/jpeg"
+      - "video/mp4"
+      - "application/pdf"
       parameters:
       - name: "id"
         in: "path"
@@ -1418,30 +1389,7 @@ paths:
         x-exportParamName: "Id"
       responses:
         200:
-          description: "Video content"
-        401:
-          description: "Unauthorized"
-          schema:
-            $ref: "#/definitions/ErrorModel"
-  /preview/document_pdf/{id}:
-    get:
-      tags:
-      - "Preview"
-      summary: "File document page preview"
-      description: "Get file document page preview\n"
-      produces:
-      - "image/png"
-      parameters:
-      - name: "id"
-        in: "path"
-        description: "File document preview page ID"
-        required: true
-        type: "string"
-        format: "uuid"
-        x-exportParamName: "Id"
-      responses:
-        200:
-          description: "PDF content"
+          description: "Binary preview data"
         401:
           description: "Unauthorized"
           schema:
@@ -1450,8 +1398,8 @@ paths:
     get:
       tags:
       - "Profile"
-      summary: "Profile metadata"
-      description: "Get profile metadata\n"
+      summary: "Get profile metadata"
+      description: "Retrieve profile information of the current user.\n"
       parameters: []
       responses:
         200:
@@ -1467,7 +1415,8 @@ paths:
       tags:
       - "Profile"
       summary: "Update profile metadata"
-      description: "Update profile metadata\n"
+      description: "Edit profile information of the current user including name, email,\
+        \ language and message signature.\n"
       parameters:
       - in: "body"
         name: "body"
@@ -1489,7 +1438,7 @@ paths:
       tags:
       - "Profile"
       summary: "Change profile password"
-      description: "Change profile password\n"
+      description: "Change the account password for the logged-in user.\n"
       parameters:
       - in: "body"
         name: "body"
@@ -1514,8 +1463,9 @@ paths:
     get:
       tags:
       - "Profile"
-      summary: "Additional profile info"
-      description: "Get additional profile info\n"
+      summary: "Retrieve additional profile info"
+      description: "Get additional details about the account e.g. number of used and\
+        \ available user licenses.\n"
       parameters: []
       responses:
         200:
@@ -1530,8 +1480,8 @@ paths:
     get:
       tags:
       - "Profile"
-      summary: "Generate new 2fa code"
-      description: "Generate new 2fa code QR code\n"
+      summary: "Generate a new 2FA code"
+      description: "Generate a new verification code for 2FA with QR code.\n"
       parameters: []
       responses:
         200:
@@ -1545,8 +1495,11 @@ paths:
       tags:
       - "Profile"
       - "MFA"
-      summary: "Set MFA enabled for account"
-      description: "Set multi factor autorization method (MFA) enabled for account\n"
+      summary: "Enable MFA for the logged-in user"
+      description: "Turn on MFA (multifactor authentication) for the user who requested\
+        \ 2FA activation while editing their profile. MFA adds an additional secure\
+        \ step on the way to log in to the account by using one more authentication\
+        \ method beyond the email and password.\n"
       parameters:
       - in: "body"
         name: "body"
@@ -1572,8 +1525,10 @@ paths:
       tags:
       - "Profile"
       - "MFA"
-      summary: "Remove MFA for account"
-      description: "Remove MFA for account if it was not forced by admin\n"
+      summary: "Disable MFA for the logged-in user"
+      description: "Trun off MFA (multifactor authentication) for the user who requested\
+        \ 2FA deactivation while editing their profile. This operation is possible\
+        \ if it was not forced by the administrator.\n"
       parameters:
       - in: "body"
         name: "body"
@@ -1598,8 +1553,9 @@ paths:
     get:
       tags:
       - "Project Folder"
-      summary: "List of valid project folder for current user"
-      description: "Get list of project folders\n"
+      summary: "List available project folders for a logged-in user"
+      description: "Retrieve a list of all project folders of a current logged-in\
+        \ user.\n"
       parameters: []
       responses:
         200:
@@ -1617,8 +1573,8 @@ paths:
     post:
       tags:
       - "Project Folder"
-      summary: "Create project folder"
-      description: "Create new project folder\n"
+      summary: "Create a project folder"
+      description: "Create a new project folder for a user.\n"
       parameters:
       - in: "body"
         name: "body"
@@ -1643,8 +1599,8 @@ paths:
     post:
       tags:
       - "Project Folder"
-      summary: "List of project folders for users"
-      description: "List of project folders for users\n"
+      summary: "List all project folders for given users"
+      description: "Get a list of all project folders for given users.\n"
       parameters:
       - in: "body"
         name: "body"
@@ -1672,8 +1628,8 @@ paths:
     get:
       tags:
       - "Project Folder"
-      summary: "List project folder users"
-      description: "List project folder users\n"
+      summary: "List users of the project folder"
+      description: "Retrieve a list of users by given project folder ID.\n"
       parameters:
       - name: "id"
         in: "path"
@@ -1698,9 +1654,10 @@ paths:
     post:
       tags:
       - "Project Folder"
-      summary: "Add users to project folders. Replace exists permissions if users\
-        \ exists"
-      description: "Set users to project folders\n"
+      summary: "Add users to project folders."
+      description: "Add users to specified project folders. If the users exist in\
+        \ the given project folder, their permissions will be updated based on given\
+        \ parameters.\n"
       parameters:
       - in: "body"
         name: "body"
@@ -1732,8 +1689,8 @@ paths:
     get:
       tags:
       - "Project Folder"
-      summary: "Project folder metadata"
-      description: "Project folder metadata\n"
+      summary: "Get project folder metadata"
+      description: "Retrieve the metadata of the project folder.\n"
       parameters:
       - name: "id"
         in: "path"
@@ -1755,8 +1712,8 @@ paths:
     post:
       tags:
       - "Project Folder"
-      summary: "Add project folder users"
-      description: "Add project folder users\n"
+      summary: "Add users to the project folder"
+      description: "Add users to the specified project folder.\n"
       parameters:
       - name: "id"
         in: "path"
@@ -1790,8 +1747,8 @@ paths:
     post:
       tags:
       - "Project Folder"
-      summary: "Update project folder users"
-      description: "Update project folder users\n"
+      summary: "Update users’ permissions of the project folder"
+      description: "Edit users’ permissions of the given project folder.\n"
       parameters:
       - name: "id"
         in: "path"
@@ -1826,7 +1783,7 @@ paths:
       tags:
       - "Project Folder"
       summary: "Remove project folder users"
-      description: "Remove project folder users\n"
+      description: "Delete users of the given project folder.\n"
       parameters:
       - in: "body"
         name: "body"
@@ -1854,8 +1811,9 @@ paths:
     get:
       tags:
       - "Project Folder"
-      summary: "Remove project folder"
-      description: "Remove project folder\n"
+      summary: "Convert a project folder to a folder"
+      description: "Convert the project folder to regular folder keeping the same\
+        \ name and location.\n"
       parameters:
       - name: "id"
         in: "path"
@@ -1877,7 +1835,9 @@ paths:
       tags:
       - "Site Settings"
       summary: "Get site settings"
-      description: "Get site settings\n"
+      description: "Retrieve information about the service settings adjusted for the\
+        \ account e.g. language, banner text, email footer, billing emails, PGP, permitted\
+        \ share types.\n"
       parameters: []
       responses:
         200:
@@ -1893,7 +1853,8 @@ paths:
       tags:
       - "Site Settings"
       summary: "Set site settings"
-      description: "Set site settings\n"
+      description: "Update service settings for the account e.g. enable or disable\
+        \ PGP, force 2FA for all users of the account.\n"
       parameters:
       - in: "body"
         name: "body"
@@ -1919,8 +1880,8 @@ paths:
       tags:
       - "Site Settings"
       - "Upload"
-      summary: "Get logo upload link"
-      description: "Get account logo upload link\n"
+      summary: "Get a new logo upload link"
+      description: "Get a unique key for uploading a new logo\n"
       parameters: []
       responses:
         200:
@@ -1935,8 +1896,8 @@ paths:
     get:
       tags:
       - "Site Settings"
-      summary: "Get account auth-methods settings"
-      description: "Get account auth-methods settings\n"
+      summary: "Get available authentication methods"
+      description: "Get available authentication methods that can be set for the account.\n"
       parameters: []
       responses:
         200:
@@ -1955,7 +1916,7 @@ paths:
       tags:
       - "Upload"
       summary: "Get file upload link"
-      description: "Get file upload link\n"
+      description: "Retrieve a link for uploading a file.\n"
       parameters:
       - in: "body"
         name: "body"
@@ -1981,7 +1942,7 @@ paths:
       tags:
       - "Upload"
       summary: "Finalize chunked file upload"
-      description: "Finalize chunked file upload\n"
+      description: "Complete the chunked upload of a file.\n"
       parameters:
       - name: "id"
         in: "path"
@@ -2011,7 +1972,7 @@ paths:
       tags:
       - "User"
       summary: "List users"
-      description: "List users\n"
+      description: "Retrieve a list of users\n"
       parameters: []
       responses:
         200:
@@ -2028,8 +1989,8 @@ paths:
     get:
       tags:
       - "User"
-      summary: "User metadata"
-      description: "Get user metadata\n"
+      summary: "Get user metadata"
+      description: "Retrieve user’s metadata by given user ID.\n"
       parameters:
       - name: "id"
         in: "path"
@@ -2051,8 +2012,9 @@ paths:
     post:
       tags:
       - "User"
-      summary: "Create user"
-      description: "Create new user\n"
+      summary: "Create a user"
+      description: "Add a new user to the account. The user receives an email where\
+        \ the password can be set.\n"
       parameters:
       - in: "body"
         name: "body"
@@ -2080,8 +2042,10 @@ paths:
     post:
       tags:
       - "User"
-      summary: "User metadata"
-      description: "Edit user\n"
+      summary: "Update metadata of users"
+      description: "Edit the existing users’ metadata. An email can be edited only\
+        \ for one user using one API call. In this case both old and new emails will\
+        \ be notified about the change.\n"
       parameters:
       - in: "body"
         name: "body"
@@ -2110,7 +2074,7 @@ paths:
       tags:
       - "User"
       summary: "Delete users"
-      description: "Delete users\n"
+      description: "Remove users from the account by specified user IDs.\n"
       parameters:
       - in: "body"
         name: "body"
@@ -2136,8 +2100,8 @@ paths:
       tags:
       - "User"
       - "PGP"
-      summary: "User PGP key"
-      description: "Get user PGP key\n"
+      summary: "Get user's PGP key"
+      description: "Use to retrieve PGP key generated by the user.\n"
       parameters:
       - name: "id"
         in: "path"
@@ -2160,8 +2124,8 @@ paths:
       tags:
       - "User"
       - "Group"
-      summary: "All user groups"
-      description: "List all user groups\n"
+      summary: "List all user groups"
+      description: "Retrieve a list of all user groups that can be set for users.\n"
       parameters: []
       responses:
         200:
@@ -2179,8 +2143,8 @@ paths:
     post:
       tags:
       - "User"
-      summary: "Signup existing user"
-      description: "Signup existing user\n"
+      summary: "Register a new user"
+      description: "Set password for a new user.\n"
       produces:
       - "raw"
       parameters:
@@ -2206,8 +2170,10 @@ paths:
       tags:
       - "User"
       - "MFA"
-      summary: "Set MFA enabled for user"
-      description: "Set multi factor autorization method (MFA) enabled for user\n"
+      summary: "Enable MFA for users"
+      description: "Activate MFA for a user by specified user ID. If auth type is\
+        \ 2FA, the user will be forced to use MFA. All logged-in sessions of users\
+        \ will be stopped.\n"
       parameters:
       - in: "body"
         name: "body"
@@ -2233,8 +2199,10 @@ paths:
       tags:
       - "User"
       - "MFA"
-      summary: "Remove MFA for user"
-      description: "Remove MFA for user\n"
+      summary: "Disable MFA for users"
+      description: "Deactivate MFA for a user by specified user ID. If 2FA is forced\
+        \ for the account, the user won’t be able to deactivate it using this API\
+        \ call.\n"
       parameters:
       - in: "body"
         name: "body"
@@ -2255,12 +2223,41 @@ paths:
           description: "Unauthorized"
           schema:
             $ref: "#/definitions/ErrorModel"
+  /user/reset-mfa:
+    post:
+      tags:
+      - "User"
+      - "MFA"
+      summary: "Update existing MFA settings for users"
+      description: "Remove already set MFA code values, the MFA will be left activated.\n\
+        All logged-in sessions of users will be stopped. On the next login the user\
+        \ should set MFA again.\n"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/UserResetMfaReq"
+        x-exportParamName: "Body"
+      responses:
+        200:
+          description: "success response"
+          schema:
+            $ref: "#/definitions/ProfileRemoveMfaResp"
+        400:
+          description: "Parameter Error"
+          schema:
+            $ref: "#/definitions/ErrorModel"
+        401:
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/ErrorModel"
   /widget/metadata/{id}:
     get:
       tags:
       - "Widget"
-      summary: "Widget metadata"
-      description: "Get widget metadata\n"
+      summary: "Get all widget metadata"
+      description: "Retrieve available metadata of the widget.\n"
       parameters:
       - name: "id"
         in: "path"
@@ -2279,8 +2276,8 @@ paths:
     post:
       tags:
       - "Widget"
-      summary: "Widget upload link"
-      description: "Get widget upload link\n"
+      summary: "Get widget upload link"
+      description: "Retrieve a link for uploading the widget.\n"
       parameters:
       - name: "id"
         in: "path"
@@ -2305,8 +2302,8 @@ paths:
     get:
       tags:
       - "Widget"
-      summary: "Finalize widget chunked file upload"
-      description: "Finalize widget chunked file upload\n"
+      summary: "Finalize chunked upload of the widget"
+      description: "Complete the chunked upload of the widget.\n"
       parameters:
       - name: "id"
         in: "path"
@@ -2325,12 +2322,12 @@ paths:
     get:
       tags:
       - "Share"
-      summary: "Share recipinets"
-      description: "List share available recipients\n"
+      summary: "List all contacts for the share"
+      description: "Retrieve a list of all recipients that can receive the share.\n"
       parameters:
       - name: "email"
         in: "query"
-        description: "Start of recipient email"
+        description: "Search emails by the specified beginning."
         required: false
         type: "string"
         x-exportParamName: "Email"
@@ -2347,8 +2344,12 @@ paths:
     post:
       tags:
       - "Share"
-      summary: "Create share"
-      description: "Create share\n"
+      summary: "Create a file share"
+      description: "Create a share with files.\nFile share types:\n          - P (public)\
+        \ - Anyone can download. Limited tracking - IP address only.\n          -\
+        \ T (tracked) - Any registered user/recipient can download. Full tracking.\n\
+        \          - C (restricted) - Only the registered email recipient(s) can download.\
+        \ Full tracking.\n"
       parameters:
       - in: "body"
         name: "body"
@@ -2358,7 +2359,7 @@ paths:
         x-exportParamName: "Body"
       responses:
         201:
-          description: "Share id"
+          description: "Share ID"
           schema:
             $ref: "#/definitions/ShareCreateResp"
         400:
@@ -2373,8 +2374,9 @@ paths:
     post:
       tags:
       - "Share"
-      summary: "Login with pin on share"
-      description: "Login with pin on share protected with pin\n"
+      summary: "Log in with PIN to access a share"
+      description: "Log in using a previously generated PIN that was sent while creating\
+        \ the share to have access to it.\n"
       parameters:
       - in: "body"
         name: "body"
@@ -2384,7 +2386,7 @@ paths:
         x-exportParamName: "Body"
       responses:
         200:
-          description: "Logged in with pin successfully"
+          description: "Logged in with PIN successfully"
         400:
           description: "Parameter Error"
           schema:
@@ -2397,8 +2399,9 @@ paths:
     post:
       tags:
       - "Share"
-      summary: "Create quicklink"
-      description: "Creating public share with no recipients\n"
+      summary: "Create a quicklink"
+      description: "Create a quicklink with the usage behaviour the same as a public\
+        \ share.\n"
       parameters:
       - in: "body"
         name: "body"
@@ -2408,7 +2411,7 @@ paths:
         x-exportParamName: "Body"
       responses:
         201:
-          description: "Share id, expires"
+          description: "Share ID, expires"
           schema:
             $ref: "#/definitions/QuicklinkCreateResp"
         400:
@@ -2423,8 +2426,8 @@ paths:
     get:
       tags:
       - "Share"
-      summary: "Revoke quicklink"
-      description: "Revoke quicklink\n"
+      summary: "Revoke a quicklink"
+      description: "Disable access to a quicklink.\n"
       parameters:
       - name: "id"
         in: "path"
@@ -2446,8 +2449,9 @@ paths:
     post:
       tags:
       - "Share"
-      summary: "Login with PIN on quicklink"
-      description: "Login on quicklink protected with PIN\n"
+      summary: "Log in with PIN to access a quicklink"
+      description: "Log in using a previously generated PIN that was sent while creating\
+        \ the quicklink to have access to it.\n"
       parameters:
       - in: "body"
         name: "body"
@@ -2457,7 +2461,7 @@ paths:
         x-exportParamName: "Body"
       responses:
         200:
-          description: "Logged in with pin successfully"
+          description: "Logged in with PIN successfully"
         400:
           description: "Parameter Error"
           schema:
@@ -2470,19 +2474,20 @@ paths:
     get:
       tags:
       - "ActivityLog"
-      summary: "Activity log"
-      description: "List activity (action) log. For details - https://dev.maytech.net/wiki/display/ISV3/Activity+Log\n"
+      summary: "Get activity log"
+      description: "Retrieve the history of actions by the specified user (all visible\
+        \ users) for a given period.\n"
       parameters:
       - name: "id"
         in: "query"
-        description: "Log id"
+        description: "Log ID"
         required: false
         type: "string"
         format: "uuid"
         x-exportParamName: "Id"
       - name: "user_id"
         in: "query"
-        description: "User id"
+        description: "User ID"
         required: false
         type: "string"
         format: "uuid"
@@ -2525,14 +2530,17 @@ paths:
     get:
       tags:
       - "ActivityLog"
-      summary: "Download CSV file with Activity Log"
-      description: "Download CSV file content with Activity Log. For details - https://dev.maytech.net/wiki/display/ISV3/Activity+Log\n"
+      summary: "Download CSV file with activity log"
+      description: "Download a file with full activity log in the CSV format by given\
+        \ user ID. If the user ID is not specified, the activity of all manageable\
+        \ users should be displayed. The content of the file will display all actions\
+        \ performed in the account for a specified period.\n"
       produces:
-      - "text/csv"
+      - "raw"
       parameters:
       - name: "user_id"
         in: "query"
-        description: "User id"
+        description: "User ID"
         required: false
         type: "string"
         format: "uuid"
@@ -2565,19 +2573,20 @@ paths:
     get:
       tags:
       - "ActivityLog"
-      summary: "Share action files"
-      description: "List share action files\n"
+      summary: "Get share action files"
+      description: "Retrieve a list of shared files by specified share action ID with\
+        \ the number of downloads.\n"
       parameters:
       - name: "id"
         in: "path"
-        description: "Share action ID"
+        description: "Share ID"
         required: true
         type: "string"
         format: "uuid"
         x-exportParamName: "Id"
       responses:
         200:
-          description: "List of share files"
+          description: "List of shared files"
           schema:
             type: "array"
             title: "TrackingFilesResp"
@@ -2591,12 +2600,12 @@ paths:
     get:
       tags:
       - "ActivityLog"
-      summary: "Share action file downloads"
-      description: "List share action file downloads\n"
+      summary: "Get shared file downloads"
+      description: "Retrieve information about download actions of the file.\n"
       parameters:
       - name: "id"
         in: "path"
-        description: "Shared file ID"
+        description: "Shared file ID - File ID from /tacking/files/id"
         required: true
         type: "string"
         format: "uuid"
@@ -2617,8 +2626,9 @@ paths:
     get:
       tags:
       - "Share"
-      summary: "List share actions"
-      description: "List share actions\n"
+      summary: "List share actions metadata for all users"
+      description: "Retrieve the metadata of created shares and quicklinks of all\
+        \ users that can be managed by a logged-in user.\n"
       parameters:
       - name: "date"
         in: "query"
@@ -2642,12 +2652,13 @@ paths:
     get:
       tags:
       - "Share"
-      summary: "List share actions"
-      description: "List share actions\n"
+      summary: "List share actions metadata for a user"
+      description: "Retrieve the metadata of created shares and quicklinks of a user\
+        \ by given user ID.\n"
       parameters:
       - name: "id"
         in: "path"
-        description: "User id"
+        description: "User ID"
         required: true
         type: "string"
         x-exportParamName: "Id"
@@ -2673,8 +2684,8 @@ paths:
     post:
       tags:
       - "Share"
-      summary: "Send return files share"
-      description: "Create and send return files share\n"
+      summary: "Return files in the created share"
+      description: "Return files to the share sender.\n"
       parameters:
       - in: "body"
         name: "body"
@@ -2684,7 +2695,7 @@ paths:
         x-exportParamName: "Body"
       responses:
         201:
-          description: "Sended files ids"
+          description: "Sent files IDs"
           schema:
             $ref: "#/definitions/FilesReturnSendResp"
         400:
@@ -2700,7 +2711,7 @@ paths:
       tags:
       - "Share"
       summary: "Get return files metadata"
-      description: "Get return files metadata\n"
+      description: "Get the metadata of returning files.\n"
       parameters:
       - name: "id"
         in: "path"
@@ -2727,7 +2738,7 @@ paths:
       tags:
       - "Share"
       summary: "Get return files upload link"
-      description: "Get return files upload link\n"
+      description: "Get the upload link to return files to the share sender.\n"
       parameters:
       - name: "id"
         in: "path"
@@ -2758,8 +2769,12 @@ paths:
     post:
       tags:
       - "Share"
-      summary: "Return files makedir"
-      description: "Create folder via return files\n"
+      summary: "Create a directory for returned files"
+      description: "Add a directory for retuned files in the sender’s file tree. In\
+        \ order to return a file tree structure, you should duplicate it on the server\
+        \ side, that is send this API call to create each folder separately. This\
+        \ call returns the ID response that can be used as the parent ID for creating\
+        \ a new folder in the already created folder.\n"
       parameters:
       - name: "id"
         in: "path"
@@ -2790,8 +2805,12 @@ paths:
     get:
       tags:
       - "Share"
-      summary: "Share download info"
-      description: "Get share download info\n"
+      summary: "Get share download info"
+      description: "Get the share metadata by the given share action iD.\nFile share\
+        \ types:\n          - P (public) - Anyone can download. Limited tracking -\
+        \ IP address only.\n          - T (tracked) - Any registered user/recipient\
+        \ can download. Full tracking.\n          - C (restricted) - Only the registered\
+        \ email recipient(s) can download. Full tracking.\n"
       parameters:
       - name: "id"
         in: "path"
@@ -2813,8 +2832,8 @@ paths:
     get:
       tags:
       - "Share"
-      summary: "Share files"
-      description: "List share files\n"
+      summary: "List shared files"
+      description: "Retrieve a list of shared files.\n"
       parameters:
       - name: "id"
         in: "path"
@@ -2839,8 +2858,8 @@ paths:
     get:
       tags:
       - "Share"
-      summary: "Download link"
-      description: "Download link for all files\n"
+      summary: "Get download link for all files"
+      description: "Retrieve a link for downloading all files.\n"
       parameters:
       - name: "id"
         in: "path"
@@ -2851,7 +2870,7 @@ paths:
         x-exportParamName: "Id"
       responses:
         200:
-          description: "All share files download link id"
+          description: "All shared files download link ID"
           schema:
             $ref: "#/definitions/IdResp"
         401:
@@ -2861,8 +2880,8 @@ paths:
     post:
       tags:
       - "Share"
-      summary: "Download link"
-      description: "Download link for selected files\n"
+      summary: "Get download link for specified files"
+      description: "Retrieve a link for downloading specified files.\n"
       parameters:
       - name: "id"
         in: "path"
@@ -2879,7 +2898,7 @@ paths:
         x-exportParamName: "Body"
       responses:
         200:
-          description: "Selected share files download link id"
+          description: "Selected share files download link ID"
           schema:
             $ref: "#/definitions/IdResp"
         400:
@@ -2895,7 +2914,7 @@ paths:
       tags:
       - "Share"
       summary: "Download share files"
-      description: "Download share files content\n"
+      description: "Download files requested in the share/download-link call.\n"
       produces:
       - "application/octet-stream"
       parameters:
@@ -2906,15 +2925,6 @@ paths:
         type: "string"
         format: "uuid"
         x-exportParamName: "Id"
-      - name: "files"
-        in: "query"
-        description: "File ids"
-        required: false
-        type: "array"
-        items:
-          type: "string"
-          format: "uuid"
-        x-exportParamName: "Files"
       responses:
         200:
           description: "Share files content"
@@ -2923,8 +2933,8 @@ paths:
     get:
       tags:
       - "Share"
-      summary: "Revoke share"
-      description: "Revoke share\n"
+      summary: "Revoke a share"
+      description: "Revoke access to a share\n"
       parameters:
       - name: "id"
         in: "path"
@@ -2946,8 +2956,8 @@ paths:
     get:
       tags:
       - "Share"
-      summary: "Preview share file"
-      description: "Preview share file\n"
+      summary: "Preview a shared file"
+      description: "Preview a shared file by given share file ID.\n"
       produces:
       - "image/png"
       parameters:
@@ -2977,8 +2987,8 @@ paths:
     post:
       tags:
       - "Share"
-      summary: "Request share"
-      description: "Request share\n"
+      summary: "Send a request to share files"
+      description: "Send a file sharing request.\n"
       parameters:
       - in: "body"
         name: "body"
@@ -3003,8 +3013,8 @@ paths:
     post:
       tags:
       - "Share"
-      summary: "DEPRECATED! Use /share/request instead."
-      description: "Send share request email\n"
+      summary: "Request files. Use /share/request API call instead."
+      description: "Send a file sharing request.\n"
       parameters:
       - name: "id"
         in: "path"
@@ -3037,8 +3047,8 @@ paths:
     get:
       tags:
       - "Service"
-      summary: "List services"
-      description: "List services\n"
+      summary: "List available services"
+      description: "Retrieve a list of all available services.\n"
       parameters: []
       responses:
         200:
@@ -3055,8 +3065,8 @@ paths:
     get:
       tags:
       - "Service"
-      summary: "Service metadata"
-      description: "Get service metadata\n"
+      summary: "Get service metadata"
+      description: "Retrieve information about the service by given ID.\n"
       parameters:
       - name: "id"
         in: "path"
@@ -3078,8 +3088,8 @@ paths:
     get:
       tags:
       - "Automation"
-      summary: "List automations"
-      description: "List of all automations\n"
+      summary: "List all automations"
+      description: "Retrieve a list of all automations of the user.\n"
       parameters: []
       responses:
         200:
@@ -3096,12 +3106,12 @@ paths:
     get:
       tags:
       - "Automation"
-      summary: "Automation metadata"
-      description: "Get automation metadata\n"
+      summary: "Get automation metadata"
+      description: "Get the automation metadata by the specified automation ID.\n"
       parameters:
       - name: "id"
         in: "path"
-        description: "ID of an automation"
+        description: "automation ID"
         required: true
         type: "string"
         format: "uuid"
@@ -3119,8 +3129,8 @@ paths:
     post:
       tags:
       - "Automation"
-      summary: "Create automation"
-      description: "Create new automation\n"
+      summary: "Create a new automation"
+      description: "Add a new automatic operation.\n"
       parameters:
       - in: "body"
         name: "body"
@@ -3145,8 +3155,8 @@ paths:
     post:
       tags:
       - "Automation"
-      summary: "Edit automation"
-      description: "Edit automation\n"
+      summary: "Edit an existing automation"
+      description: "Update an existing rule for a specified automatic operation.\n"
       parameters:
       - in: "body"
         name: "body"
@@ -3174,7 +3184,7 @@ paths:
       tags:
       - "Automation"
       summary: "Delete automations"
-      description: "Delete automations\n"
+      description: "Delete a rule set for automatic operations.\n"
       parameters:
       - in: "body"
         name: "body"
@@ -3184,7 +3194,7 @@ paths:
         x-exportParamName: "Body"
       responses:
         200:
-          description: "Deleted IDs"
+          description: "Deleted automation IDs"
           schema:
             $ref: "#/definitions/AutomationDeleteResp"
         400:
@@ -3199,12 +3209,12 @@ paths:
     get:
       tags:
       - "Inbox"
-      summary: "User`s inbox"
-      description: "User`s shares and file request list\n"
+      summary: "Get contact's share tracking"
+      description: "Retrieve the tracking of actions where the contact was the recipient.\n"
       parameters:
       - name: "id"
         in: "query"
-        description: "Inbox id"
+        description: "Inbox ID"
         required: false
         type: "string"
         format: "uuid"
@@ -3247,8 +3257,8 @@ paths:
     get:
       tags:
       - "SSH-Key"
-      summary: "List ssh keys"
-      description: "List ssh keys\n"
+      summary: "List available SSH keys"
+      description: "Get a list of all SSH keys of the logged-in user.\n"
       parameters: []
       responses:
         200:
@@ -3265,12 +3275,12 @@ paths:
     get:
       tags:
       - "SSH-Key"
-      summary: "SSH key metadata"
-      description: "Get SSH key metadata\n"
+      summary: "Get SSH key metadata"
+      description: "Retrieve the metadata of SSH key by the given ID.\n"
       parameters:
       - name: "id"
         in: "path"
-        description: "ID of a SSH key"
+        description: "SSH key ID"
         required: true
         type: "string"
         format: "uuid"
@@ -3288,8 +3298,8 @@ paths:
     post:
       tags:
       - "SSH-Key"
-      summary: "Create SSH key"
-      description: "Create new SSH key\n"
+      summary: "Create a new SSH key"
+      description: "Generate a new SSH key.\n"
       parameters:
       - in: "body"
         name: "body"
@@ -3314,8 +3324,8 @@ paths:
     post:
       tags:
       - "SSH-Key"
-      summary: "Edit SSH key"
-      description: "Edit SSH key\n"
+      summary: "Edit SSH key metadata"
+      description: "Update the metadata of SSH key.\n"
       parameters:
       - in: "body"
         name: "body"
@@ -3341,7 +3351,7 @@ paths:
       tags:
       - "SSH-Key"
       summary: "Delete SSH key"
-      description: "Delete SSH key\n"
+      description: "Remove the key specified by SSH key ID.\n"
       parameters:
       - in: "body"
         name: "body"
@@ -3351,34 +3361,7 @@ paths:
         x-exportParamName: "Body"
       responses:
         200:
-          description: "SSH-Key id"
-          schema:
-            $ref: "#/definitions/IdResp"
-        400:
-          description: "Parameter Error"
-          schema:
-            $ref: "#/definitions/ErrorModel"
-        401:
-          description: "Unauthorized"
-          schema:
-            $ref: "#/definitions/ErrorModel"
-  /ssh-key/delete/{id}:
-    get:
-      tags:
-      - "SSH-Key"
-      summary: "Delete SSH key"
-      description: "Delete SSH key\n"
-      parameters:
-      - name: "id"
-        in: "path"
-        description: "ID of a SSH key"
-        required: true
-        type: "string"
-        format: "uuid"
-        x-exportParamName: "Id"
-      responses:
-        200:
-          description: "SSH-Key id"
+          description: "SSH Key ID"
           schema:
             $ref: "#/definitions/IdResp"
         400:
@@ -3393,8 +3376,8 @@ paths:
     post:
       tags:
       - "Billing"
-      summary: "Upgrade"
-      description: "Upgrade\n"
+      summary: "Upgrade the user's account"
+      description: "Upgrade the user's account.\n"
       parameters:
       - in: "body"
         name: "body"
@@ -3415,25 +3398,6 @@ paths:
           description: "Unauthorized"
           schema:
             $ref: "#/definitions/ErrorModel"
-  /check/ping:
-    get:
-      tags:
-      - "Check"
-      summary: "Ping(action)"
-      description: "Ping(action)\n"
-      parameters:
-      - name: "api_key"
-        in: "query"
-        description: "API key"
-        required: false
-        type: "string"
-        x-exportParamName: "ApiKey"
-      responses:
-        200:
-          description: "Ping response"
-          schema:
-            $ref: "#/definitions/CheckPingResp"
-      security: []
 securityDefinitions:
   api_key:
     type: "apiKey"
@@ -4979,14 +4943,12 @@ definitions:
         - "image"
         - "video"
         - "document"
-      source:
+      uri:
         type: "string"
-      source_pdf:
-        type: "string"
+        description: "URI to get file preview by a preview type."
     example:
-      source: "source"
-      source_pdf: "source_pdf"
       type: "image"
+      uri: "uri"
   FileDiffResp_data:
     properties:
       id:
@@ -6154,6 +6116,27 @@ definitions:
       ids:
       - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
       - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+  UserResetMfaReq:
+    type: "object"
+    required:
+    - "auth_type"
+    - "ids"
+    properties:
+      ids:
+        type: "array"
+        items:
+          type: "string"
+          format: "uuid"
+      auth_type:
+        type: "string"
+        enum:
+        - "2FA"
+    title: "UserResetMfaReq"
+    example:
+      auth_type: "2FA"
+      ids:
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
   WidgetUploadLinkReq:
     type: "object"
     properties:
@@ -6238,6 +6221,7 @@ definitions:
       expires:
         type: "number"
         format: "timestamp"
+        description: "it should be larger than the \"activates\" parameter."
       activates:
         type: "number"
         format: "timestamp"
@@ -6245,6 +6229,8 @@ definitions:
         type: "boolean"
       pgp_encrypted:
         type: "boolean"
+        description: "for PGP encrypted shares PGP keys should be generated by the\
+          \ sender and the recipient. PGP encryption is disabled for public shares."
       return_pgp_encrypted:
         type: "boolean"
       message_signature:
@@ -6263,7 +6249,7 @@ definitions:
         format: "base64"
       send_email:
         type: "boolean"
-        description: "create share with sending email or just create share"
+        description: "create a share with sending an email or just create a share"
         default: false
     title: "ShareCreateReq"
     example:
@@ -6627,6 +6613,7 @@ definitions:
     properties:
       id:
         type: "string"
+        description: "already created share ID."
       files:
         type: "array"
         items:
@@ -6657,6 +6644,7 @@ definitions:
       id:
         type: "string"
         format: "uuid"
+        description: "already created share ID."
       subject:
         type: "string"
       sender_name:
@@ -6804,8 +6792,8 @@ definitions:
         description: "for PGP"
       pgp_enabled:
         type: "boolean"
-        description: "Shows that user from current session has PGP key. If True -\
-          \ user will get his private_key."
+        description: "It shows that the user from the current session has PGP key.\
+          \ If True - the user will get his private_key."
       status:
         type: "string"
       share_type:
@@ -6886,13 +6874,14 @@ definitions:
     properties:
       return_pgp_encrypted:
         type: "boolean"
+        description: "if PGP keys were generated by the sender or the recipient."
         default: false
       send_email:
         type: "boolean"
         default: true
       ids:
         type: "array"
-        description: "List of recipient ids"
+        description: "List of recipient IDs"
         items:
           type: "string"
           format: "uuid"
@@ -6901,8 +6890,7 @@ definitions:
       folder_id:
         type: "string"
         format: "uuid"
-        description: "Target folder id for requested files"
-        default: "Incoming Shares folder id"
+        description: "Target folder ID for requested files"
     title: "ShareRequestReq"
     example:
       return_pgp_encrypted: false
@@ -7216,12 +7204,6 @@ definitions:
       - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
       - "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
       status: "success"
-  CheckPingResp:
-    properties:
-      response:
-        type: "string"
-    example:
-      response: "response"
   ServiceResp_users:
     properties:
       id:

@@ -270,7 +270,7 @@ func TestShareApiService_ShareDownloadIdGet(t *testing.T) {
 		w.WriteHeader(http.StatusOK)
 	})
 
-	response, err := client.ShareApi.ShareDownloadIdGet(context.Background(), testStringValue, nil)
+	response, err := client.ShareApi.ShareDownloadIdGet(context.Background(), testStringValue)
 	if err != nil {
 		t.Error(err)
 	}

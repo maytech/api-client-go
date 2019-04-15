@@ -4,14 +4,14 @@ All URIs are relative to *https://api.quatrix.it/api/1.0*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**InboxGet**](InboxApi.md#InboxGet) | **Get** /inbox | User&#x60;s inbox
+[**InboxGet**](InboxApi.md#InboxGet) | **Get** /inbox | Get contact&#39;s share tracking
 
 
 # **InboxGet**
 > []InboxRespItems InboxGet(ctx, optional)
-User`s inbox
+Get contact's share tracking
 
-User`s shares and file request list 
+Retrieve the tracking of actions where the contact was the recipient. 
 
 ### Required Parameters
 
@@ -25,7 +25,7 @@ Optional parameters are passed through a map[string]interface{}.
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | [**string**](.md)| Inbox id | 
+ **id** | [**string**](.md)| Inbox ID | 
  **limit** | **float32**| Rows per page | [default to 100]
  **from** | **float32**| UTC timestamp | [default to 0]
  **to** | **float32**| UTC timestamp | 

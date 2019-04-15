@@ -4,34 +4,34 @@ All URIs are relative to *https://api.quatrix.it/api/1.0*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**FilesReturnMakedirIdPost**](ShareApi.md#FilesReturnMakedirIdPost) | **Post** /files-return/makedir/{id} | Return files makedir
+[**FilesReturnMakedirIdPost**](ShareApi.md#FilesReturnMakedirIdPost) | **Post** /files-return/makedir/{id} | Create a directory for returned files
 [**FilesReturnMetadataIdGet**](ShareApi.md#FilesReturnMetadataIdGet) | **Get** /files-return/metadata/{id} | Get return files metadata
-[**FilesReturnSendPost**](ShareApi.md#FilesReturnSendPost) | **Post** /files-return/send | Send return files share
+[**FilesReturnSendPost**](ShareApi.md#FilesReturnSendPost) | **Post** /files-return/send | Return files in the created share
 [**FilesReturnUploadLinkIdPost**](ShareApi.md#FilesReturnUploadLinkIdPost) | **Post** /files-return/upload-link/{id} | Get return files upload link
-[**QuicklinkCreatePost**](ShareApi.md#QuicklinkCreatePost) | **Post** /quicklink/create | Create quicklink
-[**QuicklinkLoginPinPost**](ShareApi.md#QuicklinkLoginPinPost) | **Post** /quicklink/login-pin | Login with PIN on quicklink
-[**QuicklinkRevokeIdGet**](ShareApi.md#QuicklinkRevokeIdGet) | **Get** /quicklink/revoke/{id} | Revoke quicklink
-[**ShareCreatePost**](ShareApi.md#ShareCreatePost) | **Post** /share/create | Create share
+[**QuicklinkCreatePost**](ShareApi.md#QuicklinkCreatePost) | **Post** /quicklink/create | Create a quicklink
+[**QuicklinkLoginPinPost**](ShareApi.md#QuicklinkLoginPinPost) | **Post** /quicklink/login-pin | Log in with PIN to access a quicklink
+[**QuicklinkRevokeIdGet**](ShareApi.md#QuicklinkRevokeIdGet) | **Get** /quicklink/revoke/{id} | Revoke a quicklink
+[**ShareCreatePost**](ShareApi.md#ShareCreatePost) | **Post** /share/create | Create a file share
 [**ShareDownloadIdGet**](ShareApi.md#ShareDownloadIdGet) | **Get** /share/download/{id} | Download share files
-[**ShareDownloadInfoIdGet**](ShareApi.md#ShareDownloadInfoIdGet) | **Get** /share/download-info/{id} | Share download info
-[**ShareDownloadLinkIdGet**](ShareApi.md#ShareDownloadLinkIdGet) | **Get** /share/download-link/{id} | Download link
-[**ShareDownloadLinkIdPost**](ShareApi.md#ShareDownloadLinkIdPost) | **Post** /share/download-link/{id} | Download link
-[**ShareFilesIdGet**](ShareApi.md#ShareFilesIdGet) | **Get** /share/files/{id} | Share files
-[**ShareLoginPinPost**](ShareApi.md#ShareLoginPinPost) | **Post** /share/login-pin | Login with pin on share
-[**SharePreviewIdGet**](ShareApi.md#SharePreviewIdGet) | **Get** /share/preview/{id} | Preview share file
-[**ShareRecipientsGet**](ShareApi.md#ShareRecipientsGet) | **Get** /share/recipients | Share recipinets
-[**ShareRequestPost**](ShareApi.md#ShareRequestPost) | **Post** /share/request | Request share
-[**ShareRevokeIdGet**](ShareApi.md#ShareRevokeIdGet) | **Get** /share/revoke/{id} | Revoke share
-[**ShareSendRequestIdPost**](ShareApi.md#ShareSendRequestIdPost) | **Post** /share/send-request/{id} | DEPRECATED! Use /share/request instead.
-[**TrackingGet**](ShareApi.md#TrackingGet) | **Get** /tracking/ | List share actions
-[**TrackingIdGet**](ShareApi.md#TrackingIdGet) | **Get** /tracking/{id} | List share actions
+[**ShareDownloadInfoIdGet**](ShareApi.md#ShareDownloadInfoIdGet) | **Get** /share/download-info/{id} | Get share download info
+[**ShareDownloadLinkIdGet**](ShareApi.md#ShareDownloadLinkIdGet) | **Get** /share/download-link/{id} | Get download link for all files
+[**ShareDownloadLinkIdPost**](ShareApi.md#ShareDownloadLinkIdPost) | **Post** /share/download-link/{id} | Get download link for specified files
+[**ShareFilesIdGet**](ShareApi.md#ShareFilesIdGet) | **Get** /share/files/{id} | List shared files
+[**ShareLoginPinPost**](ShareApi.md#ShareLoginPinPost) | **Post** /share/login-pin | Log in with PIN to access a share
+[**SharePreviewIdGet**](ShareApi.md#SharePreviewIdGet) | **Get** /share/preview/{id} | Preview a shared file
+[**ShareRecipientsGet**](ShareApi.md#ShareRecipientsGet) | **Get** /share/recipients | List all contacts for the share
+[**ShareRequestPost**](ShareApi.md#ShareRequestPost) | **Post** /share/request | Send a request to share files
+[**ShareRevokeIdGet**](ShareApi.md#ShareRevokeIdGet) | **Get** /share/revoke/{id} | Revoke a share
+[**ShareSendRequestIdPost**](ShareApi.md#ShareSendRequestIdPost) | **Post** /share/send-request/{id} | Request files. Use /share/request API call instead.
+[**TrackingGet**](ShareApi.md#TrackingGet) | **Get** /tracking/ | List share actions metadata for all users
+[**TrackingIdGet**](ShareApi.md#TrackingIdGet) | **Get** /tracking/{id} | List share actions metadata for a user
 
 
 # **FilesReturnMakedirIdPost**
 > FilesReturnMakedirResps FilesReturnMakedirIdPost(ctx, id, body)
-Return files makedir
+Create a directory for returned files
 
-Create folder via return files 
+Add a directory for retuned files in the sender’s file tree. In order to return a file tree structure, you should duplicate it on the server side, that is send this API call to create each folder separately. This call returns the ID response that can be used as the parent ID for creating a new folder in the already created folder. 
 
 ### Required Parameters
 
@@ -60,7 +60,7 @@ Name | Type | Description  | Notes
 > FilesReturnMetadataResp FilesReturnMetadataIdGet(ctx, id)
 Get return files metadata
 
-Get return files metadata 
+Get the metadata of returning files. 
 
 ### Required Parameters
 
@@ -86,9 +86,9 @@ Name | Type | Description  | Notes
 
 # **FilesReturnSendPost**
 > FilesReturnSendResp FilesReturnSendPost(ctx, body)
-Send return files share
+Return files in the created share
 
-Create and send return files share 
+Return files to the share sender. 
 
 ### Required Parameters
 
@@ -116,7 +116,7 @@ Name | Type | Description  | Notes
 > FilesReturnUploadLinkResp FilesReturnUploadLinkIdPost(ctx, id, body)
 Get return files upload link
 
-Get return files upload link 
+Get the upload link to return files to the share sender. 
 
 ### Required Parameters
 
@@ -143,9 +143,9 @@ Name | Type | Description  | Notes
 
 # **QuicklinkCreatePost**
 > QuicklinkCreateResp QuicklinkCreatePost(ctx, body)
-Create quicklink
+Create a quicklink
 
-Creating public share with no recipients 
+Create a quicklink with the usage behaviour the same as a public share. 
 
 ### Required Parameters
 
@@ -171,9 +171,9 @@ Name | Type | Description  | Notes
 
 # **QuicklinkLoginPinPost**
 > QuicklinkLoginPinPost(ctx, body)
-Login with PIN on quicklink
+Log in with PIN to access a quicklink
 
-Login on quicklink protected with PIN 
+Log in using a previously generated PIN that was sent while creating the quicklink to have access to it. 
 
 ### Required Parameters
 
@@ -199,9 +199,9 @@ Name | Type | Description  | Notes
 
 # **QuicklinkRevokeIdGet**
 > IdResp QuicklinkRevokeIdGet(ctx, id)
-Revoke quicklink
+Revoke a quicklink
 
-Revoke quicklink 
+Disable access to a quicklink. 
 
 ### Required Parameters
 
@@ -227,9 +227,9 @@ Name | Type | Description  | Notes
 
 # **ShareCreatePost**
 > ShareCreateResp ShareCreatePost(ctx, body)
-Create share
+Create a file share
 
-Create share 
+Create a share with files. File share types:           - P (public) - Anyone can download. Limited tracking - IP address only.           - T (tracked) - Any registered user/recipient can download. Full tracking.           - C (restricted) - Only the registered email recipient(s) can download. Full tracking. 
 
 ### Required Parameters
 
@@ -254,10 +254,10 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **ShareDownloadIdGet**
-> ShareDownloadIdGet(ctx, id, optional)
+> ShareDownloadIdGet(ctx, id)
 Download share files
 
-Download share files content 
+Download files requested in the share/download-link call. 
 
 ### Required Parameters
 
@@ -265,15 +265,6 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **ctx** | **context.Context** | context for logging, tracing, authentication, etc.
   **id** | [**string**](.md)| Download link ID | 
- **optional** | **map[string]interface{}** | optional parameters | nil if no parameters
-
-### Optional Parameters
-Optional parameters are passed through a map[string]interface{}.
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **id** | [**string**](.md)| Download link ID | 
- **files** | [**[]string**](string.md)| File ids | 
 
 ### Return type
 
@@ -292,9 +283,9 @@ No authorization required
 
 # **ShareDownloadInfoIdGet**
 > ShareDownloadInfoResp ShareDownloadInfoIdGet(ctx, id)
-Share download info
+Get share download info
 
-Get share download info 
+Get the share metadata by the given share action iD. File share types:           - P (public) - Anyone can download. Limited tracking - IP address only.           - T (tracked) - Any registered user/recipient can download. Full tracking.           - C (restricted) - Only the registered email recipient(s) can download. Full tracking. 
 
 ### Required Parameters
 
@@ -320,9 +311,9 @@ Name | Type | Description  | Notes
 
 # **ShareDownloadLinkIdGet**
 > IdResp ShareDownloadLinkIdGet(ctx, id)
-Download link
+Get download link for all files
 
-Download link for all files 
+Retrieve a link for downloading all files. 
 
 ### Required Parameters
 
@@ -348,9 +339,9 @@ Name | Type | Description  | Notes
 
 # **ShareDownloadLinkIdPost**
 > IdResp ShareDownloadLinkIdPost(ctx, id, optional)
-Download link
+Get download link for specified files
 
-Download link for selected files 
+Retrieve a link for downloading specified files. 
 
 ### Required Parameters
 
@@ -385,9 +376,9 @@ Name | Type | Description  | Notes
 
 # **ShareFilesIdGet**
 > []ShareFilesRespItems ShareFilesIdGet(ctx, id)
-Share files
+List shared files
 
-List share files 
+Retrieve a list of shared files. 
 
 ### Required Parameters
 
@@ -413,9 +404,9 @@ Name | Type | Description  | Notes
 
 # **ShareLoginPinPost**
 > ShareLoginPinPost(ctx, body)
-Login with pin on share
+Log in with PIN to access a share
 
-Login with pin on share protected with pin 
+Log in using a previously generated PIN that was sent while creating the share to have access to it. 
 
 ### Required Parameters
 
@@ -441,9 +432,9 @@ Name | Type | Description  | Notes
 
 # **SharePreviewIdGet**
 > SharePreviewIdGet(ctx, id, optional)
-Preview share file
+Preview a shared file
 
-Preview share file 
+Preview a shared file by given share file ID. 
 
 ### Required Parameters
 
@@ -478,9 +469,9 @@ Name | Type | Description  | Notes
 
 # **ShareRecipientsGet**
 > ShareRecipientsResp ShareRecipientsGet(ctx, optional)
-Share recipinets
+List all contacts for the share
 
-List share available recipients 
+Retrieve a list of all recipients that can receive the share. 
 
 ### Required Parameters
 
@@ -494,7 +485,7 @@ Optional parameters are passed through a map[string]interface{}.
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **email** | **string**| Start of recipient email | 
+ **email** | **string**| Search emails by the specified beginning. | 
 
 ### Return type
 
@@ -513,9 +504,9 @@ Name | Type | Description  | Notes
 
 # **ShareRequestPost**
 > ShareRequestResp ShareRequestPost(ctx, body)
-Request share
+Send a request to share files
 
-Request share 
+Send a file sharing request. 
 
 ### Required Parameters
 
@@ -541,9 +532,9 @@ Name | Type | Description  | Notes
 
 # **ShareRevokeIdGet**
 > IdResp ShareRevokeIdGet(ctx, id)
-Revoke share
+Revoke a share
 
-Revoke share 
+Revoke access to a share 
 
 ### Required Parameters
 
@@ -569,9 +560,9 @@ Name | Type | Description  | Notes
 
 # **ShareSendRequestIdPost**
 > JobResp ShareSendRequestIdPost(ctx, id, optional)
-DEPRECATED! Use /share/request instead.
+Request files. Use /share/request API call instead.
 
-Send share request email 
+Send a file sharing request. 
 
 ### Required Parameters
 
@@ -606,9 +597,9 @@ Name | Type | Description  | Notes
 
 # **TrackingGet**
 > []TrackingRespItems TrackingGet(ctx, optional)
-List share actions
+List share actions metadata for all users
 
-List share actions 
+Retrieve the metadata of created shares and quicklinks of all users that can be managed by a logged-in user. 
 
 ### Required Parameters
 
@@ -641,16 +632,16 @@ Name | Type | Description  | Notes
 
 # **TrackingIdGet**
 > []TrackingIdRespItems TrackingIdGet(ctx, id, optional)
-List share actions
+List share actions metadata for a user
 
-List share actions 
+Retrieve the metadata of created shares and quicklinks of a user by given user ID. 
 
 ### Required Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **ctx** | **context.Context** | context for logging, tracing, authentication, etc.
-  **id** | **string**| User id | 
+  **id** | **string**| User ID | 
  **optional** | **map[string]interface{}** | optional parameters | nil if no parameters
 
 ### Optional Parameters
@@ -658,7 +649,7 @@ Optional parameters are passed through a map[string]interface{}.
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **id** | **string**| User id | 
+ **id** | **string**| User ID | 
  **date** | **float32**| Share date timestamp | 
 
 ### Return type

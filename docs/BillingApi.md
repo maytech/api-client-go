@@ -4,14 +4,14 @@ All URIs are relative to *https://api.quatrix.it/api/1.0*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**BillingUpgradePost**](BillingApi.md#BillingUpgradePost) | **Post** /billing/upgrade | Upgrade
+[**BillingUpgradePost**](BillingApi.md#BillingUpgradePost) | **Post** /billing/upgrade | Upgrade the user&#39;s account
 
 
 # **BillingUpgradePost**
 > BillingUpgradeResp BillingUpgradePost(ctx, body)
-Upgrade
+Upgrade the user's account
 
-Upgrade 
+Upgrade the user's account. 
 
 ### Required Parameters
 

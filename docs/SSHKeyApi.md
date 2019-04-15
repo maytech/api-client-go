@@ -4,19 +4,18 @@ All URIs are relative to *https://api.quatrix.it/api/1.0*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**SshKeyCreatePost**](SSHKeyApi.md#SshKeyCreatePost) | **Post** /ssh-key/create | Create SSH key
-[**SshKeyDeleteIdGet**](SSHKeyApi.md#SshKeyDeleteIdGet) | **Get** /ssh-key/delete/{id} | Delete SSH key
+[**SshKeyCreatePost**](SSHKeyApi.md#SshKeyCreatePost) | **Post** /ssh-key/create | Create a new SSH key
 [**SshKeyDeletePost**](SSHKeyApi.md#SshKeyDeletePost) | **Post** /ssh-key/delete | Delete SSH key
-[**SshKeyEditPost**](SSHKeyApi.md#SshKeyEditPost) | **Post** /ssh-key/edit | Edit SSH key
-[**SshKeyGet**](SSHKeyApi.md#SshKeyGet) | **Get** /ssh-key | List ssh keys
-[**SshKeyMetadataIdGet**](SSHKeyApi.md#SshKeyMetadataIdGet) | **Get** /ssh-key/metadata/{id} | SSH key metadata
+[**SshKeyEditPost**](SSHKeyApi.md#SshKeyEditPost) | **Post** /ssh-key/edit | Edit SSH key metadata
+[**SshKeyGet**](SSHKeyApi.md#SshKeyGet) | **Get** /ssh-key | List available SSH keys
+[**SshKeyMetadataIdGet**](SSHKeyApi.md#SshKeyMetadataIdGet) | **Get** /ssh-key/metadata/{id} | Get SSH key metadata
 
 
 # **SshKeyCreatePost**
 > SshKeyResp SshKeyCreatePost(ctx, body)
-Create SSH key
+Create a new SSH key
 
-Create new SSH key 
+Generate a new SSH key. 
 
 ### Required Parameters
 
@@ -40,39 +39,11 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **SshKeyDeleteIdGet**
-> IdResp SshKeyDeleteIdGet(ctx, id)
-Delete SSH key
-
-Delete SSH key 
-
-### Required Parameters
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **ctx** | **context.Context** | context for logging, tracing, authentication, etc.
-  **id** | [**string**](.md)| ID of a SSH key | 
-
-### Return type
-
-[**IdResp**](IdResp.md)
-
-### Authorization
-
-[api_key](../README.md#api_key)
-
-### HTTP request headers
-
- - **Content-Type**: application/json
- - **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
 # **SshKeyDeletePost**
 > IdResp SshKeyDeletePost(ctx, body)
 Delete SSH key
 
-Delete SSH key 
+Remove the key specified by SSH key ID. 
 
 ### Required Parameters
 
@@ -98,9 +69,9 @@ Name | Type | Description  | Notes
 
 # **SshKeyEditPost**
 > SshKeyResp SshKeyEditPost(ctx, body)
-Edit SSH key
+Edit SSH key metadata
 
-Edit SSH key 
+Update the metadata of SSH key. 
 
 ### Required Parameters
 
@@ -126,9 +97,9 @@ Name | Type | Description  | Notes
 
 # **SshKeyGet**
 > []SshKeyResp SshKeyGet(ctx, )
-List ssh keys
+List available SSH keys
 
-List ssh keys 
+Get a list of all SSH keys of the logged-in user. 
 
 ### Required Parameters
 This endpoint does not need any parameter.
@@ -150,16 +121,16 @@ This endpoint does not need any parameter.
 
 # **SshKeyMetadataIdGet**
 > SshKeyResp SshKeyMetadataIdGet(ctx, id)
-SSH key metadata
+Get SSH key metadata
 
-Get SSH key metadata 
+Retrieve the metadata of SSH key by the given ID. 
 
 ### Required Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **ctx** | **context.Context** | context for logging, tracing, authentication, etc.
-  **id** | [**string**](.md)| ID of a SSH key | 
+  **id** | [**string**](.md)| SSH key ID | 
 
 ### Return type
 

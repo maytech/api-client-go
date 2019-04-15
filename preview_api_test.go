@@ -1,59 +1,35 @@
 package quatrix
 
 import (
-	"net/http"
 	"testing"
-
-	"golang.org/x/net/context"
+	"net/http"
 )
 
-func TestPreviewApiService_PreviewVideoIdGet(t *testing.T) {
+func TestPreviewApiService_PreviewIdGet(t *testing.T) {
 	tearDown := initClient()
 	defer tearDown()
 
-	mu.HandleFunc("/preview/video/{id}", func(w http.ResponseWriter, r *http.Request) {
+	mu.HandleFunc("/preview/{id}", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
+		
+		// ... add another response parameters 
 	})
-
-	response, err := client.PreviewApi.PreviewVideoIdGet(context.Background(), testStringValue)
-	if err != nil {
-		t.Error(err)
-	}
-
-	checkStatusCode(t, response.StatusCode, http.StatusOK)
+	
+	// ... write quatrix here
 }
 
-func TestPreviewApiService_PreviewDocumentPdfIdGet(t *testing.T) {
+func TestPreviewApiService_FilePreviewIdGet(t *testing.T) {
 	tearDown := initClient()
 	defer tearDown()
 
-	mu.HandleFunc("/preview/document_pdf/{id}", func(w http.ResponseWriter, r *http.Request) {
+	mu.HandleFunc("/file/preview/{id}", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
+		
+		// ... add another response parameters 
 	})
-
-	response, err := client.PreviewApi.PreviewDocumentPdfIdGet(context.Background(), testStringValue)
-	if err != nil {
-		t.Error(err)
-	}
-
-	checkStatusCode(t, response.StatusCode, http.StatusOK)
+	
+	// ... write quatrix here
 }
 
-func TestPreviewApiService_PreviewImageIdGet(t *testing.T) {
-	tearDown := initClient()
-	defer tearDown()
-
-	mu.HandleFunc("/preview/image/{id}", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-	})
-
-	response, err := client.PreviewApi.PreviewImageIdGet(context.Background(), testStringValue, nil)
-	if err != nil {
-		t.Error(err)
-	}
-
-	checkStatusCode(t, response.StatusCode, http.StatusOK)
-}

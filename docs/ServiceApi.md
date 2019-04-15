@@ -4,15 +4,15 @@ All URIs are relative to *https://api.quatrix.it/api/1.0*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**ServiceGet**](ServiceApi.md#ServiceGet) | **Get** /service | List services
-[**ServiceMetadataIdGet**](ServiceApi.md#ServiceMetadataIdGet) | **Get** /service/metadata/{id} | Service metadata
+[**ServiceGet**](ServiceApi.md#ServiceGet) | **Get** /service | List available services
+[**ServiceMetadataIdGet**](ServiceApi.md#ServiceMetadataIdGet) | **Get** /service/metadata/{id} | Get service metadata
 
 
 # **ServiceGet**
 > []ServiceResp ServiceGet(ctx, )
-List services
+List available services
 
-List services 
+Retrieve a list of all available services. 
 
 ### Required Parameters
 This endpoint does not need any parameter.
@@ -34,9 +34,9 @@ This endpoint does not need any parameter.
 
 # **ServiceMetadataIdGet**
 > ServiceResp ServiceMetadataIdGet(ctx, id)
-Service metadata
+Get service metadata
 
-Get service metadata 
+Retrieve information about the service by given ID. 
 
 ### Required Parameters
 

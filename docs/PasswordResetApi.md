@@ -4,16 +4,16 @@ All URIs are relative to *https://api.quatrix.it/api/1.0*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**ResetPasswordMetadataIdGet**](PasswordResetApi.md#ResetPasswordMetadataIdGet) | **Get** /reset-password/metadata/{id} | Password reset request metadata
+[**ResetPasswordMetadataIdGet**](PasswordResetApi.md#ResetPasswordMetadataIdGet) | **Get** /reset-password/metadata/{id} | Get password reset request metadata
 [**ResetPasswordRequestPost**](PasswordResetApi.md#ResetPasswordRequestPost) | **Post** /reset-password/request | Request password reset
 [**ResetPasswordResetIdPost**](PasswordResetApi.md#ResetPasswordResetIdPost) | **Post** /reset-password/reset/{id} | Reset password
 
 
 # **ResetPasswordMetadataIdGet**
 > ResetPasswordMetadataResp ResetPasswordMetadataIdGet(ctx, id)
-Password reset request metadata
+Get password reset request metadata
 
-Get password reset request metadata 
+Retrieve information about the password reset request. 
 
 ### Required Parameters
 
@@ -41,7 +41,7 @@ Name | Type | Description  | Notes
 > ResetPasswordRequestResp ResetPasswordRequestPost(ctx, body)
 Request password reset
 
-Send request password reset email 
+Send an email with the request to reset password (including the link) to the user. 
 
 ### Required Parameters
 
@@ -69,7 +69,7 @@ No authorization required
 > IdResp ResetPasswordResetIdPost(ctx, id, body)
 Reset password
 
-Reset password 
+Change the password based on the existing password reset request. 
 
 ### Required Parameters
 

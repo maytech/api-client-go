@@ -4,18 +4,18 @@ All URIs are relative to *https://api.quatrix.it/api/1.0*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**SessionKeepaliveGet**](AuthApi.md#SessionKeepaliveGet) | **Get** /session/keepalive | Keepalive
-[**SessionLoginGet**](AuthApi.md#SessionLoginGet) | **Get** /session/login | Login and get session ID
-[**SessionLoginPost**](AuthApi.md#SessionLoginPost) | **Post** /session/login | MFA
-[**SessionLogoutGet**](AuthApi.md#SessionLogoutGet) | **Get** /session/logout | Logout
-[**SessionUnblockCaptchaPost**](AuthApi.md#SessionUnblockCaptchaPost) | **Post** /session/unblock-captcha | Unblock captcha
+[**SessionKeepaliveGet**](AuthApi.md#SessionKeepaliveGet) | **Get** /session/keepalive | Refresh session expiration time
+[**SessionLoginGet**](AuthApi.md#SessionLoginGet) | **Get** /session/login | Log in and get session ID details
+[**SessionLoginPost**](AuthApi.md#SessionLoginPost) | **Post** /session/login | Log in to the account using MFA
+[**SessionLogoutGet**](AuthApi.md#SessionLogoutGet) | **Get** /session/logout | Close the user&#39;s session
+[**SessionUnblockCaptchaPost**](AuthApi.md#SessionUnblockCaptchaPost) | **Post** /session/unblock-captcha | Unblock the session using CAPTCHA
 
 
 # **SessionKeepaliveGet**
 > SessionKeepaliveGet(ctx, )
-Keepalive
+Refresh session expiration time
 
-Keep alive current session 
+Refresh the existing session using the ID for the session. The session will expire if there were no API actions for 15 minutes. 
 
 ### Required Parameters
 This endpoint does not need any parameter.
@@ -37,9 +37,9 @@ This endpoint does not need any parameter.
 
 # **SessionLoginGet**
 > SessionLoginResp SessionLoginGet(ctx, )
-Login and get session ID
+Log in and get session ID details
 
-Basic Authentication with the Authorization header The Authorization header is constructed as follows   1. The user email and password are combined with a single colon. (:)   2. The resulting string is encoded using a variant of Base64.   3. The authorization method and a space is then prepended to the encoded string, separated with a space (e.g. \"Basic \").   For example, 'test@example.com' as the user email and 'qwerty' as the password, then the field's value is the   base64-encoding of test@example.com:qwerty, or dGVzdEBleGFtcGxlLmNvbTpxd2VydHk=.   Then the Authorization header will appear as   'Authorization: Basic dGVzdEBleGFtcGxlLmNvbTpxd2VydHk=' 
+Get session information for the given session ID and log in to the account.  The easiest way to authenticate is using [Basic HTTP Authentication Scheme](https://en.wikipedia.org/wiki/Basic_access_authentication).  To proceed with the authorization, you need to have Quatrix account. If you don’t have the one, you can set up a free trial account [here](https://www.maytech.net/freetrial.html#trial=qtrx).  As the basic authentication requires the authentication of the user with the user ID and password, the Authorization header should be constructed as follows:    1. The user email and password are combined with a single colon. (:)    2. The resulting string is encoded using a variant of Base64.    3. The authorization method and a space is then prepended to the encoded string, separated with a space (e.g. \"Basic \").    For example, 'test@example.com' as the user email and 'qwerty' as the password, then the field's value is the following:    base64-encoding of test@example.com:qwerty, or dGVzdEBleGFtcGxlLmNvbTpxd2VydHk=.    The authorization header will appear as    'Authorization: Basic dGVzdEBleGFtcGxlLmNvbTpxd2VydHk=' 
 
 ### Required Parameters
 This endpoint does not need any parameter.
@@ -61,9 +61,9 @@ This endpoint does not need any parameter.
 
 # **SessionLoginPost**
 > SessionLoginResp SessionLoginPost(ctx, body)
-MFA
+Log in to the account using MFA
 
-Login with MFA 
+Use to generate a session login token in scenarios in which 2FA or PIN are required. 
 
 ### Required Parameters
 
@@ -89,9 +89,9 @@ Name | Type | Description  | Notes
 
 # **SessionLogoutGet**
 > SessionLogoutGet(ctx, )
-Logout
+Close the user's session
 
-Logout of current session 
+Close the session for the currently logged in user. 
 
 ### Required Parameters
 This endpoint does not need any parameter.
@@ -113,9 +113,9 @@ This endpoint does not need any parameter.
 
 # **SessionUnblockCaptchaPost**
 > SessionUnblockCaptchaResp SessionUnblockCaptchaPost(ctx, body)
-Unblock captcha
+Unblock the session using CAPTCHA
 
-Unblock captcha 
+Enter CAPTCHA to log in the user to the current session. 
 
 ### Required Parameters
 
